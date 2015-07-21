@@ -24,5 +24,4 @@ def test_surface_bad():
             surface_response = mbx.surface('mapbox.mapbox-terrain-v2',
                 query_points,
                 layer='contour',
-                fields=['ele'], 
-                test=True)
+                fields=['ele'])
