@@ -1,5 +1,5 @@
 import requests
-import api_utils
+from mapbox.scripts import api_utils
 
 
 def surface(mapid, points, access_token, **kwargs):
