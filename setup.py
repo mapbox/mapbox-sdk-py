@@ -21,10 +21,12 @@ setup(name='mapbox',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'click'
+          'click',
+          'request'
       ],
       extras_require={
           'test': ['pytest'],
+          'request': ['security']
       },
       entry_points="""
       [console_scripts]

@@ -6,8 +6,7 @@ install:
   - "pip install coveralls"
   - "pip install -e .[test]"
 script: 
-  - py.test
-  - coverage run --source=riomucho -m py.test
+  - py.test --cov mapbox --cov-report term-missing
 after_success:
   - coveralls
 sudo: false
