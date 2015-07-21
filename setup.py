@@ -22,7 +22,7 @@ setup(name='mapbox',
       zip_safe=False,
       install_requires=[
           'click',
-          'request'
+          'requests'
       ],
       extras_require={
           'test': ['pytest'],
