@@ -1,7 +1,7 @@
 ## mapbox.py
 from __future__ import with_statement
 import click
-from scripts import surface_query
+from mapbox.scripts import surface_query
 
 class Mapbox:
     def __init__(self, access_token):
