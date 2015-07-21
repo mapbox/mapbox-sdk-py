@@ -25,3 +25,15 @@ def test_surface_bad():
                 query_points,
                 layer='contour',
                 fields=['ele'])
+
+    with mapbox.Mapbox('abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123') as mbx:
+        with pytest.raises(ValueError):
+            surface_response = mbx.surface('mapbox.mapbox-terrain-v2',
+                query_points,
+                fields=['ele'])
+
+    with mapbox.Mapbox('abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123') as mbx:
+        with pytest.raises(ValueError):
+            surface_response = mbx.surface('mapbox.mapbox-terrain-v2',
+                query_points,
+                layer='contour')
