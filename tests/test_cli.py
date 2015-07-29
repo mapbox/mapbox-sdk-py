@@ -1,0 +1,20 @@
+from click.testing import CliRunner
+
+import responses
+
+from mapbox.scripts.cli import main_group
+
+
+@responses.activate
+def test_cli_geocode_fwd():
+
+    responses.add(
+        responses.GET,
+        'http://api.mapbox.com/v4/geocode/mapbox.places/1600%20pennsylvania%20ave%20nw.json',
+        body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
+        content_type='application/json')
+
+    runner = CliRunner()
+    result = runner.invoke(main_group, ['geocode', '1600 pennsylvania ave nw'])
+    assert result.exit_code == 0
+    assert result.output == '{"query": ["1600", "pennsylvania", "ave", "nw"]}\n'

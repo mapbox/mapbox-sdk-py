@@ -21,8 +21,8 @@ Basic usage of the geocoder:
 ```python
 import mapbox
 
-session = mapbox.Session('YOUR_ACCESS_TOKEN')
-response = session.geocode_forward('Chester, NJ')
+geocoder = mapbox.service('geocoder')
+response = geocoder.fwd('Chester, NJ', access_token='YOUR_ACCESS_TOKEN')
 
 # response.json() returns the geocoding result as GeoJSON.
 ```
