@@ -1,5 +1,7 @@
 # mapbox
 
+import os
+
 import requests
 from uritemplate import URITemplate
 
@@ -7,15 +9,23 @@ from uritemplate import URITemplate
 __version__ = "0.1.0"
 
 
-class Geocoder:
+class Service:
+    """Base service class"""
+
+    def get_session(self, token):
+        access_token = token or os.environ.get('MapboxAccessToken')
+        session = requests.Session()
+        session.params.update(access_token=access_token)
+        return session
+
+
+class Geocoder(Service):
     """A very simple Geocoding API proxy"""
 
     def __init__(self, name='mapbox.places', access_token=None):
         self.name = name
         self.baseuri = 'http://api.mapbox.com/v4/geocode'
-        self.session = requests.Session()
-        if access_token:
-            self.session.params.update(access_token=access_token)
+        self.session = self.get_session(access_token)
 
     def fwd(self, address, params=None):
         """A forward geocoding request
