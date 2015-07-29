@@ -32,7 +32,7 @@ setup(name='mapbox',
           'click', 'requests', 'uritemplate.py'
       ],
       extras_require={
-          'test': ['pytest', 'responses'],
+          'test': ['coveralls', 'pytest', 'pytest-cov', 'responses'],
       },
       entry_points="""
       [console_scripts]
