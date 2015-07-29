@@ -12,8 +12,8 @@ __version__ = "0.1.0"
 class Service:
     """Base service class"""
 
-    def get_session(self, token):
-        access_token = token or os.environ.get('MapboxAccessToken')
+    def get_session(self, token=None, env=None):
+        access_token = token or (env or os.environ).get('MapboxAccessToken')
         session = requests.Session()
         session.params.update(access_token=access_token)
         return session
