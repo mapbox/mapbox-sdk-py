@@ -36,8 +36,10 @@ def test_cli_geocode_fwd_env_token():
     runner = CliRunner()
     result = runner.invoke(
         main_group,
-        ['geocode', '1600 pennsylvania ave nw'],
-        env={'MapboxAccessToken': 'bogus'})
+        ['geocodex', '1600 pennsylvania ave nw'],
+        env={'MapboxAccessToken': 'bogus'},
+        catch_exceptions=False)
+    import pdb; pdb.set_trace()
     assert result.exit_code == 0
     assert result.output == '{"query": ["1600", "pennsylvania", "ave", "nw"]}\n'
 

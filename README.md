@@ -30,6 +30,13 @@ response = geocoder.fwd('Chester, NJ')
 # response.json() returns the geocoding result as GeoJSON.
 ```
 
+## Testing
+
+```bash
+pip install -e .[test]
+py.test
+```
+
 ## See Also
 
 https://github.com/mapbox/mapbox-sdk-js
