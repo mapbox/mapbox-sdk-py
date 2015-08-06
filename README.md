@@ -19,7 +19,8 @@ $ pip install mapbox
 
 ## Usage
 
-Basic usage of the geocoder:
+Client methods return [Requests](http://www.python-requests.org/en/latest/)
+style response objects.
 
 ```python
 import mapbox
@@ -28,6 +29,7 @@ geocoder = mapbox.Geocoder(access_token='YOUR_ACCESS_TOKEN')
 response = geocoder.fwd('Chester, NJ')
 
 # response.json() returns the geocoding result as GeoJSON.
+# response.status_code returns the HTTP API status code.
 ```
 
 ## Testing
