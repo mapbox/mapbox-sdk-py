@@ -58,11 +58,12 @@ def test_geocoder_reverse():
 
     responses.add(
         responses.GET,
-        'http://api.mapbox.com/v4/geocode/mapbox.places/%s.json?access_token=pk.test' % ','.join(map(lambda x: str(x), coords)),
+        'http://api.mapbox.com/v4/geocode/mapbox.places/%s.json?access_token=pk.test' % ','.join([str(x) for x in coords]),
         match_querystring=True,
-        body='{"query": %s}' % json.dumps(coords), status=200,
+        body='{"query": %s}' % json.dumps(coords),
+        status=200,
         content_type='application/json')
 
-    response = mapbox.Geocoder(access_token='pk.test').reverse(*map(lambda x: str(x), coords))
+    response = mapbox.Geocoder(access_token='pk.test').reverse(*[str(x) for x in coords])
     assert response.status_code == 200
     assert response.json()['query'] == coords
