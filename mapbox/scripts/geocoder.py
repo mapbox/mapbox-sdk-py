@@ -35,7 +35,7 @@ def geocode(ctx, access_token, forward, reverse):
     if forward:
         resp = geocoder.forward(forward)
     elif reverse:
-        coords = filter(lambda x: _is_numeric(x), [ x.strip() for x in reverse.split(',') ])
+        coords = list(filter(lambda x: _is_numeric(x), [ x.strip() for x in reverse.split(',') ]))
         if len(coords) != 2:
             raise MapboxException('Reverse geocoding requires a query in decimal longitude,latitude format, e.g. --reverse="-100,37.7"')
         resp = geocoder.reverse(coords[0], coords[1])
