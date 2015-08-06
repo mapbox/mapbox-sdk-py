@@ -23,3 +23,6 @@ def geocode(ctx, address, access_token):
         click.echo(resp.text)
     else:
         raise MapboxException(resp.text.strip())
+
+if __name__ == '__main__':
+    geocode()
