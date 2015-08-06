@@ -9,11 +9,21 @@ class MapboxException(click.ClickException):
     pass
 
 def _is_numeric(x):
-    try:
-        float(x)
-    except:
-        return False
-    return True
+    """
+    >>> _is_numeric(9.2)
+    True
+    >>> _is_numeric('9.2')
+    True
+    >>> _is_numeric('-9.2')
+    True
+    >>> _is_numeric('10000')
+    True
+    >>> _is_numeric('18f')
+    False
+    >>> _is_numeric([])
+    False
+    """
+
 
 @click.command(short_help="Geocode an address.")
 @click.option('--access-token', help="Your access token")

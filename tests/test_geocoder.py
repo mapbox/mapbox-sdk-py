@@ -3,6 +3,22 @@ import responses
 import mapbox
 
 
+def test_is_numeric():
+    """ test utility function in geocoder.py """
+    import mapbox.scripts.geocoder as gc
+    tests = (
+        (9.2, True),
+        ('9.2', True),
+        ('-9.2', True),
+        ('10000', True),
+        ('one thousand', False),
+        ('18f', False),
+        ([], False)
+    )
+    for test in tests:
+        assert gc._is_numeric(test[0]) == test[1]
+
+
 def test_service_session():
     """Get a session using a token"""
     session = mapbox.Service().get_session('pk.test')
