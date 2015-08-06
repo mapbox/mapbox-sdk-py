@@ -16,26 +16,29 @@ def _is_numeric(x):
     return True
 
 @click.command(short_help="Geocode an address.")
-@click.argument('LOCATION')
 @click.option('--access-token', help="Your access token")
-@click.option('--reverse', is_flag=True, flag_value=True, help="Perform a reverse geocode")
+@click.option('--forward', default=False, help="Perform a forward geocode")
+@click.option('--reverse', default=False, help="Perform a reverse geocode")
 @click.pass_context
-def geocode(ctx, location, access_token, reverse):
+def geocode(ctx, access_token, forward, reverse):
     """Geocode an address"""
     verbosity = (ctx.obj and ctx.obj.get('verbosity')) or 2
     logger = logging.getLogger('mapbox')
     geocoder = mapbox.Geocoder(access_token=access_token)
 
-    if not reverse:
-        resp = geocoder.forward(location)
-    else:
-        location_parts = location.split(',')
-        if len(location_parts) != 2:
-            raise MapboxException('Reverse geocoding requires a LOCATION in format longitude,latitude')
-        coords = filter(lambda x: _is_numeric(x), location_parts):
+    if reverse and forward:
+        raise MapboxException('Cannot use forward and reverse geocoding simultaneously')
+
+    if not (reverse or forward):
+        raise MapboxException('You must specify --forward or --reverse (but not both)')
+
+    if forward:
+        resp = geocoder.forward(forward)
+    elif reverse:
+        coords = filter(lambda x: _is_numeric(x), [ x.strip() for x in reverse.split(',') ])
         if len(coords) != 2:
-            raise MapboxException('Reverse geocoding LOCATION components must be decimal longitude/latitude')
-        rep = geocoder.reverse(coords[0], coord[1])
+            raise MapboxException('Reverse geocoding requires a query in decimal longitude,latitude format, e.g. --reverse="-100,37.7"')
+        resp = geocoder.reverse(coords[0], coords[1])
 
     if resp.status_code == 200:
         click.echo(resp.text)
