@@ -1,5 +1,5 @@
+import json
 import responses
-
 import mapbox
 
 
@@ -49,3 +49,20 @@ def test_geocoder_forward():
     response = mapbox.Geocoder(access_token='pk.test').forward('1600 pennsylvania ave nw')
     assert response.status_code == 200
     assert response.json()['query'] == ["1600", "pennsylvania", "ave", "nw"]
+
+@responses.activate
+def test_geocoder_reverse():
+    """Reverse geocoding works"""
+
+    coords = [-77.4371, 37.5227]
+
+    responses.add(
+        responses.GET,
+        'http://api.mapbox.com/v4/geocode/mapbox.places/%s.json?access_token=pk.test' % ','.join(map(lambda x: str(x), coords)),
+        match_querystring=True,
+        body='{"query": %s}' % json.dumps(coords), status=200,
+        content_type='application/json')
+
+    response = mapbox.Geocoder(access_token='pk.test').reverse(*map(lambda x: str(x), coords))
+    assert response.status_code == 200
+    assert response.json()['query'] == coords

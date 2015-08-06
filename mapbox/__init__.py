@@ -35,3 +35,10 @@ class Geocoder(Service):
             dataset=self.name, query=address)
         return self.session.get(uri, params=params)
 
+    def reverse(self, lon, lat, params=None):
+        """A reverse geocoding request
+
+        See: https://www.mapbox.com/developers/api/geocoding/#reverse"""
+        uri = URITemplate('%s/{dataset}/{lon},{lat}.json' % self.baseuri).expand(
+            dataset=self.name, lon=lon, lat=lat)
+        return self.session.get(uri, params=params)
