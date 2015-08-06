@@ -27,10 +27,11 @@ class Geocoder(Service):
         self.baseuri = 'http://api.mapbox.com/v4/geocode'
         self.session = self.get_session(access_token)
 
-    def fwd(self, address, params=None):
+    def forward(self, address, params=None):
         """A forward geocoding request
 
-        See: https://www.mapbox.com/developers/api/geocoding/#forward."""
+        See: https://www.mapbox.com/developers/api/geocoding/#forward"""
         uri = URITemplate('%s/{dataset}/{query}.json' % self.baseuri).expand(
             dataset=self.name, query=address)
         return self.session.get(uri, params=params)
+

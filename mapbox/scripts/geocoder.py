@@ -10,10 +10,10 @@ class MapboxException(click.ClickException):
 
 
 @click.command(short_help="Geocode an address.")
-@click.argument('ADDRESS')
+@click.argument('LOCATION')
 @click.option('--access-token', help="Your access token")
 @click.pass_context
-def geocode(ctx, address, access_token):
+def geocode(ctx, location, access_token, reverse):
     """Geocode an address"""
     verbosity = (ctx.obj and ctx.obj.get('verbosity')) or 2
     logger = logging.getLogger('mapbox')

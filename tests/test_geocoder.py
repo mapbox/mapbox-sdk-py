@@ -36,7 +36,7 @@ def test_geocoder_name():
 
 
 @responses.activate
-def test_geocoder_fwd():
+def test_geocoder_forward():
     """Forward geocoding works"""
 
     responses.add(
@@ -46,7 +46,6 @@ def test_geocoder_fwd():
         body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
         content_type='application/json')
 
-    response = mapbox.Geocoder(
-        access_token='pk.test').fwd('1600 pennsylvania ave nw')
+    response = mapbox.Geocoder(access_token='pk.test').forward('1600 pennsylvania ave nw')
     assert response.status_code == 200
     assert response.json()['query'] == ["1600", "pennsylvania", "ave", "nw"]
