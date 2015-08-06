@@ -47,7 +47,7 @@ def test_cli_geocode_reverse():
 
     responses.add(
         responses.GET,
-        'http://api.mapbox.com/v4/geocode/mapbox.places/%s.json?access_token=pk.test' % ','.join(map(lambda x: str(x), coords)),
+        'http://api.mapbox.com/v4/geocode/mapbox.places/%s.json?access_token=pk.test' % ','.join([str(x) for x in coords]),
         match_querystring=True,
         body='{"query": %s}' % json.dumps(coords),
         status=200,
@@ -56,7 +56,7 @@ def test_cli_geocode_reverse():
     runner = CliRunner()
     result = runner.invoke(
         main_group,
-        ['geocode', '--reverse', ','.join([str(x) for x in coords]), '--access-token', 'bogus'])
+        ['geocode', '--reverse', ','.join([str(x) for x in coords]), '--access-token', 'pk.test'])
     assert result.exit_code == 0
     assert result.output == '{"query": %s}\n' % json.dumps(coords)
 
@@ -67,7 +67,7 @@ def test_cli_geocode_reverse_env_token():
 
     responses.add(
         responses.GET,
-        'http://api.mapbox.com/v4/geocode/mapbox.places/1600%20pennsylvania%20ave%20nw.json?access_token=bogus',
+        'http://api.mapbox.com/v4/geocode/mapbox.places/%s.json?access_token=bogus' % ','.join([str(x) for x in coords]),
         match_querystring=True,
         body='{"query": %s}' % json.dumps(coords),
         status=200,
@@ -92,6 +92,6 @@ def test_cli_geocode_unauthorized():
         content_type='application/json')
 
     runner = CliRunner()
-    result = runner.invoke(main_group, ['geocode', '1600 pennsylvania ave nw'])
+    result = runner.invoke(main_group, ['geocode', '--forward', '1600 pennsylvania ave nw'])
     assert result.exit_code == 1
     assert result.output == 'Error: {"message":"Not Authorized - Invalid Token"}\n'
