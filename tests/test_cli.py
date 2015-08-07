@@ -1,7 +1,6 @@
+import json
 from click.testing import CliRunner
-
 import responses
-
 from mapbox.scripts.cli import main_group
 
 
@@ -18,7 +17,7 @@ def test_cli_geocode_fwd():
     runner = CliRunner()
     result = runner.invoke(
         main_group,
-        ['geocode', '1600 pennsylvania ave nw', '--access-token', 'bogus'])
+        ['geocode', '--forward', '1600 pennsylvania ave nw', '--access-token', 'bogus'])
     assert result.exit_code == 0
     assert result.output == '{"query": ["1600", "pennsylvania", "ave", "nw"]}\n'
 
@@ -36,10 +35,51 @@ def test_cli_geocode_fwd_env_token():
     runner = CliRunner()
     result = runner.invoke(
         main_group,
-        ['geocode', '1600 pennsylvania ave nw'],
+        ['geocode', '--forward', '1600 pennsylvania ave nw'],
         env={'MapboxAccessToken': 'bogus'})
     assert result.exit_code == 0
     assert result.output == '{"query": ["1600", "pennsylvania", "ave", "nw"]}\n'
+
+@responses.activate
+def test_cli_geocode_reverse():
+
+    coords = [-77.4371, 37.5227]
+
+    responses.add(
+        responses.GET,
+        'http://api.mapbox.com/v4/geocode/mapbox.places/%s.json?access_token=pk.test' % ','.join([str(x) for x in coords]),
+        match_querystring=True,
+        body='{"query": %s}' % json.dumps(coords),
+        status=200,
+        content_type='application/json')
+
+    runner = CliRunner()
+    result = runner.invoke(
+        main_group,
+        ['geocode', '--reverse', ','.join([str(x) for x in coords]), '--access-token', 'pk.test'])
+    assert result.exit_code == 0
+    assert result.output == '{"query": %s}\n' % json.dumps(coords)
+
+@responses.activate
+def test_cli_geocode_reverse_env_token():
+
+    coords = [-77.4371, 37.5227]
+
+    responses.add(
+        responses.GET,
+        'http://api.mapbox.com/v4/geocode/mapbox.places/%s.json?access_token=bogus' % ','.join([str(x) for x in coords]),
+        match_querystring=True,
+        body='{"query": %s}' % json.dumps(coords),
+        status=200,
+        content_type='application/json')
+
+    runner = CliRunner()
+    result = runner.invoke(
+        main_group,
+        ['geocode', '--reverse', ','.join([str(x) for x in coords])],
+        env={'MapboxAccessToken': 'bogus'})
+    assert result.exit_code == 0
+    assert result.output == '{"query": %s}\n' % json.dumps(coords)
 
 
 @responses.activate
@@ -52,6 +92,6 @@ def test_cli_geocode_unauthorized():
         content_type='application/json')
 
     runner = CliRunner()
-    result = runner.invoke(main_group, ['geocode', '1600 pennsylvania ave nw'])
+    result = runner.invoke(main_group, ['geocode', '--forward', '1600 pennsylvania ave nw'])
     assert result.exit_code == 1
     assert result.output == 'Error: {"message":"Not Authorized - Invalid Token"}\n'

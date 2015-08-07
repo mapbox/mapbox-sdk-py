@@ -1,6 +1,22 @@
+import json
 import responses
-
 import mapbox
+
+
+def test_is_numeric():
+    """ test utility function in geocoder.py """
+    import mapbox.scripts.geocoder as gc
+    tests = (
+        (9.2, True),
+        ('9.2', True),
+        ('-9.2', True),
+        ('10000', True),
+        ('one thousand', False),
+        ('18f', False),
+        ([], False)
+    )
+    for test in tests:
+        assert gc._is_numeric(test[0]) == test[1]
 
 
 def test_service_session():
@@ -36,7 +52,7 @@ def test_geocoder_name():
 
 
 @responses.activate
-def test_geocoder_fwd():
+def test_geocoder_forward():
     """Forward geocoding works"""
 
     responses.add(
@@ -46,7 +62,24 @@ def test_geocoder_fwd():
         body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
         content_type='application/json')
 
-    response = mapbox.Geocoder(
-        access_token='pk.test').fwd('1600 pennsylvania ave nw')
+    response = mapbox.Geocoder(access_token='pk.test').forward('1600 pennsylvania ave nw')
     assert response.status_code == 200
     assert response.json()['query'] == ["1600", "pennsylvania", "ave", "nw"]
+
+@responses.activate
+def test_geocoder_reverse():
+    """Reverse geocoding works"""
+
+    coords = [-77.4371, 37.5227]
+
+    responses.add(
+        responses.GET,
+        'http://api.mapbox.com/v4/geocode/mapbox.places/%s.json?access_token=pk.test' % ','.join([str(x) for x in coords]),
+        match_querystring=True,
+        body='{"query": %s}' % json.dumps(coords),
+        status=200,
+        content_type='application/json')
+
+    response = mapbox.Geocoder(access_token='pk.test').reverse(*[str(x) for x in coords])
+    assert response.status_code == 200
+    assert response.json()['query'] == coords

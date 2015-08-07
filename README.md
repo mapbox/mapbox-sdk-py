@@ -26,7 +26,7 @@ style response objects.
 import mapbox
 
 geocoder = mapbox.Geocoder(access_token='YOUR_ACCESS_TOKEN')
-response = geocoder.fwd('Chester, NJ')
+response = geocoder.forward('Chester, NJ')
 
 # response.json() returns the geocoding result as GeoJSON.
 # response.status_code returns the HTTP API status code.
