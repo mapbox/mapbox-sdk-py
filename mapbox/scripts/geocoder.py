@@ -1,49 +1,62 @@
 import logging
+import json
+import re
 
 import click
 
 import mapbox
+from mapbox.compat import map
 
 
 class MapboxException(click.ClickException):
     pass
 
-def _is_numeric(x):
+
+def iter_query(query):
+    """Accept a filename, stream, or string.
+    Returns an iterator over lines of the query."""
     try:
-        float(x)
-    except:
-        return False
-    return True
+        itr = click.open_file(query).readlines()
+    except IOError:
+        itr = [query]
+    return itr
+
+
+def coords_from_query(query):
+    """Transform a query line into a (lng, lat) pair of coordinates."""
+    try:
+        coords = json.loads(query)
+    except ValueError:
+        vals = re.split(r"\,*\s*", query)
+        coords = [float(v) for v in vals]
+    return tuple(coords[:2])
+
 
 @click.command(short_help="Geocode an address.")
+@click.argument('query', default='-', required=False)
 @click.option('--access-token', help="Your access token")
-@click.option('--forward', default=False, help="Perform a forward geocode")
-@click.option('--reverse', default=False, help="Perform a reverse geocode")
+@click.option(
+    '--forward/--reverse',
+    default=True,
+    help="Perform a forward (default) or reverse geocode")
 @click.pass_context
-def geocode(ctx, access_token, forward, reverse):
+def geocode(ctx, query, access_token, forward):
     """Geocode an address"""
     verbosity = (ctx.obj and ctx.obj.get('verbosity')) or 2
     logger = logging.getLogger('mapbox')
     geocoder = mapbox.Geocoder(access_token=access_token)
 
-    if reverse and forward:
-        raise MapboxException('Cannot use forward and reverse geocoding simultaneously')
-
-    if not (reverse or forward):
-        raise MapboxException('You must specify --forward or --reverse (but not both)')
-
     if forward:
-        resp = geocoder.forward(forward)
-    elif reverse:
-        coords = list(filter(lambda x: _is_numeric(x), [ x.strip() for x in reverse.split(',') ]))
-        if len(coords) != 2:
-            raise MapboxException('Reverse geocoding requires a query in decimal longitude,latitude format, e.g. --reverse="-100,37.7"')
-        resp = geocoder.reverse(coords[0], coords[1])
-
-    if resp.status_code == 200:
-        click.echo(resp.text)
+        for q in iter_query(query):
+            resp = geocoder.forward(q)
+        if resp.status_code == 200:
+            click.echo(resp.text)
+        else:
+            raise MapboxException(resp.text.strip())
     else:
-        raise MapboxException(resp.text.strip())
-
-if __name__ == '__main__':
-    geocode()
+        for coords in map(coords_from_query, iter_query(query)):
+            resp = geocoder.reverse(*coords)
+        if resp.status_code == 200:
+            click.echo(resp.text)
+        else:
+            raise MapboxException(resp.text.strip())
