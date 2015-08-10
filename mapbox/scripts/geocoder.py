@@ -27,7 +27,7 @@ def coords_from_query(query):
     try:
         coords = json.loads(query)
     except ValueError:
-        vals = re.split(r"\,*\s*", query)
+        vals = re.split(r"\,*\s*", query.strip())
         coords = [float(v) for v in vals]
     return tuple(coords[:2])
 
@@ -49,14 +49,14 @@ def geocode(ctx, query, access_token, forward):
     if forward:
         for q in iter_query(query):
             resp = geocoder.forward(q)
-        if resp.status_code == 200:
-            click.echo(resp.text)
-        else:
-            raise MapboxException(resp.text.strip())
+            if resp.status_code == 200:
+                click.echo(resp.text)
+            else:
+                raise MapboxException(resp.text.strip())
     else:
         for coords in map(coords_from_query, iter_query(query)):
             resp = geocoder.reverse(*coords)
-        if resp.status_code == 200:
-            click.echo(resp.text)
-        else:
-            raise MapboxException(resp.text.strip())
+            if resp.status_code == 200:
+                click.echo(resp.text)
+            else:
+                raise MapboxException(resp.text.strip())
