@@ -24,7 +24,7 @@ class Geocoder(Service):
 
     def __init__(self, name='mapbox.places', access_token=None):
         self.name = name
-        self.baseuri = 'http://api.mapbox.com/v4/geocode'
+        self.baseuri = 'https://api.mapbox.com/v4/geocode'
         self.session = self.get_session(access_token)
 
     def forward(self, address, params=None):
@@ -39,6 +39,6 @@ class Geocoder(Service):
         """A reverse geocoding request
 
         See: https://www.mapbox.com/developers/api/geocoding/#reverse"""
-        uri = URITemplate('%s/{dataset}/{lon},{lat}.json' % self.baseuri).expand(
-            dataset=self.name, lon=lon, lat=lat)
+        uri = URITemplate(self.baseuri + '/{dataset}/{lon},{lat}.json').expand(
+            dataset=self.name, lon=str(lon), lat=str(lat))
         return self.session.get(uri, params=params)

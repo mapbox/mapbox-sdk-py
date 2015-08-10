@@ -3,22 +3,6 @@ import responses
 import mapbox
 
 
-def test_is_numeric():
-    """ test utility function in geocoder.py """
-    import mapbox.scripts.geocoder as gc
-    tests = (
-        (9.2, True),
-        ('9.2', True),
-        ('-9.2', True),
-        ('10000', True),
-        ('one thousand', False),
-        ('18f', False),
-        ([], False)
-    )
-    for test in tests:
-        assert gc._is_numeric(test[0]) == test[1]
-
-
 def test_service_session():
     """Get a session using a token"""
     session = mapbox.Service().get_session('pk.test')
@@ -39,6 +23,7 @@ def test_service_session_os_environ(monkeypatch):
     assert session.params.get('access_token') == 'pk.test_os_environ'
     monkeypatch.undo()
 
+
 def test_geocoder_default_name():
     """Default name is set"""
     geocoder = mapbox.Geocoder()
@@ -57,7 +42,7 @@ def test_geocoder_forward():
 
     responses.add(
         responses.GET,
-        'http://api.mapbox.com/v4/geocode/mapbox.places/1600%20pennsylvania%20ave%20nw.json?access_token=pk.test',
+        'https://api.mapbox.com/v4/geocode/mapbox.places/1600%20pennsylvania%20ave%20nw.json?access_token=pk.test',
         match_querystring=True,
         body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
         content_type='application/json')
@@ -65,6 +50,7 @@ def test_geocoder_forward():
     response = mapbox.Geocoder(access_token='pk.test').forward('1600 pennsylvania ave nw')
     assert response.status_code == 200
     assert response.json()['query'] == ["1600", "pennsylvania", "ave", "nw"]
+
 
 @responses.activate
 def test_geocoder_reverse():
@@ -74,7 +60,7 @@ def test_geocoder_reverse():
 
     responses.add(
         responses.GET,
-        'http://api.mapbox.com/v4/geocode/mapbox.places/%s.json?access_token=pk.test' % ','.join([str(x) for x in coords]),
+        'https://api.mapbox.com/v4/geocode/mapbox.places/%s.json?access_token=pk.test' % ','.join([str(x) for x in coords]),
         match_querystring=True,
         body='{"query": %s}' % json.dumps(coords),
         status=200,
