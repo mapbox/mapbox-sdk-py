@@ -17,11 +17,11 @@ with open('mapbox/__init__.py') as f:
 
 setup(name='mapbox',
       version=version,
-      description=u"A Python client for Mapbox services",
+      description="A Python client for Mapbox services",
       long_description=long_description,
       classifiers=[],
       keywords='',
-      author=u"Sean Gillies",
+      author="Sean Gillies",
       author_email='sean@mapbox.com',
       url='https://github.com/mapbox/mapbox-sdk-py',
       license='MIT',
