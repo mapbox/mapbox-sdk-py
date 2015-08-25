@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/mapbox/mapbox-sdk-py.svg?branch=master)](https://travis-ci.org/mapbox/mapbox-sdk-py)
 [![Coverage Status](https://coveralls.io/repos/mapbox/mapbox-sdk-py/badge.svg?branch=master&service=github)](https://coveralls.io/github/mapbox/mapbox-sdk-py?branch=master)
 
-A Python client for Mapbox services
+A Python client for Mapbox web services
 
 ## Services
 
