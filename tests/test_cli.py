@@ -41,7 +41,7 @@ def test_cli_geocode_fwd():
     runner = CliRunner()
     result = runner.invoke(
         main_group,
-        ['geocode', '--forward', '1600 pennsylvania ave nw', '--access-token', 'bogus'])
+        ['--access-token', 'bogus', 'geocode', '--forward', '1600 pennsylvania ave nw'])
     assert result.exit_code == 0
     assert result.output == '{"query": ["1600", "pennsylvania", "ave", "nw"]}\n'
 
@@ -81,7 +81,7 @@ def test_cli_geocode_reverse():
     runner = CliRunner()
     result = runner.invoke(
         main_group,
-        ['geocode', '--reverse', '--access-token', 'pk.test'],
+        ['--access-token', 'pk.test', 'geocode', '--reverse'],
         input=','.join([str(x) for x in coords]))
     assert result.exit_code == 0
     assert result.output == '{"query": %s}\n' % json.dumps(coords)
