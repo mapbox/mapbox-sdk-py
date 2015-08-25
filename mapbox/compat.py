@@ -4,7 +4,4 @@ import itertools
 import sys
 
 
-if sys.version_info < (3,):
-    map = itertools.imap
-else:
-    map = map
+map = itertools.imap if sys.version_info < (3,) else map

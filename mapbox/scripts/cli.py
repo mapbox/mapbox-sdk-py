@@ -23,12 +23,27 @@ def configure_logging(verbosity):
 @click.group()
 @cligj.verbose_opt
 @cligj.quiet_opt
+@click.option('--access-token', help="Your Mapbox access token.")
 @click.version_option(version=mapbox.__version__, message='%(version)s')
 @click.pass_context
-def main_group(ctx, verbose, quiet):
-    """Command line interface to Mapbox web services.
+def main_group(ctx, verbose, quiet, access_token):
+    """This is the command line interface to Mapbox web services.
+
+    Mapbox web services require an access token. Your token is shown
+    on the https://www.mapbox.com/developers/api/ page when you are
+    logged in. The token can be provided on the command line
+
+      $ mbx --access-token MY_TOKEN ...
+
+    or as an environment variable.
+
+    \b
+      $ export MapboxAccessToken=MY_TOKEN
+      $ mbx ...
+
     """
     verbosity = verbose - quiet
     configure_logging(verbosity)
     ctx.obj = {}
     ctx.obj['verbosity'] = verbosity
+    ctx.obj['access_token'] = access_token

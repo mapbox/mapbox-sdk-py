@@ -34,15 +34,14 @@ def coords_from_query(query):
 
 @click.command(short_help="Geocode an address or coordinates.")
 @click.argument('query', default='-', required=False)
-@click.option('--access-token', help="Your access token")
 @click.option(
     '--forward/--reverse',
     default=True,
     help="Perform a forward or reverse geocode. [default: forward]")
 @click.pass_context
-def geocode(ctx, query, access_token, forward):
-    """Get coordinates for an address (forward geocoding) or addresses
-    for coordinates (reverse geocoding)
+def geocode(ctx, query, forward):
+    """This command gets coordinates for an address (forward mode) or
+    addresses for coordinates (reverse mode).
 
     In forward (the default) mode the query argument shall be an address
     such as '1600 pennsylvania ave nw'.
@@ -57,6 +56,8 @@ def geocode(ctx, query, access_token, forward):
     """
     verbosity = (ctx.obj and ctx.obj.get('verbosity')) or 2
     logger = logging.getLogger('mapbox')
+
+    access_token = (ctx.obj and ctx.obj.get('access_token')) or None
     geocoder = mapbox.Geocoder(access_token=access_token)
 
     if forward:
