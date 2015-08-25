@@ -36,7 +36,7 @@ setup(name='mapbox',
       },
       entry_points="""
       [console_scripts]
-      mapbaux=mapbox.scripts.cli:main_group
+      mbx=mapbox.scripts.cli:main_group
 
       [mapbox.mapbox_commands]
       geocode=mapbox.scripts.geocoder:geocode

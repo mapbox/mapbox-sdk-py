@@ -32,16 +32,29 @@ def coords_from_query(query):
     return tuple(coords[:2])
 
 
-@click.command(short_help="Geocode an address.")
+@click.command(short_help="Geocode an address or coordinates.")
 @click.argument('query', default='-', required=False)
 @click.option('--access-token', help="Your access token")
 @click.option(
     '--forward/--reverse',
     default=True,
-    help="Perform a forward (default) or reverse geocode")
+    help="Perform a forward or reverse geocode. [default: forward]")
 @click.pass_context
 def geocode(ctx, query, access_token, forward):
-    """Geocode an address"""
+    """Get coordinates for an address (forward geocoding) or addresses
+    for coordinates (reverse geocoding)
+
+    In forward (the default) mode the query argument shall be an address
+    such as '1600 pennsylvania ave nw'.
+
+      $ mbx geocode '1600 pennsylvania ave nw'
+
+    In reverse mode the query argument shall be a JSON encoded array
+    of longitude and latitude (in that order) in decimal degrees.
+
+      $ mbx geocode --reverse '[-77.4371, 37.5227]'
+
+    """
     verbosity = (ctx.obj and ctx.obj.get('verbosity')) or 2
     logger = logging.getLogger('mapbox')
     geocoder = mapbox.Geocoder(access_token=access_token)

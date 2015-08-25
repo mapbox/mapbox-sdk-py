@@ -26,7 +26,7 @@ def configure_logging(verbosity):
 @click.version_option(version=mapbox.__version__, message='%(version)s')
 @click.pass_context
 def main_group(ctx, verbose, quiet):
-    """Mapbox command line interface.
+    """Command line interface to Mapbox web services.
     """
     verbosity = verbose - quiet
     configure_logging(verbosity)
