@@ -142,3 +142,41 @@ def test_cli_geocode_rev_unauthorized():
         input='%s,%s' % coords)
     assert result.exit_code == 1
     assert result.output == 'Error: {"message":"Not Authorized - Invalid Token"}\n'
+
+
+@responses.activate
+def test_cli_geocode_fwd_headers():
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/v4/geocode/mapbox.places/1600%20pennsylvania%20ave%20nw.json',
+        body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
+        content_type='application/json')
+
+    runner = CliRunner()
+    result = runner.invoke(
+        main_group,
+        ['geocode', '-i', '--forward', '1600 pennsylvania ave nw'])
+    assert result.exit_code == 0
+    assert result.output.startswith('Content-Type')
+
+
+@responses.activate
+def test_cli_geocode_rev_headers():
+
+    coords = [-77.4371, 37.5227]
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/v4/geocode/mapbox.places/%s.json' % ','.join([str(x) for x in coords]),
+        body='{"query": %s}' % json.dumps(coords),
+        status=200,
+        content_type='application/json')
+
+    runner = CliRunner()
+    result = runner.invoke(
+        main_group,
+        ['geocode', '-i', '--reverse'],
+        input=','.join([str(x) for x in coords]))
+    assert result.exit_code == 0
+    assert result.output.startswith('Content-Type')

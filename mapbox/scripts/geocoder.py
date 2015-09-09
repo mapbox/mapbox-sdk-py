@@ -32,26 +32,37 @@ def coords_from_query(query):
     return tuple(coords[:2])
 
 
+def echo_headers(headers, file=None):
+    """Echo headers, sorted."""
+    for k, v in sorted(headers.items()):
+        click.echo("{0}: {1}".format(k.title(), v), file=file)
+    click.echo(file=file)
+
+
 @click.command(short_help="Geocode an address or coordinates.")
 @click.argument('query', default='-', required=False)
 @click.option(
     '--forward/--reverse',
     default=True,
     help="Perform a forward or reverse geocode. [default: forward]")
+@click.option('--include', '-i', 'include_headers',
+              is_flag=True, default=False,
+              help="Include HTTP headers in the output.")
 @click.option(
-    '--place-type', '-t', multiple=True, metavar='NAME', default=None,
-    help="Restrict results to one or more of these place types: {0}.".format(
-        sorted(mapbox.Geocoder().place_types.keys())))
+    '--lat', type=float, default=None,
+    help="Bias results toward this latitude (decimal degrees). --lng "
+         "is also required.")
 @click.option(
     '--lng', type=float, default=None,
     help="Bias results toward this longitude (decimal degrees). --lat "
          "is also required.")
 @click.option(
-    '--lat', type=float, default=None,
-    help="Bias results toward this latitude (decimal degrees). --lng "
-         "is also required.")
+    '--place-type', '-t', multiple=True, metavar='NAME', default=None,
+    help="Restrict results to one or more of these place types: {0}.".format(
+        sorted(mapbox.Geocoder().place_types.keys())))
+@click.option('--output', '-o', default='-', help="Save output to a file.")
 @click.pass_context
-def geocode(ctx, query, forward, place_type, lng, lat):
+def geocode(ctx, query, include_headers, forward, lat, lng, place_type, output):
     """This command returns places matching an address (forward mode) or
     places matching coordinates (reverse mode).
 
@@ -71,19 +82,26 @@ def geocode(ctx, query, forward, place_type, lng, lat):
     logger = logging.getLogger('mapbox')
 
     access_token = (ctx.obj and ctx.obj.get('access_token')) or None
+    stdout = click.open_file(output, 'w')
+
     geocoder = mapbox.Geocoder(access_token=access_token)
 
     if forward:
         for q in iter_query(query):
-            resp = geocoder.forward(q, place_types=place_type)
+            resp = geocoder.forward(
+                q, place_types=place_type, lat=lat, lng=lng)
+            if include_headers:
+                echo_headers(resp.headers, file=stdout)
             if resp.status_code == 200:
-                click.echo(resp.text)
+                click.echo(resp.text, file=stdout)
             else:
                 raise MapboxCLIException(resp.text.strip())
     else:
         for coords in map(coords_from_query, iter_query(query)):
             resp = geocoder.reverse(*coords, place_types=place_type)
+            if include_headers:
+                echo_headers(resp.headers, file=stdout)
             if resp.status_code == 200:
-                click.echo(resp.text)
+                click.echo(resp.text, file=stdout)
             else:
                 raise MapboxCLIException(resp.text.strip())

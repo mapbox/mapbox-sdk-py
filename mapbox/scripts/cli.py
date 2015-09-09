@@ -21,10 +21,10 @@ def configure_logging(verbosity):
 
 @with_plugins(ep for ep in list(iter_entry_points('mapbox.mapbox_commands')))
 @click.group()
-@cligj.verbose_opt
-@cligj.quiet_opt
 @click.option('--access-token', help="Your Mapbox access token.")
+@cligj.verbose_opt
 @click.version_option(version=mapbox.__version__, message='%(version)s')
+@cligj.quiet_opt
 @click.pass_context
 def main_group(ctx, verbose, quiet, access_token):
     """This is the command line interface to Mapbox web services.
