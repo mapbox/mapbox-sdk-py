@@ -120,9 +120,8 @@ Its output can be piped to [geojsonio](http://geojson.io) using
 $ mbx geocode 'Chester, NJ' | geojsonio
 ```
 
-```html
-<iframe frameborder="0" width="100%" height="300" src="http://bl.ocks.org/d/dc48d41d21ef054fe865"></iframe>
-```
+<iframe frameborder="0" width="100%" height="300" src="http://bl.ocks.org/d/dc48d41d21ef054fe865">
+</iframe>
 
 ## Testing
 
