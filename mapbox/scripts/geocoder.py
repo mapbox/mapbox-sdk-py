@@ -89,7 +89,7 @@ def geocode(ctx, query, include_headers, forward, lat, lng, place_type, output):
     if forward:
         for q in iter_query(query):
             resp = geocoder.forward(
-                q, place_types=place_type, lat=lat, lng=lng)
+                q, types=place_type, lat=lat, lng=lng)
             if include_headers:
                 echo_headers(resp.headers, file=stdout)
             if resp.status_code == 200:
@@ -98,7 +98,7 @@ def geocode(ctx, query, include_headers, forward, lat, lng, place_type, output):
                 raise MapboxCLIException(resp.text.strip())
     else:
         for coords in map(coords_from_query, iter_query(query)):
-            resp = geocoder.reverse(*coords, place_types=place_type)
+            resp = geocoder.reverse(*coords, types=place_type)
             if include_headers:
                 echo_headers(resp.headers, file=stdout)
             if resp.status_code == 200:

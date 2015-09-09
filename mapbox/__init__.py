@@ -34,14 +34,14 @@ class Geocoder(Service):
         self.baseuri = 'https://api.mapbox.com/v4/geocode'
         self.session = self.get_session(access_token)
 
-    def _validate_place_types(self, place_types):
+    def _validate_place_types(self, types):
         """Validate place types and return a mapping for use in requests"""
-        for pt in place_types:
+        for pt in types:
             if pt not in self.place_types:
                 raise InvalidPlaceTypeError(pt)
-        return {'types': ",".join(place_types)}
+        return {'types': ",".join(types)}
 
-    def forward(self, address, place_types=None, lng=None, lat=None):
+    def forward(self, address, types=None, lng=None, lat=None):
         """A forward geocoding request
 
         Results may be constrained to those in a sequence of place_types or
@@ -51,21 +51,21 @@ class Geocoder(Service):
         uri = URITemplate('%s/{dataset}/{query}.json' % self.baseuri).expand(
             dataset=self.name, query=address)
         params = {}
-        if place_types:
-            params.update(self._validate_place_types(place_types))
+        if types:
+            params.update(self._validate_place_types(types))
         if lng is not None and lat is not None:
             params.update(proximity='{0},{1}'.format(lng, lat))
         return self.session.get(uri, params=params)
 
-    def reverse(self, lon, lat, place_types=None):
+    def reverse(self, lon, lat, types=None):
         """A reverse geocoding request
 
         See: https://www.mapbox.com/developers/api/geocoding/#reverse."""
         uri = URITemplate(self.baseuri + '/{dataset}/{lon},{lat}.json').expand(
             dataset=self.name, lon=str(lon), lat=str(lat))
         params = {}
-        if place_types:
-            params.update(self._validate_place_types(place_types))
+        if types:
+            params.update(self._validate_place_types(types))
         return self.session.get(uri, params=params)
 
     @property

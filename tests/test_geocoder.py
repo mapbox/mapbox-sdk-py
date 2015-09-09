@@ -117,7 +117,7 @@ def test_geocoder_forward_types():
     response = mapbox.Geocoder(
         access_token='pk.test').forward(
             '1600 pennsylvania ave nw',
-            place_types=('address', 'country', 'place', 'poi', 'postcode', 'region'))
+            types=('address', 'country', 'place', 'poi', 'postcode', 'region'))
     assert response.status_code == 200
     assert response.json()['query'] == ["1600", "pennsylvania", "ave", "nw"]
 
@@ -139,7 +139,7 @@ def test_geocoder_reverse_types():
     response = mapbox.Geocoder(
         access_token='pk.test').reverse(
             *[str(x) for x in coords],
-            place_types=('address', 'country', 'place', 'poi', 'postcode', 'region'))
+            types=('address', 'country', 'place', 'poi', 'postcode', 'region'))
     assert response.status_code == 200
     assert response.json()['query'] == coords
 
