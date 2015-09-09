@@ -35,10 +35,11 @@ def main_group(ctx, verbose, quiet, access_token):
 
       $ mbx --access-token MY_TOKEN ...
 
-    or as an environment variable.
+    or as an environment variable named MAPBOX_ACCESS_TOKEN or 
+    MapboxAccessToken.
 
     \b
-      $ export MapboxAccessToken=MY_TOKEN
+      $ export MAPBOX_ACCESS_TOKEN=MY_TOKEN
       $ mbx ...
 
     """

@@ -142,3 +142,21 @@ def test_geocoder_reverse_types():
             place_types=('address', 'country', 'place', 'poi', 'postcode', 'region'))
     assert response.status_code == 200
     assert response.json()['query'] == coords
+
+
+@responses.activate
+def test_geocoder_forward_proximity():
+    """Proximity parameter works"""
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/v4/geocode/mapbox.places/1600%20pennsylvania%20ave%20nw.json?proximity=0,0&access_token=pk.test',
+        match_querystring=True,
+        body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
+        content_type='application/json')
+
+    response = mapbox.Geocoder(
+        access_token='pk.test').forward(
+            '1600 pennsylvania ave nw', lng=0, lat=0)
+    assert response.status_code == 200
+    assert response.json()['query'] == ["1600", "pennsylvania", "ave", "nw"]

@@ -8,7 +8,7 @@ import mapbox
 from mapbox.compat import map
 
 
-class MapboxException(click.ClickException):
+class MapboxCLIException(click.ClickException):
     pass
 
 
@@ -38,10 +38,22 @@ def coords_from_query(query):
     '--forward/--reverse',
     default=True,
     help="Perform a forward or reverse geocode. [default: forward]")
+@click.option(
+    '--place-type', '-t', multiple=True, metavar='NAME', default=None,
+    help="Restrict results to one or more of these place types: {0}.".format(
+        sorted(mapbox.Geocoder().place_types.keys())))
+@click.option(
+    '--lng', type=float, default=None,
+    help="Bias results toward this longitude (decimal degrees). --lat "
+         "is also required.")
+@click.option(
+    '--lat', type=float, default=None,
+    help="Bias results toward this latitude (decimal degrees). --lng "
+         "is also required.")
 @click.pass_context
-def geocode(ctx, query, forward):
-    """This command gets coordinates for an address (forward mode) or
-    addresses for coordinates (reverse mode).
+def geocode(ctx, query, forward, place_type, lng, lat):
+    """This command returns places matching an address (forward mode) or
+    places matching coordinates (reverse mode).
 
     In forward (the default) mode the query argument shall be an address
     such as '1600 pennsylvania ave nw'.
@@ -53,6 +65,7 @@ def geocode(ctx, query, forward):
 
       $ mbx geocode --reverse '[-77.4371, 37.5227]'
 
+    An access token is required, see `mbx --help`.
     """
     verbosity = (ctx.obj and ctx.obj.get('verbosity')) or 2
     logger = logging.getLogger('mapbox')
@@ -62,15 +75,15 @@ def geocode(ctx, query, forward):
 
     if forward:
         for q in iter_query(query):
-            resp = geocoder.forward(q)
+            resp = geocoder.forward(q, place_types=place_type)
             if resp.status_code == 200:
                 click.echo(resp.text)
             else:
-                raise MapboxException(resp.text.strip())
+                raise MapboxCLIException(resp.text.strip())
     else:
         for coords in map(coords_from_query, iter_query(query)):
-            resp = geocoder.reverse(*coords)
+            resp = geocoder.reverse(*coords, place_types=place_type)
             if resp.status_code == 200:
                 click.echo(resp.text)
             else:
-                raise MapboxException(resp.text.strip())
+                raise MapboxCLIException(resp.text.strip())

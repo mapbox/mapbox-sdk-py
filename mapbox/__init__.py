@@ -41,8 +41,11 @@ class Geocoder(Service):
                 raise InvalidPlaceTypeError(pt)
         return {'types': ",".join(place_types)}
 
-    def forward(self, address, place_types=None):
+    def forward(self, address, place_types=None, lng=None, lat=None):
         """A forward geocoding request
+
+        Results may be constrained to those in a sequence of place_types or
+        biased toward a given longitude and latitude.
 
         See: https://www.mapbox.com/developers/api/geocoding/#forward."""
         uri = URITemplate('%s/{dataset}/{query}.json' % self.baseuri).expand(
@@ -50,6 +53,8 @@ class Geocoder(Service):
         params = {}
         if place_types:
             params.update(self._validate_place_types(place_types))
+        if lng is not None and lat is not None:
+            params.update(proximity='{0},{1}'.format(lng, lat))
         return self.session.get(uri, params=params)
 
     def reverse(self, lon, lat, place_types=None):
