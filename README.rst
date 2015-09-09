@@ -14,8 +14,10 @@ Services
 ========
 
 - `Geocoding <https://www.mapbox.com/developers/api/geocoding/>`__
-  -  Forward (place names ⇢ longitude, latitude)
-  -  Reverse (longitude, latitude ⇢ place names)
+
+  - Forward (place names ⇢ longitude, latitude)
+  - Reverse (longitude, latitude ⇢ place names)
+
 -  Other services coming soon
 
 Installation
