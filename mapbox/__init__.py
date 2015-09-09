@@ -6,7 +6,7 @@ import requests
 from uritemplate import URITemplate
 
 
-__version__ = "0.1a1"
+__version__ = "0.1a3"
 
 
 class InvalidPlaceTypeError(KeyError):
