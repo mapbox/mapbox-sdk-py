@@ -32,14 +32,25 @@ def coords_from_query(query):
     return tuple(coords[:2])
 
 
+def echo_headers(headers, file=None):
+    """Echo headers, sorted."""
+    for k, v in sorted(headers.items()):
+        click.echo("{0}: {1}".format(k.title(), v), file=file)
+    click.echo(file=file)
+
+
 @click.command(short_help="Geocode an address or coordinates.")
 @click.argument('query', default='-', required=False)
+@click.option('--include', '-i', 'include_headers',
+              is_flag=True, default=False,
+              help="Include HTTP headers in the output.")
 @click.option(
     '--forward/--reverse',
     default=True,
     help="Perform a forward or reverse geocode. [default: forward]")
+@click.option('--output', '-o', default='-', help="Save output to a file.")
 @click.pass_context
-def geocode(ctx, query, forward):
+def geocode(ctx, query, include_headers, forward, output):
     """This command gets coordinates for an address (forward mode) or
     addresses for coordinates (reverse mode).
 
@@ -58,19 +69,25 @@ def geocode(ctx, query, forward):
     logger = logging.getLogger('mapbox')
 
     access_token = (ctx.obj and ctx.obj.get('access_token')) or None
+    stdout = click.open_file(output, 'w')
+
     geocoder = mapbox.Geocoder(access_token=access_token)
 
     if forward:
         for q in iter_query(query):
             resp = geocoder.forward(q)
+            if include_headers:
+                echo_headers(resp.headers, file=stdout)
             if resp.status_code == 200:
-                click.echo(resp.text)
+                click.echo(resp.text, file=stdout)
             else:
                 raise MapboxException(resp.text.strip())
     else:
         for coords in map(coords_from_query, iter_query(query)):
             resp = geocoder.reverse(*coords)
+            if include_headers:
+                echo_headers(resp.headers, file=stdout)
             if resp.status_code == 200:
-                click.echo(resp.text)
+                click.echo(resp.text, file=stdout)
             else:
                 raise MapboxException(resp.text.strip())
