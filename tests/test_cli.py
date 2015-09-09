@@ -83,7 +83,7 @@ def test_cli_geocode_reverse():
     result = runner.invoke(
         main_group,
         ['--access-token', 'pk.test', 'geocode', '--reverse'],
-        input=','.join([str(x) for x in (lon, lat)]))
+        input='{0},{1}'.format(lon, lat))
     assert result.exit_code == 0
     assert result.output.strip() == body
 
@@ -106,7 +106,7 @@ def test_cli_geocode_reverse_env_token():
     result = runner.invoke(
         main_group,
         ['geocode', '--reverse'],
-        input=','.join([str(x) for x in (lon, lat)]),
+        input='{0},{1}'.format(lon, lat),
         env={'MapboxAccessToken': 'bogus'})
     assert result.exit_code == 0
     assert result.output.strip() == body
@@ -172,7 +172,7 @@ def test_cli_geocode_rev_headers():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/{},{}.json'.format(lon, lat),
+        'https://api.mapbox.com/v4/geocode/mapbox.places/{0},{1}.json'.format(lon, lat),
         body=body,
         status=200,
         content_type='application/json')
@@ -181,6 +181,6 @@ def test_cli_geocode_rev_headers():
     result = runner.invoke(
         main_group,
         ['geocode', '-i', '--reverse'],
-        input='{},{}'.format(lon, lat))
+        input='{0},{1}'.format(lon, lat))
     assert result.exit_code == 0
     assert result.output.startswith('Content-Type')
