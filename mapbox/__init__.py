@@ -58,7 +58,7 @@ class Geocoder(Service):
         if types:
             params.update(self._validate_place_types(types))
         if lon is not None and lat is not None:
-            params.update(proximity='{},{}'.format(lon, lat))
+            params.update(proximity='{0},{1}'.format(lon, lat))
         return self.session.get(uri, params=params)
 
     def reverse(self, lon=None, lat=None, types=None):
