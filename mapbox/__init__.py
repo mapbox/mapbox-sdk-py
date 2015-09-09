@@ -41,11 +41,15 @@ class Geocoder(Service):
                 raise InvalidPlaceTypeError(pt)
         return {'types': ",".join(types)}
 
-    def forward(self, address, types=None, lng=None, lat=None):
-        """A forward geocoding request
+    def forward(self, address, types=None, lon=None, lat=None):
+        """Returns a Requests response object that contains a GeoJSON
+        collection of places matching the given address.
 
-        Results may be constrained to those in a sequence of place_types or
-        biased toward a given longitude and latitude.
+        `response.json()` returns the geocoding result as GeoJSON.
+        `response.status_code` returns the HTTP API status code.
+
+        Place results may be constrained to those of one or more types
+        or be biased toward a given longitude and latitude.
 
         See: https://www.mapbox.com/developers/api/geocoding/#forward."""
         uri = URITemplate('%s/{dataset}/{query}.json' % self.baseuri).expand(
@@ -53,12 +57,16 @@ class Geocoder(Service):
         params = {}
         if types:
             params.update(self._validate_place_types(types))
-        if lng is not None and lat is not None:
-            params.update(proximity='{0},{1}'.format(lng, lat))
+        if lon is not None and lat is not None:
+            params.update(proximity='{},{}'.format(lon, lat))
         return self.session.get(uri, params=params)
 
-    def reverse(self, lon, lat, types=None):
-        """A reverse geocoding request
+    def reverse(self, lon=None, lat=None, types=None):
+        """Returns a Requests response object that contains a GeoJSON
+        collection of places near the given longitude and latitude.
+
+        `response.json()` returns the geocoding result as GeoJSON.
+        `response.status_code` returns the HTTP API status code.
 
         See: https://www.mapbox.com/developers/api/geocoding/#reverse."""
         uri = URITemplate(self.baseuri + '/{dataset}/{lon},{lat}.json').expand(

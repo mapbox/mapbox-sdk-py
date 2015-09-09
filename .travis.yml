@@ -1,18 +1,26 @@
 sudo: false
 language: python
 python:
-  - "2.6"
-  - "2.7"
-  - "3.3"
-  - "3.4"
-  - "pypy"
+- '2.6'
+- '2.7'
+- '3.3'
+- '3.4'
+- pypy
 cache:
   directories:
-    - $HOME/.pip-cache/
+  - $HOME/.pip-cache/
 install:
-  - "pip install -U pip --cache-dir $HOME/.pip-cache"
-  - "pip install -e .[test] --cache-dir $HOME/.pip-cache"
-script: 
-  - py.test --cov mapbox --cov-report term-missing
+- pip install -U pip --cache-dir $HOME/.pip-cache
+- pip install -e .[test] --cache-dir $HOME/.pip-cache
+script:
+- py.test --cov mapbox --cov-report term-missing
 after_success:
-  - coveralls
+- coveralls
+deploy:
+  on:
+    tags: true
+  provider: pypi
+  distributions: "sdist bdist_wheel"
+  user: seang
+  password:
+    secure: FpuNoam0Ul8o/Kqtg5YTrTdvuRoE/9oTOsUml0OsapPX1/+qxpaZ7DwbktAQc2Zx1rAAeUkA2MC6rvUW+9xjJAkwS6bUi0NaeZhF2bqP81nprUunnQSTVdXKxHEjcKvLRWfJKB1Oadb1o8zVyoCfLHkbPjrfueJxpjhqfl/If2cHYfrw250Kfg82s9r6mH9iIMtoGOrCrmDITiJQ4juNMRHajHJGsZuQipYICaIUEybiGgpcEsUHsLZrqLPwwUFfCO8ukUHivNlF5HhSpgeAVvgLgXoWFTn6niPpBdr9pCL4ojTvD4O2exEHnfDXTQknvkfYMve9mbhjTxRa1lnri9YqiwpQ/wTaOQTEH5xmxYMH0ZwYUABDDXKPjJa72soYJGHW2uQSnTD079RUYyzOF4xinRKeeA1Dlh8vySvcVZRHrE5/K0WGdEYcAzBLlSgxrHoBMtthBbJFqEGPuHiUucOF1VMGSlcbEJUrHl+AbQNH5bnTXIwgf63Nl7Vuojzu7hKPj/GLRAllqbhFt5MTqiFUesXv96SE3Q1w1wz64MhGAaAGXIk9x67DocYdcufFwBvlMnu5gApanmdJJe2K3ozyGQye0nleOC+qTh9yMZD/Kgvk8Q8myAKwLAVbtAD+hJH5DWWU7wYK6Bw7/5j/JFwbjBBdmTjDtj0KNxqXLCg=

@@ -68,13 +68,14 @@ def test_cli_geocode_fwd_env_token():
 @responses.activate
 def test_cli_geocode_reverse():
 
-    coords = [-77.4371, 37.5227]
+    lon, lat = -77.4371, 37.5227
+    body = json.dumps({"query": [lon, lat]})
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/%s.json?access_token=pk.test' % ','.join([str(x) for x in coords]),
+        'https://api.mapbox.com/v4/geocode/mapbox.places/{0},{1}.json?access_token=pk.test'.format(lon, lat),
         match_querystring=True,
-        body='{"query": %s}' % json.dumps(coords),
+        body=body,
         status=200,
         content_type='application/json')
 
@@ -82,21 +83,22 @@ def test_cli_geocode_reverse():
     result = runner.invoke(
         main_group,
         ['--access-token', 'pk.test', 'geocode', '--reverse'],
-        input=','.join([str(x) for x in coords]))
+        input=','.join([str(x) for x in (lon, lat)]))
     assert result.exit_code == 0
-    assert result.output == '{"query": %s}\n' % json.dumps(coords)
+    assert result.output.strip() == body
 
 
 @responses.activate
 def test_cli_geocode_reverse_env_token():
 
-    coords = [-77.4371, 37.5227]
+    lon, lat = -77.4371, 37.5227
+    body = json.dumps({"query": [lon, lat]})
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/%s.json?access_token=bogus' % ','.join([str(x) for x in coords]),
+        'https://api.mapbox.com/v4/geocode/mapbox.places/{0},{1}.json?access_token=bogus'.format(lon, lat),
         match_querystring=True,
-        body='{"query": %s}' % json.dumps(coords),
+        body=body,
         status=200,
         content_type='application/json')
 
@@ -104,10 +106,10 @@ def test_cli_geocode_reverse_env_token():
     result = runner.invoke(
         main_group,
         ['geocode', '--reverse'],
-        input=','.join([str(x) for x in coords]),
+        input=','.join([str(x) for x in (lon, lat)]),
         env={'MapboxAccessToken': 'bogus'})
     assert result.exit_code == 0
-    assert result.output == '{"query": %s}\n' % json.dumps(coords)
+    assert result.output.strip() == body
 
 
 @responses.activate
@@ -127,11 +129,12 @@ def test_cli_geocode_unauthorized():
 
 @responses.activate
 def test_cli_geocode_rev_unauthorized():
-    coords = (-77.4371, 37.5227)
+
+    lon, lat = -77.4371, 37.5227
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/%s,%s.json' % coords,
+        'https://api.mapbox.com/v4/geocode/mapbox.places/{0},{1}.json'.format(lon, lat),
         body='{"message":"Not Authorized - Invalid Token"}', status=401,
         content_type='application/json')
 
@@ -139,7 +142,7 @@ def test_cli_geocode_rev_unauthorized():
     result = runner.invoke(
         main_group,
         ['geocode', '--reverse'],
-        input='%s,%s' % coords)
+        input='{0},{1}'.format(lon, lat))
     assert result.exit_code == 1
     assert result.output == 'Error: {"message":"Not Authorized - Invalid Token"}\n'
 
@@ -164,12 +167,13 @@ def test_cli_geocode_fwd_headers():
 @responses.activate
 def test_cli_geocode_rev_headers():
 
-    coords = [-77.4371, 37.5227]
+    lon, lat = -77.4371, 37.5227
+    body = json.dumps({"query": [lon, lat]})
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/%s.json' % ','.join([str(x) for x in coords]),
-        body='{"query": %s}' % json.dumps(coords),
+        'https://api.mapbox.com/v4/geocode/mapbox.places/{},{}.json'.format(lon, lat),
+        body=body,
         status=200,
         content_type='application/json')
 
@@ -177,6 +181,6 @@ def test_cli_geocode_rev_headers():
     result = runner.invoke(
         main_group,
         ['geocode', '-i', '--reverse'],
-        input=','.join([str(x) for x in coords]))
+        input='{},{}'.format(lon, lat))
     assert result.exit_code == 0
     assert result.output.startswith('Content-Type')

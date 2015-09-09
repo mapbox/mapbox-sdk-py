@@ -50,10 +50,10 @@ def echo_headers(headers, file=None):
               help="Include HTTP headers in the output.")
 @click.option(
     '--lat', type=float, default=None,
-    help="Bias results toward this latitude (decimal degrees). --lng "
+    help="Bias results toward this latitude (decimal degrees). --lon "
          "is also required.")
 @click.option(
-    '--lng', type=float, default=None,
+    '--lon', type=float, default=None,
     help="Bias results toward this longitude (decimal degrees). --lat "
          "is also required.")
 @click.option(
@@ -62,7 +62,7 @@ def echo_headers(headers, file=None):
         sorted(mapbox.Geocoder().place_types.keys())))
 @click.option('--output', '-o', default='-', help="Save output to a file.")
 @click.pass_context
-def geocode(ctx, query, include_headers, forward, lat, lng, place_type, output):
+def geocode(ctx, query, forward, include_headers, lat, lon, place_type, output):
     """This command returns places matching an address (forward mode) or
     places matching coordinates (reverse mode).
 
@@ -89,7 +89,7 @@ def geocode(ctx, query, include_headers, forward, lat, lng, place_type, output):
     if forward:
         for q in iter_query(query):
             resp = geocoder.forward(
-                q, types=place_type, lat=lat, lng=lng)
+                q, types=place_type, lat=lat, lon=lon)
             if include_headers:
                 echo_headers(resp.headers, file=stdout)
             if resp.status_code == 200:
@@ -97,8 +97,8 @@ def geocode(ctx, query, include_headers, forward, lat, lng, place_type, output):
             else:
                 raise MapboxCLIException(resp.text.strip())
     else:
-        for coords in map(coords_from_query, iter_query(query)):
-            resp = geocoder.reverse(*coords, types=place_type)
+        for lon, lat in map(coords_from_query, iter_query(query)):
+            resp = geocoder.reverse(lon=lon, lat=lat, types=place_type)
             if include_headers:
                 echo_headers(resp.headers, file=stdout)
             if resp.status_code == 200:

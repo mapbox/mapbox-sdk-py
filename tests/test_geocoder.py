@@ -65,19 +65,20 @@ def test_geocoder_forward():
 def test_geocoder_reverse():
     """Reverse geocoding works"""
 
-    coords = [-77.4371, 37.5227]
+    lon, lat = -77.4371, 37.5227
+    body = json.dumps({"query": [lon, lat]})
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/%s.json?access_token=pk.test' % ','.join([str(x) for x in coords]),
+        'https://api.mapbox.com/v4/geocode/mapbox.places/{0},{1}.json?access_token=pk.test'.format(lon, lat),
         match_querystring=True,
-        body='{"query": %s}' % json.dumps(coords),
+        body=body,
         status=200,
         content_type='application/json')
 
-    response = mapbox.Geocoder(access_token='pk.test').reverse(*[str(x) for x in coords])
+    response = mapbox.Geocoder(access_token='pk.test').reverse(lon=lon, lat=lat)
     assert response.status_code == 200
-    assert response.json()['query'] == coords
+    assert response.json()['query'] == [lon, lat]
 
 
 def test_geocoder_place_types():
@@ -126,22 +127,23 @@ def test_geocoder_forward_types():
 def test_geocoder_reverse_types():
     """Type filtering of reverse geocoding works"""
 
-    coords = [-77.4371, 37.5227]
+    lon, lat = -77.4371, 37.5227
+    body = json.dumps({"query": [lon, lat]})
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/%s.json?types=address,country,place,poi,postcode,region&access_token=pk.test' % ','.join([str(x) for x in coords]),
+        'https://api.mapbox.com/v4/geocode/mapbox.places/{0},{1}.json?types=address,country,place,poi,postcode,region&access_token=pk.test'.format(lon, lat),
         match_querystring=True,
-        body='{"query": %s}' % json.dumps(coords),
+        body=body,
         status=200,
         content_type='application/json')
 
     response = mapbox.Geocoder(
         access_token='pk.test').reverse(
-            *[str(x) for x in coords],
+            lon=lon, lat=lat,
             types=('address', 'country', 'place', 'poi', 'postcode', 'region'))
     assert response.status_code == 200
-    assert response.json()['query'] == coords
+    assert response.json()['query'] == [lon, lat]
 
 
 @responses.activate
@@ -157,6 +159,6 @@ def test_geocoder_forward_proximity():
 
     response = mapbox.Geocoder(
         access_token='pk.test').forward(
-            '1600 pennsylvania ave nw', lng=0, lat=0)
+            '1600 pennsylvania ave nw', lon=0, lat=0)
     assert response.status_code == 200
     assert response.json()['query'] == ["1600", "pennsylvania", "ave", "nw"]
