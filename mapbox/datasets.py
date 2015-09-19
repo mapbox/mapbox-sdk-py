@@ -24,3 +24,14 @@ class Datasets(Service):
         See: https://www.mapbox.com/developers/api/datasets/."""
         uri = URITemplate(self.baseuri + '/{owner}').expand(owner=self.name)
         return self.session.get(uri)
+
+    def create(self, **kwargs):
+        """Create a new dataset and return a Requests response object
+        that contains information about the new dataset.
+
+        `response.json()` returns the geocoding result as GeoJSON.
+        `response.status_code` returns the HTTP API status code.
+
+        See: https://www.mapbox.com/developers/api/datasets/."""
+        uri = URITemplate(self.baseuri + '/{owner}').expand(owner=self.name)
+        return self.session.post(uri, json=kwargs)

@@ -34,10 +34,40 @@ def test_datasets_list():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/datasets/v1/juser',
+        'https://api.mapbox.com/datasets/v1/juser?access_token=pk.test',
+        match_querystring=True,
         body=body, status=200,
         content_type='application/json')
 
-    response = mapbox.Datasets('juser').list()
+    response = mapbox.Datasets('juser', access_token='pk.test').list()
     assert response.status_code == 200
-    assert len(response.json()) == 2
+    assert [item['id'] for item in response.json()] == ['ds1', 'ds2']
+
+
+@responses.activate
+def test_datasets_create_with_name_description():
+    """Creating a named and described dataset works"""
+
+    def request_callback(request):
+        payload = json.loads(request.body)
+        resp_body = {
+            'owner': 'juser',
+            'id': 'new',
+            'name': payload['name'],
+            'description': payload['description'],
+            'created': '2015-09-19',
+            'modified': '2015-09-19'}
+        headers = {}
+        return (200, headers, json.dumps(resp_body))
+
+    responses.add_callback(
+        responses.POST,
+        'https://api.mapbox.com/datasets/v1/juser?access_token=pk.test',
+        match_querystring=True,
+        callback=request_callback)
+
+    response = mapbox.Datasets('juser', access_token='pk.test').create(
+        name='things', description='a collection of things')
+    assert response.status_code == 200
+    assert response.json()['name'] == 'things'
+    assert response.json()['description'] == 'a collection of things'
