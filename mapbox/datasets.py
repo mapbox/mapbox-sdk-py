@@ -6,6 +6,9 @@ from uritemplate import URITemplate
 from mapbox.service import Service
 
 
+BASE_URI = 'https://api.mapbox.com/datasets/v1'
+
+
 class Datasets(Service):
     """A Datasets API proxy"""
 
@@ -35,3 +38,25 @@ class Datasets(Service):
         See: https://www.mapbox.com/developers/api/datasets/."""
         uri = URITemplate(self.baseuri + '/{owner}').expand(owner=self.name)
         return self.session.post(uri, json=kwargs)
+
+
+class Dataset(Service):
+    """A Datasets API proxy"""
+
+    def __init__(self, owner, id, access_token=None):
+        self.owner = owner
+        self.id = id
+        self.baseuri = URITemplate(BASE_URI + '/{owner}/{id}').expand(
+            owner=self.owner, id=self.id)
+        self.session = self.get_session(access_token)
+
+    def features(self):
+        """Return a Requests response object that contains the features
+        of the dataset.
+
+        `response.json()` returns the geocoding result as GeoJSON.
+        `response.status_code` returns the HTTP API status code.
+
+        See: https://www.mapbox.com/developers/api/datasets/."""
+        uri = URITemplate(self.baseuri + '/features').expand()
+        return self.session.get(uri)

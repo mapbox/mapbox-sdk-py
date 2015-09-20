@@ -40,5 +40,6 @@ setup(name='mapbox',
 
       [mapbox.mapbox_commands]
       geocode=mapbox.scripts.geocoder:geocode
+      features=mapbox.scripts.datasets:features
       """
       )

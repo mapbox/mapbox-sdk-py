@@ -1,6 +1,6 @@
 # mapbox
 
-from mapbox.datasets import Datasets
+from mapbox.datasets import Datasets, Dataset
 from mapbox.geocoder import Geocoder, InvalidPlaceTypeError
 
 
