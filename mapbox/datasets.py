@@ -50,7 +50,7 @@ class Dataset(Service):
             owner=self.owner, id=self.id)
         self.session = self.get_session(access_token)
 
-    def features(self):
+    def retrieve_features(self):
         """Return a Requests response object that contains the features
         of the dataset.
 
@@ -60,3 +60,15 @@ class Dataset(Service):
         See: https://www.mapbox.com/developers/api/datasets/."""
         uri = URITemplate(self.baseuri + '/features').expand()
         return self.session.get(uri)
+
+
+    def update_features(self, **updates):
+        """Return a Requests response object that contains the features
+        of the dataset.
+
+        `response.json()` returns the geocoding result as GeoJSON.
+        `response.status_code` returns the HTTP API status code.
+
+        See: https://www.mapbox.com/developers/api/datasets/."""
+        uri = URITemplate(self.baseuri + '/features').expand()
+        return self.session.post(uri, json=updates)

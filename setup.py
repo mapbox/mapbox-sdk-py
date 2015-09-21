@@ -40,6 +40,9 @@ setup(name='mapbox',
 
       [mapbox.mapbox_commands]
       geocode=mapbox.scripts.geocoder:geocode
-      features=mapbox.scripts.datasets:features
+      create_dataset=mapbox.scripts.datasets:create_dataset
+      ls_datasets=mapbox.scripts.datasets:ls_datasets
+      retrieve_features=mapbox.scripts.datasets:retrieve_features
+      update_features=mapbox.scripts.datasets:update_features
       """
       )
