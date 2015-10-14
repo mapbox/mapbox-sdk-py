@@ -51,7 +51,7 @@ def test_geocoder_forward():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/1600%20pennsylvania%20ave%20nw.json?access_token=pk.test',
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/1600%20pennsylvania%20ave%20nw.json?access_token=pk.test',
         match_querystring=True,
         body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
         content_type='application/json')
@@ -70,7 +70,7 @@ def test_geocoder_reverse():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/{0},{1}.json?access_token=pk.test'.format(lon, lat),
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/{0},{1}.json?access_token=pk.test'.format(lon, lat),
         match_querystring=True,
         body=body,
         status=200,
@@ -86,6 +86,7 @@ def test_geocoder_place_types():
     assert sorted(mapbox.Geocoder().place_types.items()) == [
         ('address', "A street address with house number. Examples: 1600 Pennsylvania Ave NW, 1051 Market St, Oberbaumstrasse 7."),
         ('country', "Sovereign states and other political entities. Examples: United States, France, China, Russia."),
+        ('neighborhood', 'A smaller area within a place, often without formal boundaries. Examples: Montparnasse, Downtown, Haight-Ashbury.'),
         ('place', "City, town, village or other municipality relevant to a country's address or postal system. Examples: Cleveland, Saratoga Springs, Berlin, Paris."),
         ('poi', "Places of interest including commercial venues, major landmarks, parks, and other features. Examples: Yosemite National Park, Lake Superior."),
         ('postcode', "Postal code, varies by a country's postal system. Examples: 20009, CR0 3RL."),
@@ -110,7 +111,7 @@ def test_geocoder_forward_types():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/1600%20pennsylvania%20ave%20nw.json?types=address,country,place,poi,postcode,region&access_token=pk.test',
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/1600%20pennsylvania%20ave%20nw.json?types=address,country,place,poi,postcode,region&access_token=pk.test',
         match_querystring=True,
         body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
         content_type='application/json')
@@ -132,7 +133,7 @@ def test_geocoder_reverse_types():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/{0},{1}.json?types=address,country,place,poi,postcode,region&access_token=pk.test'.format(lon, lat),
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/{0},{1}.json?types=address,country,place,poi,postcode,region&access_token=pk.test'.format(lon, lat),
         match_querystring=True,
         body=body,
         status=200,
@@ -152,7 +153,7 @@ def test_geocoder_forward_proximity():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/1600%20pennsylvania%20ave%20nw.json?proximity=0,0&access_token=pk.test',
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/1600%20pennsylvania%20ave%20nw.json?proximity=0.0,0.0&access_token=pk.test',
         match_querystring=True,
         body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
         content_type='application/json')
@@ -162,3 +163,5 @@ def test_geocoder_forward_proximity():
             '1600 pennsylvania ave nw', lon=0, lat=0)
     assert response.status_code == 200
     assert response.json()['query'] == ["1600", "pennsylvania", "ave", "nw"]
+
+# @TODO TEST prox/rev coordinate rounding

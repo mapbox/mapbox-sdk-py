@@ -33,7 +33,7 @@ def test_cli_geocode_fwd():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/1600%20pennsylvania%20ave%20nw.json?access_token=bogus',
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/1600%20pennsylvania%20ave%20nw.json?access_token=bogus',
         match_querystring=True,
         body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
         content_type='application/json')
@@ -51,7 +51,7 @@ def test_cli_geocode_fwd_env_token():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/1600%20pennsylvania%20ave%20nw.json?access_token=bogus',
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/1600%20pennsylvania%20ave%20nw.json?access_token=bogus',
         match_querystring=True,
         body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
         content_type='application/json')
@@ -73,7 +73,7 @@ def test_cli_geocode_reverse():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/{0},{1}.json?access_token=pk.test'.format(lon, lat),
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/{0},{1}.json?access_token=pk.test'.format(lon, lat),
         match_querystring=True,
         body=body,
         status=200,
@@ -96,7 +96,7 @@ def test_cli_geocode_reverse_env_token():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/{0},{1}.json?access_token=bogus'.format(lon, lat),
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/{0},{1}.json?access_token=bogus'.format(lon, lat),
         match_querystring=True,
         body=body,
         status=200,
@@ -117,7 +117,7 @@ def test_cli_geocode_unauthorized():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/1600%20pennsylvania%20ave%20nw.json',
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/1600%20pennsylvania%20ave%20nw.json',
         body='{"message":"Not Authorized - Invalid Token"}', status=401,
         content_type='application/json')
 
@@ -134,7 +134,7 @@ def test_cli_geocode_rev_unauthorized():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/{0},{1}.json'.format(lon, lat),
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/{0},{1}.json'.format(lon, lat),
         body='{"message":"Not Authorized - Invalid Token"}', status=401,
         content_type='application/json')
 
@@ -152,7 +152,7 @@ def test_cli_geocode_fwd_headers():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/1600%20pennsylvania%20ave%20nw.json',
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/1600%20pennsylvania%20ave%20nw.json',
         body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
         content_type='application/json')
 
@@ -172,7 +172,7 @@ def test_cli_geocode_rev_headers():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/geocode/mapbox.places/{0},{1}.json'.format(lon, lat),
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/{0},{1}.json'.format(lon, lat),
         body=body,
         status=200,
         content_type='application/json')

@@ -31,8 +31,9 @@ class Geocoder(Service):
 
     def __init__(self, name='mapbox.places', access_token=None):
         self.name = name
-        self.baseuri = 'https://api.mapbox.com/v4/geocode'
+        self.baseuri = 'https://api.mapbox.com/geocoding/v5'
         self.session = self.get_session(access_token)
+        self.precision = { 'reverse': 5, 'proximity': 3 }
 
     def _validate_place_types(self, types):
         """Validate place types and return a mapping for use in requests"""
@@ -58,7 +59,7 @@ class Geocoder(Service):
         if types:
             params.update(self._validate_place_types(types))
         if lon is not None and lat is not None:
-            params.update(proximity='{0},{1}'.format(lon, lat))
+            params.update(proximity='{0},{1}'.format(round(float(lon), self.precision.get('proximity', 3)), round(float(lat), self.precision.get('proximity', 3))))
         return self.session.get(uri, params=params)
 
     def reverse(self, lon=None, lat=None, types=None):
@@ -70,7 +71,7 @@ class Geocoder(Service):
 
         See: https://www.mapbox.com/developers/api/geocoding/#reverse."""
         uri = URITemplate(self.baseuri + '/{dataset}/{lon},{lat}.json').expand(
-            dataset=self.name, lon=str(lon), lat=str(lat))
+            dataset=self.name, lon=str(round(float(lon), self.precision.get('reverse', 5))), lat=str(round(float(lat), self.precision.get('reverse', 5))))
         params = {}
         if types:
             params.update(self._validate_place_types(types))
@@ -83,6 +84,7 @@ class Geocoder(Service):
             'address': "A street address with house number. Examples: 1600 Pennsylvania Ave NW, 1051 Market St, Oberbaumstrasse 7.",
             'country': "Sovereign states and other political entities. Examples: United States, France, China, Russia.",
             'place': "City, town, village or other municipality relevant to a country's address or postal system. Examples: Cleveland, Saratoga Springs, Berlin, Paris.",
+            'neighborhood': "A smaller area within a place, often without formal boundaries. Examples: Montparnasse, Downtown, Haight-Ashbury.",
             'poi': "Places of interest including commercial venues, major landmarks, parks, and other features. Examples: Yosemite National Park, Lake Superior.",
             'postcode': "Postal code, varies by a country's postal system. Examples: 20009, CR0 3RL.",
             'region': "First order administrative divisions within a country, usually provinces or states. Examples: California, Ontario, Essonne."}
