@@ -1,4 +1,5 @@
 import json
+import re
 import responses
 
 import mapbox
@@ -43,6 +44,13 @@ def test_geocoder_name():
     """Named dataset name is set"""
     geocoder = mapbox.Geocoder('mapbox.places-permanent')
     assert geocoder.name == 'mapbox.places-permanent'
+
+def _check_coordinate_precision(coord, precision):
+    """Coordinate precision is <= specified number of digits"""
+    if '.' not in coord:
+        return True
+    else:
+        return len(coord.split('.')[-1]) <= precision
 
 
 @responses.activate
@@ -164,4 +172,48 @@ def test_geocoder_forward_proximity():
     assert response.status_code == 200
     assert response.json()['query'] == ["1600", "pennsylvania", "ave", "nw"]
 
-# @TODO TEST prox/rev coordinate rounding
+@responses.activate
+def test_geocoder_proximity_rounding():
+    """Proximity parameter is rounded to 3 decimal places"""
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/1600%20pennsylvania%20ave%20nw.json',
+        match_querystring=False,
+        body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
+        content_type='application/json')
+
+    response = mapbox.Geocoder(
+        access_token='pk.test').forward(
+            '1600 pennsylvania ave nw', lon=0.123456, lat=0.987654)
+
+    # check coordinate precision for proximity flag
+    match = re.search(r'[&\?]proximity=([^&$]+)', response.url)
+    assert match is not None
+    for coord in re.split(r'(%2C|,)', match.group(1)):
+        assert _check_coordinate_precision(coord, 3)
+
+@responses.activate
+def test_geocoder_reverse_rounding():
+    """Reverse geocoding parameters are rounded to 5 decimal places"""
+
+    lon, lat = -77.123456789, 37.987654321
+    body = json.dumps({"query": [lon, lat]})
+
+    responses.add(
+        responses.GET,
+        re.compile('https:\/\/api\.mapbox\.com\/geocoding\/v5\/mapbox\.places\/.+\.json'),
+        match_querystring=False,
+        body=body,
+        status=200,
+        content_type='application/json')
+
+    response = mapbox.Geocoder(
+        access_token='pk.test').reverse(
+            lon=lon, lat=lat)
+
+    # check coordinate precision for reverse geocoding coordinates
+    match = re.search(r'\/([\-\d\.\,]+)\.json', response.url)
+    assert match is not None
+    for coord in re.split(r'(%2C|,)', match.group(1)):
+        assert _check_coordinate_precision(coord, 5)
