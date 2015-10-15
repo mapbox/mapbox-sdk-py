@@ -1,3 +1,9 @@
+0.2.0 (2015-10-15)
+------------------
+- This version uses version 5 of the geocoding web API.
+- Precision of coordinate and proximity values sent to the web API are limited
+  to 5 and 3 decimal places respectively.
+
 0.1.0 (2015-09-09)
 ------------------
 - Initial release with support for Mapbox Geocoding API.
