@@ -69,7 +69,7 @@ class Uploader(Service):
         an upload dict
         """
         if not tileset.startswith(self.username + "."):
-            tileset = "{}.{}".format(self.username, tileset)
+            tileset = "{0}.{1}".format(self.username, tileset)
 
         msg = {'tileset': tileset,
                'url': stage_url}

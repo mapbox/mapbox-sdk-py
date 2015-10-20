@@ -27,7 +27,7 @@ def test_get_credentials():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/uploads/v1/{}/credentials?access_token=pk.test'.format(username),
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token=pk.test'.format(username),
         match_querystring=True,
         body=query_body, status=200,
         content_type='application/json')
@@ -48,10 +48,10 @@ def test_get_credentials():
 # @mock_s3
 # def test_stage():
 #     creds = {
-#         "key": "_pending/{}/key.test".format(username),
+#         "key": "_pending/{0}/key.test".format(username),
 #         "accessKeyId": "ak.test",
 #         "bucket": "tilestream-tilesets-production",
-#         "url": "https://tilestream-tilesets-production.s3.amazonaws.com/_pending/{}/key.test".format(username),
+#         "url": "https://tilestream-tilesets-production.s3.amazonaws.com/_pending/{0}/key.test".format(username),
 #         "secretAccessKey": "sak.test",
 #         "sessionToken": "st.test"}
 #     s3 = boto3.resource('s3', region_name='us-east-1')
@@ -66,7 +66,7 @@ def test_get_credentials():
 def test_upload():
     responses.add(
         responses.POST,
-        'https://api.mapbox.com/uploads/v1/{}?access_token=pk.test'.format(username),
+        'https://api.mapbox.com/uploads/v1/{0}?access_token=pk.test'.format(username),
         match_querystring=True,
         body=upload_response_body, status=201,
         content_type='application/json')
@@ -75,22 +75,22 @@ def test_upload():
         'http://example.com/test.json', 'test1')  # without username prefix
     assert res.status_code == 201
     job = res.json()
-    assert job['tileset'] == "{}.{}".format(username, 'test1')
+    assert job['tileset'] == "{0}.test1".format(username)
 
     res2 = mapbox.Uploader(username, access_token='pk.test').upload(
         'http://example.com/test.json', 'testuser.test1')  # also takes full tileset
     assert res2.status_code == 201
     job = res2.json()
-    assert job['tileset'] == "{}.{}".format(username, 'test1')
+    assert job['tileset'] == "{0}.test1".format(username)
 
 
 @responses.activate
 def test_list():
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/uploads/v1/{}?access_token=pk.test'.format(username),
+        'https://api.mapbox.com/uploads/v1/{0}?access_token=pk.test'.format(username),
         match_querystring=True,
-        body="[{}]".format(upload_response_body), status=200,
+        body="[{0}]".format(upload_response_body), status=200,
         content_type='application/json')
 
     res = mapbox.Uploader(username, access_token='pk.test').list()
@@ -105,7 +105,7 @@ def test_status():
     job = json.loads(upload_response_body)
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/uploads/v1/{}/{}?access_token=pk.test'.format(username, job['id']),
+        'https://api.mapbox.com/uploads/v1/{0}/{1}?access_token=pk.test'.format(username, job['id']),
         match_querystring=True,
         body=upload_response_body, status=200,
         content_type='application/json')
@@ -121,7 +121,7 @@ def test_delete():
     job = json.loads(upload_response_body)
     responses.add(
         responses.DELETE,
-        'https://api.mapbox.com/uploads/v1/{}/{}?access_token=pk.test'.format(username, job['id']),
+        'https://api.mapbox.com/uploads/v1/{0}/{1}?access_token=pk.test'.format(username, job['id']),
         match_querystring=True,
         body=None, status=204,
         content_type='application/json')
