@@ -3,3 +3,4 @@ __version__ = "0.2.0"
 
 from .services.base import Service
 from .services.geocoding import Geocoder, InvalidPlaceTypeError
+from .services.upload import Uploader
