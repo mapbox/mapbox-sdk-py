@@ -1,7 +1,8 @@
 # mapbox
 
-from mapbox.datasets import Datasets, Dataset
-from mapbox.geocoder import Geocoder, InvalidPlaceTypeError
+from .services.base import Service
+from .services.datasets Datasets, Dataset
+from .services.geocoding import Geocoder, InvalidPlaceTypeError
 
 
-__version__ = "0.2a1"
+__version__ = "0.3.0"
