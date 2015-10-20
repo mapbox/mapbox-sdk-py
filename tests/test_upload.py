@@ -32,7 +32,9 @@ def test_get_credentials():
         body=query_body, status=200,
         content_type='application/json')
 
-    creds = mapbox.Uploader(username, access_token='pk.test')._get_credentials()
+    res = mapbox.Uploader(username, access_token='pk.test')._get_credentials()
+    assert res.status_code == 200
+    creds = res.json()
     assert username in creds['url']
     for k in ['key', 'bucket', 'url', 'accessKeyId',
               'secretAccessKey', 'sessionToken']:
@@ -69,12 +71,16 @@ def test_upload():
         body=upload_response_body, status=201,
         content_type='application/json')
 
-    job = mapbox.Uploader(username, access_token='pk.test').upload(
+    res = mapbox.Uploader(username, access_token='pk.test').upload(
         'http://example.com/test.json', 'test1')  # without username prefix
+    assert res.status_code == 201
+    job = res.json()
     assert job['tileset'] == "{}.{}".format(username, 'test1')
 
-    job = mapbox.Uploader(username, access_token='pk.test').upload(
+    res2 = mapbox.Uploader(username, access_token='pk.test').upload(
         'http://example.com/test.json', 'testuser.test1')  # also takes full tileset
+    assert res2.status_code == 201
+    job = res2.json()
     assert job['tileset'] == "{}.{}".format(username, 'test1')
 
 
@@ -87,7 +93,9 @@ def test_list():
         body="[{}]".format(upload_response_body), status=200,
         content_type='application/json')
 
-    uploads = mapbox.Uploader(username, access_token='pk.test').list()
+    res = mapbox.Uploader(username, access_token='pk.test').list()
+    assert res.status_code == 200
+    uploads = res.json()
     assert len(uploads) == 1
     assert json.loads(upload_response_body) in uploads
 
@@ -102,7 +110,9 @@ def test_status():
         body=upload_response_body, status=200,
         content_type='application/json')
 
-    status = mapbox.Uploader(username, access_token='pk.test').status(job)
+    res = mapbox.Uploader(username, access_token='pk.test').status(job)
+    assert res.status_code == 200
+    status = res.json()
     assert job == status
 
 
@@ -116,4 +126,5 @@ def test_delete():
         body=None, status=204,
         content_type='application/json')
 
-    assert mapbox.Uploader(username, access_token='pk.test').delete(job)
+    res = mapbox.Uploader(username, access_token='pk.test').delete(job)
+    assert res.status_code == 204
