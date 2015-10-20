@@ -18,6 +18,10 @@ Services
   - Forward (place names ⇢ longitude, latitude)
   - Reverse (longitude, latitude ⇢ place names)
 
+- `Upload <https://www.mapbox.com/developers/api/uploads/>`__
+
+  - Upload data to be processed and hosted by Mapbox.
+
 -  Other services coming soon
 
 Installation
@@ -29,6 +33,9 @@ Installation
 
 API Usage
 =========
+
+Geocoder
+--------
 
 To begin geocoding, import the mapbox module and create a new
 ``Geocoder`` object with your `Mapbox access token 
@@ -53,6 +60,24 @@ To begin geocoding, import the mapbox module and create a new
     response = geocoder.reverse(lon=-74.7083, lat=40.7851)
 
 See ``import mapbox; help(mapbox.Geocoder)`` for more detailed usage.
+
+Upload
+------
+To upload data, you must created a token with ``uploads:*`` scopes at https://www.mapbox.com/account/apps/.
+Then upload any supported file to your account using the ``Uploader`` 
+
+.. code:: python
+    
+    from mapbox import Uploader
+    conxn = Uploader('username', access_token='MY_TOKEN')
+    resp = conxn.upload('RGB.byte.tif', 'RGB-byte-tif')
+    upload_id = resp.json()['id']
+
+    resp = conxn.status(upload_id).json()
+    resp['complete']  # True
+    resp['tileset']   # "username.RGB-byte-tif"
+
+See ``import mapbox; help(mapbox.Uploader)`` for more detailed usage.
 
 Command Line Interface
 ======================
