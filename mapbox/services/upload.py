@@ -13,7 +13,7 @@ class Uploader(Service):
 
         u = Uploader('username')
         url = u.stage('test.tif')
-        job = u.upload(url, 'test1').json()
+        job = u.extract(url, 'test1').json()
 
         assert job in u.list().json()
 
@@ -56,9 +56,13 @@ class Uploader(Service):
 
         return creds['url']
 
-    def upload(self, stage_url, tileset, name=None):
-        """Initiates the uploads process; from the
+    def extract(self, stage_url, tileset, name=None):
+        """Initiates the extraction process from the
         staging S3 bucket into the user's tileset.
+
+        Note: this step is refered to as "upload" in the API docs;
+        This classes upload() method is a high-level function
+        which acts like the web-based upload form
 
         Parameters
         stage_url: URL to resource on S3, does not work on arbitrary URLs (TODO)
@@ -118,3 +122,11 @@ class Uploader(Service):
         uri = URITemplate('%s/{username}/{upload_id}' % self.baseuri).expand(
             username=self.username, upload_id=upload_id)
         return self.session.get(uri)
+
+    def upload(self, filepath, tileset):
+        """High level function to upload a local file to mapbox tileset
+        Effectively replicates the upload functionality using the HTML form
+        Returns a response object where the json() is a dict with upload metadata
+        """
+        url = self.stage(filepath)
+        return self.extract(url, tileset)
