@@ -4,7 +4,7 @@ import json
 import click
 
 import mapbox
-from mapbox.datasets import batch, iter_features
+from mapbox.services.datasets import batch, iter_features
 
 
 class MapboxCLIException(click.ClickException):

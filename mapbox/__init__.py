@@ -1,7 +1,7 @@
 # mapbox
 
 from .services.base import Service
-from .services.datasets Datasets, Dataset
+from .services.datasets import Datasets, Dataset
 from .services.geocoding import Geocoder, InvalidPlaceTypeError
 
 

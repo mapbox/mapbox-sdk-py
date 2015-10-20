@@ -2,7 +2,7 @@ import json
 import responses
 
 import mapbox
-from mapbox.datasets import Dataset, Datasets, batch, iter_features
+from mapbox.services.datasets import Dataset, Datasets, batch, iter_features
 
 
 def test_datasets_name():

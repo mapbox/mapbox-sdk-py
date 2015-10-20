@@ -1,7 +1,7 @@
 import json
 import responses
 
-from mapbox.service import Service
+from mapbox.services.base import Service
 
 
 def test_service_session():

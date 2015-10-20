@@ -5,7 +5,7 @@ import json
 import requests
 from uritemplate import URITemplate
 
-from mapbox.service import Service
+from mapbox.services.base import Service
 
 
 # Constants
