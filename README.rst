@@ -66,7 +66,7 @@ Upload
 To upload data, you must created a token with ``uploads:*`` scopes at https://www.mapbox.com/account/apps/.
 Then upload any supported file to your account using the ``Uploader`` 
 
-..code:: python
+.. code:: python
     
     from mapbox import Uploader
     conxn = Uploader('username', access_token='MY_TOKEN')
