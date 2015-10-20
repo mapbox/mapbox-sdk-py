@@ -184,3 +184,114 @@ def test_cli_geocode_rev_headers():
         input='{0},{1}'.format(lon, lat))
     assert result.exit_code == 0
     assert result.output.startswith('Content-Type')
+
+
+@responses.activate
+def test_cli_datasets_list():
+    """Listing datasets works"""
+
+    body = '''
+[
+  {
+    "owner": "juser",
+    "id": "ds1",
+    "created": "2015-09-19",
+    "modified": "2015-09-19"
+  },
+  {
+    "owner": "juser",
+    "id": "ds2",
+    "created": "2015-09-19",
+    "modified": "2015-09-19"
+  }
+]
+'''
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/datasets/v1/juser?access_token=pk.test',
+        match_querystring=True,
+        body=body, status=200,
+        content_type='application/json')
+
+    runner = CliRunner()
+    result = runner.invoke(
+        main_group,
+        ['--access-token', 'pk.test', 'ls_datasets', 'juser'])
+    assert result.exit_code == 0
+    body = json.loads(result.output)
+    assert [item['id'] for item in body] == ['ds1', 'ds2']
+
+
+@responses.activate
+def test_cli_dataset_creation():
+
+    def request_callback(request):
+        payload = json.loads(request.body)
+        resp_body = {
+            'owner': 'juser',
+            'id': 'new',
+            'name': payload['name'],
+            'description': payload['description'],
+            'created': '2015-09-19',
+            'modified': '2015-09-19'}
+        headers = {}
+        return (200, headers, json.dumps(resp_body))
+
+    responses.add_callback(
+        responses.POST,
+        'https://api.mapbox.com/datasets/v1/juser?access_token=pk.test',
+        match_querystring=True,
+        callback=request_callback)
+
+    runner = CliRunner()
+    result = runner.invoke(
+        main_group,
+        ['--access-token', 'pk.test', 'create_dataset', 'juser', '--name', 'things', '--description', 'all the things'])
+    assert result.exit_code == 0
+    body = json.loads(result.output)
+    assert body['name'] == 'things'
+    assert body['description'] == 'all the things'
+
+
+@responses.activate
+def test_cli_dataset_retrieve_features():
+    """Features retrieval work"""
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/datasets/v1/juser/test/features?access_token=pk.test',
+        match_querystring=True,
+        body=json.dumps({'type': 'FeatureCollection'}),
+        status=200,
+        content_type='application/json')
+
+    runner = CliRunner()
+    result = runner.invoke(
+        main_group,
+        ['--access-token', 'pk.test', 'retrieve_features', 'juser', 'test'])
+    assert result.exit_code == 0
+    assert json.loads(result.output)['type'] == 'FeatureCollection'
+
+
+@responses.activate
+def test_cli_dataset_update_features():
+    """Features update works"""
+
+    def request_callback(request):
+        payload = json.loads(request.body)
+        assert payload['put'] == [{'type': 'Feature'}]
+        return (200, {}, "")
+
+    responses.add_callback(
+        responses.POST,
+        'https://api.mapbox.com/datasets/v1/juser/test/features?access_token=pk.test',
+        match_querystring=True,
+        callback=request_callback)
+
+    runner = CliRunner()
+    result = runner.invoke(
+        main_group,
+        ['--access-token', 'pk.test', 'update_features', 'juser', 'test', '--sequence'],
+        input=json.dumps({'type': 'Feature'}))
+    assert result.exit_code == 0
