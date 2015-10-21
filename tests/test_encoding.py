@@ -43,6 +43,13 @@ gj_line_features = [{
              36.92217534275667]]}}]
 
 
+class GeoThing(object):
+    __geo_interface__ = None
+
+    def __init__(self, thing):
+        self.__geo_interface__ = thing
+
+
 def test_read_geojson_features():
     expected = [(-87.33787536621092, 36.539156961321574),
                 (-88.2476806640625, 36.92217534275667)]
@@ -71,6 +78,18 @@ def test_encode_limits():
         encode_waypoints(gj_point_features, max_limit=1)
     assert 'at most' in str(exc.value)
 
+
+def test_geo_interface():
+    expected = [(-87.33787536621092, 36.539156961321574),
+                (-88.2476806640625, 36.92217534275667)]
+
+    features = [GeoThing(gj_point_features[0]),
+                GeoThing(gj_point_features[1])]
+    assert expected == list(read_points(features))
+
+    geoms = [GeoThing(gj_point_features[0]['geometry']),
+             GeoThing(gj_point_features[1]['geometry'])]
+    assert expected == list(read_points(geoms))
 
 # TODO
 # def test_unsupported_geometry():

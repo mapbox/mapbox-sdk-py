@@ -19,13 +19,7 @@ def read_points(features):
     """
     for feature in features:
 
-        if feature['type'] == 'Feature':
-            # A GeoJSON-like mapping
-            geom = feature['geometry']
-            for pt in _geom_points(geom):
-                yield pt
-
-        elif hasattr(feature, '__geo_interface__'):
+        if hasattr(feature, '__geo_interface__'):
             # An object implementing the geo_interface
             try:
                 # Could be a Feature...
@@ -36,6 +30,12 @@ def read_points(features):
                 # ... or a geometry directly
                 for pt in _geom_points(feature.__geo_interface__):
                     yield pt
+
+        elif feature['type'] == 'Feature':
+            # A GeoJSON-like mapping
+            geom = feature['geometry']
+            for pt in _geom_points(geom):
+                yield pt
 
         else:
             raise ValueError("Unknown object: Not a GeoJSON feature or "
