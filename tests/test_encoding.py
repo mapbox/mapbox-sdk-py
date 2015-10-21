@@ -1,5 +1,6 @@
 import pytest
-from mapbox.encoding import read_points, encode_waypoints
+import copy
+from mapbox.encoding import read_points, encode_waypoints, encode_polyline
 
 
 gj_point_features = [{
@@ -59,6 +60,19 @@ def test_read_geojson_features():
     assert expected == list(read_points(gj_line_features))
 
 
+def test_geo_interface():
+    expected = [(-87.33787536621092, 36.539156961321574),
+                (-88.2476806640625, 36.92217534275667)]
+
+    features = [GeoThing(gj_point_features[0]),
+                GeoThing(gj_point_features[1])]
+    assert expected == list(read_points(features))
+
+    geoms = [GeoThing(gj_point_features[0]['geometry']),
+             GeoThing(gj_point_features[1]['geometry'])]
+    assert expected == list(read_points(geoms))
+
+
 def test_encode_waypoints():
     expected = "-87.337875,36.539157;-88.247681,36.922175"
 
@@ -79,27 +93,23 @@ def test_encode_limits():
     assert 'at most' in str(exc.value)
 
 
-def test_geo_interface():
-    expected = [(-87.33787536621092, 36.539156961321574),
-                (-88.2476806640625, 36.92217534275667)]
+def test_unsupported_geometry():
+    unsupported = copy.deepcopy(gj_point_features)
+    unsupported[0]['geometry']['type'] = "MultiPolygonnnnnn"
+    with pytest.raises(ValueError) as exc:
+        list(read_points(unsupported))
+    assert 'Unsupported geometry' in str(exc.value)
 
-    features = [GeoThing(gj_point_features[0]),
-                GeoThing(gj_point_features[1])]
-    assert expected == list(read_points(features))
 
-    geoms = [GeoThing(gj_point_features[0]['geometry']),
-             GeoThing(gj_point_features[1]['geometry'])]
-    assert expected == list(read_points(geoms))
+def test_unknown_object():
+    unknown = ["foo", "bar"]
+    with pytest.raises(ValueError) as exc:
+        list(read_points(unknown))
+    assert 'Unknown object' in str(exc.value)
 
-# TODO
-# def test_unsupported_geometry():
 
-# TODO
-# def test_unknown_object():
-
-# TODO
-# def test_encode_polyline():
-#     expected = "vdatOwp_~EhupD{xiA"
-#     assert expected == encode_polyline(gj_point_features)
-#     assert expected == encode_polyline(gj_multipoint_features)
-#     assert expected == encode_polyline(gj_line_features)
+def test_encode_polyline():
+    expected = "vdatOwp_~EhupD{xiA"
+    assert expected == encode_polyline(gj_point_features)
+    assert expected == encode_polyline(gj_multipoint_features)
+    assert expected == encode_polyline(gj_line_features)
