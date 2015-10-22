@@ -29,7 +29,13 @@ setup(name='mapbox',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'click', 'click-plugins', 'cligj', 'requests', 'uritemplate.py', 'boto3'
+          'click',
+          'click-plugins',
+          'cligj',
+          'requests',
+          'uritemplate.py',
+          'boto3',
+          'polyline'
       ],
       extras_require={
           'test': ['coveralls', 'pytest', 'pytest-cov', 'responses'],
