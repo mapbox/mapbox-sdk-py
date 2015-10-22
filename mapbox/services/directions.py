@@ -26,6 +26,33 @@ class Directions(Service):
         waypoints = encode_waypoints(features, precision=6,
                                      min_limit=2, max_limit=30)
 
+        # TODO add optional args as url params
         uri = URITemplate('%s/{profile}/{waypoints}.json' % self.baseuri).expand(
             profile=self.profile, waypoints=waypoints)
         return self.session.get(uri)
+
+    def route_geojson(self, *args, **kwargs):
+        res = self.route(*args, **kwargs)
+        data = res.json()
+        fc = {
+            'type': 'FeatureCollection',
+            'features': []}
+
+        for route in data['routes']:
+
+            feature = {
+                'properties': {
+                    # TODO handle these nested structures
+                    # Flatten or ???
+                    # 'destination': data['destination'],
+                    # 'origin': data['origin'],
+                    # 'waypoints': data['waypoints'],
+                    # 'steps': route['steps']
+                    'distance': route['distance'],
+                    'duration': route['duration'],
+                    'summary': route['summary']}}
+
+            feature['geometry'] = route['geometry']
+            fc['features'].append(feature)
+
+        return fc
