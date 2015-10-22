@@ -1,4 +1,5 @@
 from polyline.codec import PolylineCodec
+import json
 
 
 def _geom_points(geom):
@@ -63,6 +64,19 @@ def encode_waypoints(features, min_limit=None, max_limit=None, precision=6):
 
 
 def encode_polyline(features, zoom_level=18):
+    """Encode and iterable of features as a polyline
+    """
     points = list(read_points(features))
     codec = PolylineCodec()
     return codec.encode(points)
+
+
+def encode_coordinates_json(features):
+    """Given an iterable of features
+    return a JSON string to be used as the request body for the distance API:
+    a JSON object, with a key coordinates,
+    which has an array of [ Longitude, Latitidue ] pairs
+    """
+    coords = {
+        'coordinates': list(read_points(features))}
+    return json.dumps(coords)

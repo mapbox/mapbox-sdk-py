@@ -1,6 +1,10 @@
 import pytest
 import copy
-from mapbox.encoding import read_points, encode_waypoints, encode_polyline
+import json
+from mapbox.encoding import (read_points,
+                             encode_waypoints,
+                             encode_polyline,
+                             encode_coordinates_json)
 
 
 gj_point_features = [{
@@ -113,3 +117,14 @@ def test_encode_polyline():
     assert expected == encode_polyline(gj_point_features)
     assert expected == encode_polyline(gj_multipoint_features)
     assert expected == encode_polyline(gj_line_features)
+
+
+def test_encode_coordinates_json():
+    expected = {
+        'coordinates': [
+            [-87.33787536621092, 36.539156961321574],
+            [-88.2476806640625, 36.92217534275667]]}
+
+    assert expected == json.loads(encode_coordinates_json(gj_point_features))
+    assert expected == json.loads(encode_coordinates_json(gj_multipoint_features))
+    assert expected == json.loads(encode_coordinates_json(gj_line_features))
