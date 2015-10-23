@@ -41,6 +41,7 @@ class Directions(Service):
         for route in data['routes']:
 
             feature = {
+                'type': 'Feature',
                 'properties': {
                     # TODO handle these nested structures
                     # Flatten or ???
