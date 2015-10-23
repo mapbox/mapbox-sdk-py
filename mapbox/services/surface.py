@@ -5,16 +5,9 @@ from .base import Service
 
 class Surface(Service):
 
-    def __init__(self, profile='mapbox.driving', access_token=None):
-        self.profile = self._validate_profile(profile)
+    def __init__(self, access_token=None):
         self.baseuri = 'https://api.mapbox.com/v4/surface'
         self.session = self.get_session(access_token)
-
-    def _validate_profile(self, profile):
-        valid_profiles = ['mapbox.driving', 'mapbox.cycling', 'mapbox.walking']
-        if profile not in valid_profiles:
-            raise ValueError("{} is not a valid profile".format(profile))
-        return profile
 
     def surface(self,
                 features,
@@ -30,8 +23,10 @@ class Surface(Service):
         params = {
             'layer': layer,
             'fields': ','.join(fields),
-            'geojson': geojson,  # 'true' if geojson else 'fasle'
-            'point': waypoints}
+            'geojson': 'true' if geojson else 'false',
+            'points': waypoints}
+
+        # TODO encoded polyline
 
         uri = URITemplate('%s/{mapid}.json' % self.baseuri).expand(mapid=mapid)
         return self.session.get(uri, params=params)
