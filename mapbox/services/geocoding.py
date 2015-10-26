@@ -41,7 +41,9 @@ class Geocoder(Service):
             params.update(self._validate_place_types(types))
         if lon is not None and lat is not None:
             params.update(proximity='{0},{1}'.format(round(float(lon), self.precision.get('proximity', 3)), round(float(lat), self.precision.get('proximity', 3))))
-        return self.session.get(uri, params=params)
+        resp = self.session.get(uri, params=params)
+        self.handle_http_error(resp)
+        return resp
 
     def reverse(self, lon=None, lat=None, types=None):
         """Returns a Requests response object that contains a GeoJSON
@@ -56,7 +58,9 @@ class Geocoder(Service):
         params = {}
         if types:
             params.update(self._validate_place_types(types))
-        return self.session.get(uri, params=params)
+        resp = self.session.get(uri, params=params)
+        self.handle_http_error(resp)
+        return resp
 
     @property
     def place_types(self):
