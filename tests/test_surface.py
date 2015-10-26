@@ -50,3 +50,21 @@ def test_surface_geojson():
     fc = res.geojson()
     assert fc['type'] == 'FeatureCollection'
     assert len(fc['features']) == 3
+
+
+@responses.activate
+def test_surface_params():
+
+    params = "&encoded_polyline=~kbkTss%60%7BEQeAHu%40&zoom=16&interpolate=false"
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/v4/surface/mapbox.mapbox-terrain-v1.json?access_token=pk.test&fields=ele&layer=contour&geojson=true' + params,
+        match_querystring=True,
+        body="just testing URI templating", status=200,
+        content_type='application/json')
+
+    res = mapbox.Surface(access_token='pk.test').surface(points,
+                                                         zoom=16,
+                                                         polyline=True,
+                                                         interpolate=False)
+    assert res.status_code == 200

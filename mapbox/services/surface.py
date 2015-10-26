@@ -14,19 +14,28 @@ class Surface(Service):
                 mapid="mapbox.mapbox-terrain-v1",
                 layer="contour",
                 fields=["ele"],
-                geojson=True):
+                geojson=True,
+                polyline=False,
+                interpolate=None,
+                zoom=None):
 
-        waypoints = encode_waypoints(features, precision=6,
-                                     min_limit=2, max_limit=300)
-
-        # TODO other params
         params = {
             'layer': layer,
             'fields': ','.join(fields),
             'geojson': 'true' if geojson else 'false',
-            'points': waypoints}
+        }
 
-        # TODO encoded polyline
+        if interpolate is not None:
+            params['interpolate'] = 'true' if interpolate else 'false',
+
+        if zoom is not None:
+            params['zoom'] = zoom
+
+        if polyline:
+            params['encoded_polyline'] = encode_polyline(features)
+        else:
+            params['points'] = encode_waypoints(
+                features, precision=6, min_limit=2, max_limit=300)
 
         uri = URITemplate('%s/{mapid}.json' % self.baseuri).expand(mapid=mapid)
         res = self.session.get(uri, params=params)
