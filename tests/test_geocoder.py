@@ -70,6 +70,22 @@ def test_geocoder_forward():
 
 
 @responses.activate
+def test_geocoder_forward_geojson():
+    """Forward geocoding .geojson method works"""
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/1600%20pennsylvania%20ave%20nw.json?access_token=pk.test',
+        match_querystring=True,
+        body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
+        content_type='application/json')
+
+    response = mapbox.Geocoder(access_token='pk.test').forward('1600 pennsylvania ave nw')
+    assert response.status_code == 200
+    assert response.geojson() == response.json()
+
+
+@responses.activate
 def test_geocoder_reverse():
     """Reverse geocoding works"""
 
@@ -88,6 +104,24 @@ def test_geocoder_reverse():
     assert response.status_code == 200
     assert response.json()['query'] == [lon, lat]
 
+@responses.activate
+def test_geocoder_reverse_geojson():
+    """Reverse geocoding geojson works"""
+
+    lon, lat = -77.4371, 37.5227
+    body = json.dumps({"query": [lon, lat]})
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/{0},{1}.json?access_token=pk.test'.format(lon, lat),
+        match_querystring=True,
+        body=body,
+        status=200,
+        content_type='application/json')
+
+    response = mapbox.Geocoder(access_token='pk.test').reverse(lon=lon, lat=lat)
+    assert response.status_code == 200
+    assert response.geojson() == response.json()
 
 def test_geocoder_place_types():
     """Place types are enumerated"""
