@@ -14,7 +14,7 @@ class Surface(Service):
                 mapid="mapbox.mapbox-terrain-v1",
                 layer="contour",
                 fields=["ele"],
-                geojson=False):
+                geojson=True):
 
         waypoints = encode_waypoints(features, precision=6,
                                      min_limit=2, max_limit=300)
@@ -29,14 +29,11 @@ class Surface(Service):
         # TODO encoded polyline
 
         uri = URITemplate('%s/{mapid}.json' % self.baseuri).expand(mapid=mapid)
-        return self.session.get(uri, params=params)
+        res = self.session.get(uri, params=params)
+        res.raise_for_status()
 
-    def surface_geojson(self, *args, **kwargs):
-        kwargs['geojson'] = True
-        res = self.surface(*args, **kwargs)
-        if res.status_code == 200:
-            data = res.json()
-            fc = data['results']
-            return fc
-        else:
-            raise Exception(res.text)
+        def geojson():
+            return res.json()['results']
+        res.geojson = geojson
+
+        return res

@@ -26,7 +26,7 @@ def test_surface():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/v4/surface/mapbox.mapbox-terrain-v1.json?access_token=pk.test&points=-112.084004%2C36.053220%3B-112.083914%2C36.053573%3B-112.083965%2C36.053845&geojson=false&fields=ele&layer=contour',
+        'https://api.mapbox.com/v4/surface/mapbox.mapbox-terrain-v1.json?access_token=pk.test&points=-112.084004%2C36.053220%3B-112.083914%2C36.053573%3B-112.083965%2C36.053845&geojson=true&fields=ele&layer=contour',
         match_querystring=True,
         body=body, status=200,
         content_type='application/json')
@@ -46,6 +46,7 @@ def test_surface_geojson():
         body=body, status=200,
         content_type='application/json')
 
-    fc = mapbox.Surface(access_token='pk.test').surface_geojson(points)
+    res = mapbox.Surface(access_token='pk.test').surface(points)
+    fc = res.geojson()
     assert fc['type'] == 'FeatureCollection'
     assert len(fc['features']) == 3
