@@ -42,7 +42,7 @@ class Geocoder(Service):
         if lon is not None and lat is not None:
             params.update(proximity='{0},{1}'.format(round(float(lon), self.precision.get('proximity', 3)), round(float(lat), self.precision.get('proximity', 3))))
         resp = self.session.get(uri, params=params)
-        resp.raise_for_status()
+        self.handle_http_error(resp)
 
         # for consistency with other services
         def geojson():
@@ -65,7 +65,7 @@ class Geocoder(Service):
         if types:
             params.update(self._validate_place_types(types))
         resp = self.session.get(uri, params=params)
-        resp.raise_for_status()
+        self.handle_http_error(resp)
 
         # for consistency with other services
         def geojson():
