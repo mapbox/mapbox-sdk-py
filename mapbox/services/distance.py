@@ -24,5 +24,5 @@ class Distance(Service):
 
         res = self.session.post(uri, data=coords,
                                 headers={'Content-Type': 'application/json'})
-        res.raise_for_status()
+        self.handle_http_error(res)
         return res
