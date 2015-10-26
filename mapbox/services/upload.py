@@ -34,7 +34,11 @@ class Uploader(Service):
         """
         uri = URITemplate('%s/{username}/credentials' % self.baseuri).expand(
             username=self.username)
-        return self.session.get(uri)
+        res = self.session.get(uri)
+        res.raise_for_status()
+        # TODO if there is a perms error,
+        # massage exeption to alert user about upload:* scope tokens
+        return res
 
     def stage(self, filepath, creds=None):
         """Stages the user's file on S3
@@ -84,7 +88,9 @@ class Uploader(Service):
         uri = URITemplate('%s/{username}' % self.baseuri).expand(
             username=self.username)
 
-        return self.session.post(uri, json=msg)
+        res = self.session.post(uri, json=msg)
+        res.raise_for_status()
+        return res
 
     def list(self):
         """List of all uploads
@@ -94,7 +100,9 @@ class Uploader(Service):
         """
         uri = URITemplate('%s/{username}' % self.baseuri).expand(
             username=self.username)
-        return self.session.get(uri)
+        res = self.session.get(uri)
+        res.raise_for_status()
+        return res
 
     def delete(self, upload):
         """Delete the specified upload
@@ -106,7 +114,9 @@ class Uploader(Service):
 
         uri = URITemplate('%s/{username}/{upload_id}' % self.baseuri).expand(
             username=self.username, upload_id=upload_id)
-        return self.session.delete(uri)
+        res = self.session.delete(uri)
+        res.raise_for_status()
+        return res
 
     def status(self, upload):
         """Check status of upload
@@ -121,7 +131,9 @@ class Uploader(Service):
 
         uri = URITemplate('%s/{username}/{upload_id}' % self.baseuri).expand(
             username=self.username, upload_id=upload_id)
-        return self.session.get(uri)
+        res = self.session.get(uri)
+        res.raise_for_status()
+        return res
 
     def upload(self, filepath, tileset):
         """High level function to upload a local file to mapbox tileset
