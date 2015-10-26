@@ -29,11 +29,17 @@ class Directions(Service):
         # TODO add optional args as url params
         uri = URITemplate('%s/{profile}/{waypoints}.json' % self.baseuri).expand(
             profile=self.profile, waypoints=waypoints)
-        return self.session.get(uri)
 
-    def route_geojson(self, *args, **kwargs):
-        res = self.route(*args, **kwargs)
-        data = res.json()
+        resp = self.session.get(uri)
+        resp.raise_for_status()
+
+        def geojson():
+            return self._geojson(resp.json())
+
+        resp.geojson = geojson
+        return resp
+
+    def _geojson(self, data):
         fc = {
             'type': 'FeatureCollection',
             'features': []}

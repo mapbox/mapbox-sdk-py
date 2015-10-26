@@ -49,7 +49,8 @@ def test_directions_geojson():
         body=body, status=200,
         content_type='application/json')
 
-    fc = mapbox.Directions(access_token='pk.test').route_geojson(points)
+    res = mapbox.Directions(access_token='pk.test').route(points)
+    fc = res.geojson()
     assert fc['type'] == 'FeatureCollection'
     assert sorted(fc['features'][0]['properties'].keys()) == ['distance', 'duration', 'summary']
     assert fc['features'][0]['geometry']['type'] == "LineString"
