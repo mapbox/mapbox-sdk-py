@@ -22,13 +22,7 @@ class Distance(Service):
         uri = URITemplate('%s/{profile}' % self.baseuri).expand(
             profile=self.profile)
 
-        return self.session.post(uri, data=coords,
-                                 headers={'Content-Type': 'application/json'})
-
-    def distance_matrix(self, features):
-        res = self.distances(features)
-        if res.status_code == 200:
-            data = res.json()
-            return data['durations']
-        else:
-            raise Exception(res.text)
+        res = self.session.post(uri, data=coords,
+                                headers={'Content-Type': 'application/json'})
+        res.raise_for_status()
+        return res

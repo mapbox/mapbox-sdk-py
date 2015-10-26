@@ -54,7 +54,8 @@ def test_distances_matrix():
         status=200,
         content_type='application/json')
 
-    matrix = mapbox.Distance(access_token='pk.test').distance_matrix(points)
+    res = mapbox.Distance(access_token='pk.test').distances(points)
+    matrix = res.json()['durations']
     # 3x3 list
     assert len(matrix) == 3
     assert len(matrix[0]) == 3
