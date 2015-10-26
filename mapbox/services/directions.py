@@ -26,11 +26,22 @@ class Directions(Service):
         waypoints = encode_waypoints(features, precision=6,
                                      min_limit=2, max_limit=30)
 
-        # TODO add optional args as url params
+        params = {}
+        if alternatives is not None:
+            params.update(
+                {'alternatives': 'true' if alternatives is True else 'false'})
+        if instructions is not None:
+            params.update({'instructions': instructions})
+        if geometry is not None:
+            params.update({'geometry': 'false' if geometry is False else geometry})
+        if steps is not None:
+            params.update(
+                {'steps': 'true' if steps is True else 'false'})
+
         uri = URITemplate('%s/{profile}/{waypoints}.json' % self.baseuri).expand(
             profile=self.profile, waypoints=waypoints)
 
-        resp = self.session.get(uri)
+        resp = self.session.get(uri, params=params)
         resp.raise_for_status()
 
         def geojson():

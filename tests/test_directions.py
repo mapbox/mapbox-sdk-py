@@ -1,5 +1,6 @@
 import responses
 import mapbox
+import pytest
 
 
 points = [{
@@ -55,4 +56,26 @@ def test_directions_geojson():
     assert sorted(fc['features'][0]['properties'].keys()) == ['distance', 'duration', 'summary']
     assert fc['features'][0]['geometry']['type'] == "LineString"
 
-# TODO test as_featurecollection=True
+
+def test_invalid_profile():
+    with pytest.raises(ValueError):
+        mapbox.Directions(profile="bogus", access_token='pk.test')
+
+
+@responses.activate
+def test_direction_params():
+    params = "&alternatives=false&instructions=html&geometry=polyline&steps=false"
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/v4/directions/mapbox.driving/-87.337875%2C36.539157%3B-88.247681%2C36.922175.json?access_token=pk.test' + params,
+        match_querystring=True,
+        body="not important, only testing URI templating", status=200,
+        content_type='application/json')
+
+    res = mapbox.Directions(access_token='pk.test').route(points,
+                                                          alternatives=False,
+                                                          instructions='html',
+                                                          geometry='polyline',
+                                                          steps=False)
+    assert res.status_code == 200
