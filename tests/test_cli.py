@@ -117,13 +117,12 @@ def test_cli_geocode_unauthorized():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/geocoding/v5/mapbox.places/1600%20pennsylvania%20ave%20nw.json?access_token=invalid',
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/1600%20pennsylvania%20ave%20nw.json',
         body='{"message":"Not Authorized - Invalid Token"}', status=401,
         content_type='application/json')
 
     runner = CliRunner()
-    result = runner.invoke(main_group, ['--access-token', 'invalid',
-                                        'geocode', '--forward',
+    result = runner.invoke(main_group, ['geocode', '--forward',
                                         '1600 pennsylvania ave nw'])
     assert result.exit_code == 1
     assert result.output == 'Error: {"message":"Not Authorized - Invalid Token"}\n'
