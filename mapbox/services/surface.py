@@ -39,7 +39,7 @@ class Surface(Service):
 
         uri = URITemplate('%s/{mapid}.json' % self.baseuri).expand(mapid=mapid)
         res = self.session.get(uri, params=params)
-        res.raise_for_status()
+        self.handle_http_error(res)
 
         def geojson():
             return res.json()['results']
