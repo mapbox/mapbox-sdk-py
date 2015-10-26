@@ -42,7 +42,7 @@ class Directions(Service):
             profile=self.profile, waypoints=waypoints)
 
         resp = self.session.get(uri, params=params)
-        resp.raise_for_status()
+        self.handle_http_error(resp)
 
         def geojson():
             return self._geojson(resp.json())
