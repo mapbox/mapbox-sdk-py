@@ -27,7 +27,7 @@ class Geocoder(Service):
         """Returns a Requests response object that contains a GeoJSON
         collection of places matching the given address.
 
-        `response.json()` returns the geocoding result as GeoJSON.
+        `response.geojson()` returns the geocoding result as GeoJSON.
         `response.status_code` returns the HTTP API status code.
 
         Place results may be constrained to those of one or more types
@@ -43,13 +43,19 @@ class Geocoder(Service):
             params.update(proximity='{0},{1}'.format(round(float(lon), self.precision.get('proximity', 3)), round(float(lat), self.precision.get('proximity', 3))))
         resp = self.session.get(uri, params=params)
         self.handle_http_error(resp)
+
+        # for consistency with other services
+        def geojson():
+            return resp.json()
+        resp.geojson = geojson
+
         return resp
 
     def reverse(self, lon=None, lat=None, types=None):
         """Returns a Requests response object that contains a GeoJSON
         collection of places near the given longitude and latitude.
 
-        `response.json()` returns the geocoding result as GeoJSON.
+        `response.geojson()` returns the geocoding result as GeoJSON.
         `response.status_code` returns the HTTP API status code.
 
         See: https://www.mapbox.com/developers/api/geocoding/#reverse."""
@@ -60,6 +66,12 @@ class Geocoder(Service):
             params.update(self._validate_place_types(types))
         resp = self.session.get(uri, params=params)
         self.handle_http_error(resp)
+
+        # for consistency with other services
+        def geojson():
+            return resp.json()
+        resp.geojson = geojson
+
         return resp
 
     @property
