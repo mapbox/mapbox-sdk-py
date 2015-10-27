@@ -122,7 +122,8 @@ def test_cli_geocode_unauthorized():
         content_type='application/json')
 
     runner = CliRunner()
-    result = runner.invoke(main_group, ['geocode', '--forward', '1600 pennsylvania ave nw'])
+    result = runner.invoke(main_group, ['geocode', '--forward',
+                                        '1600 pennsylvania ave nw'])
     assert result.exit_code == 1
     assert result.output == 'Error: {"message":"Not Authorized - Invalid Token"}\n'
 
