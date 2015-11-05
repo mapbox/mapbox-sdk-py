@@ -1,7 +1,11 @@
-import responses
 import json
 
+import boto3
+from moto import mock_s3
+import responses
+
 import mapbox
+
 
 username = 'testuser'
 upload_response_body = """
@@ -14,6 +18,7 @@ upload_response_body = """
     "created": "date.test",
     "id": "id.test",
     "name": null}}""".format(username=username)
+
 
 @responses.activate
 def test_get_credentials():
@@ -41,25 +46,20 @@ def test_get_credentials():
         assert k in creds.keys()
 
 
-# This is not working, moto is not properly patching boto3?
-#
-# import boto3
-# from moto import mock_s3
-# @mock_s3
-# def test_stage():
-#     creds = {
-#         "key": "_pending/{0}/key.test".format(username),
-#         "accessKeyId": "ak.test",
-#         "bucket": "tilestream-tilesets-production",
-#         "url": "https://tilestream-tilesets-production.s3.amazonaws.com/_pending/{0}/key.test".format(username),
-#         "secretAccessKey": "sak.test",
-#         "sessionToken": "st.test"}
-#     s3 = boto3.resource('s3', region_name='us-east-1')
-#     s3.create_bucket(Bucket=creds['bucket'])
-#     url = mapbox.Uploader(username, access_token='pk.test').stage('tests/test.csv', creds)
-#     assert url == creds['url']
-#     assert s3.Object(creds['bucket'], creds['key']).get()['Body'].read().decode("utf-8") == \
-#         'testing123'
+@mock_s3
+def test_stage():
+    creds = {
+        "key": "_pending/{0}/key.test".format(username),
+        "accessKeyId": "ak.test",
+        "bucket": "tilestream-tilesets-production",
+        "url": "https://tilestream-tilesets-production.s3.amazonaws.com/_pending/{0}/key.test".format(username),
+        "secretAccessKey": "sak.test",
+        "sessionToken": "st.test"}
+    s3 = boto3.resource('s3', region_name='us-east-1')
+    s3.create_bucket(Bucket=creds['bucket'])
+    url = mapbox.Uploader(username, access_token='pk.test').stage('tests/test.csv', creds)
+    assert url == creds['url']
+    assert s3.Object(creds['bucket'], creds['key']).get()['Body'].read() == 'testing123\n'
 
 
 @responses.activate
