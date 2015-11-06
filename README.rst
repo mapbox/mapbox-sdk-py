@@ -79,82 +79,6 @@ Then upload any supported file to your account using the ``Uploader``
 
 See ``import mapbox; help(mapbox.Uploader)`` for more detailed usage.
 
-Command Line Interface
-======================
-
-The mapbox module includes a CLI program named ``mbx``.
-
-::
-
-    $ mbx --help
-    Usage: mbx [OPTIONS] COMMAND [ARGS]...
-
-      This is the command line interface to Mapbox web services.
-
-      Mapbox web services require an access token. Your token is shown on the
-      https://www.mapbox.com/developers/api/ page when you are logged in. The
-      token can be provided on the command line
-
-        $ mbx --access-token MY_TOKEN ...
-
-      or as an environment variable named MAPBOX_ACCESS_TOKEN or
-      MapboxAccessToken.
-
-        $ export MAPBOX_ACCESS_TOKEN=MY_TOKEN
-        $ mbx ...
-
-    Options:
-      --access-token TEXT  Your Mapbox access token.
-      -v, --verbose        Increase verbosity.
-      --version            Show the version and exit.
-      -q, --quiet          Decrease verbosity.
-      --help               Show this message and exit.
-
-    Commands:
-      geocode  Geocode an address or coordinates.
-
-The ``mbx-geocode`` command can do forward or reverse geocoding.
-
-::
-
-    $ mbx geocode --help
-    Usage: mbx geocode [OPTIONS] [QUERY]
-
-      This command returns places matching an address (forward mode) or places
-      matching coordinates (reverse mode).
-
-      In forward (the default) mode the query argument shall be an address such
-      as '1600 pennsylvania ave nw'.
-
-        $ mbx geocode '1600 pennsylvania ave nw'
-
-      In reverse mode the query argument shall be a JSON encoded array of
-      longitude and latitude (in that order) in decimal degrees.
-
-        $ mbx geocode --reverse '[-77.4371, 37.5227]'
-
-      An access token is required, see `mbx --help`.
-
-    Options:
-      --forward / --reverse  Perform a forward or reverse geocode. [default:
-                             forward]
-      -i, --include          Include HTTP headers in the output.
-      --lat FLOAT            Bias results toward this latitude (decimal degrees).
-                             --lon is also required.
-      --lon FLOAT            Bias results toward this longitude (decimal degrees).
-                             --lat is also required.
-      -t, --place-type NAME  Restrict results to one or more of these place types:
-                             ['address', 'country', 'place', 'poi', 'postcode',
-                             'region'].
-      -o, --output TEXT      Save output to a file.
-      --help                 Show this message and exit.
-
-Its output can be piped to `geojsonio <http://geojson.io>`__ using
-`geojsonio-cli <https://github.com/mapbox/geojsonio-cli>`__.
-
-.. code:: bash
-
-    $ mbx geocode 'Chester, NJ' | geojsonio
 
 Testing
 =======
@@ -167,4 +91,5 @@ Testing
 See Also
 ========
 
+https://github.com/mapbox/mbx-cli
 https://github.com/mapbox/mapbox-sdk-js
