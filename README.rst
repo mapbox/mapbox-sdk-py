@@ -15,36 +15,31 @@ The Mapbox Python SDK is a low-level client API, not a Resource API such as the 
 Services
 ========
 
-Generally Available
-
-- `Geocoding <https://www.mapbox.com/developers/api/geocoding/>`__
-
-  - Forward (place names ⇢ longitude, latitude)
-  - Reverse (longitude, latitude ⇢ place names)
-
-- `Uploads <https://www.mapbox.com/developers/api/uploads/>`__
-
-  - Upload data to be processed and hosted by Mapbox.
-
 - `Directions <https://www.mapbox.com/developers/api/directions/>`__
 
   - Profiles for driving, walking, and cycling
   - GeoJSON & Polyline formatting
   - Instructions as text or HTML
 
-Contact help@mapbox.com for information
-
 - `Distance <https://www.mapbox.com/developers/api/distance/>`__
 
   - Travel-time tables between up to 100 points
   - Profiles for driving, walking and cycling
 
+- `Geocoding <https://www.mapbox.com/developers/api/geocoding/>`__
+
+  - Forward (place names ⇢ longitude, latitude)
+  - Reverse (longitude, latitude ⇢ place names)
+
 - `Surface <https://www.mapbox.com/developers/api/surface/>`__
 
   - Interpolates values along lines. Useful for elevation traces.
 
-Other services coming soon
+- `Uploads <https://www.mapbox.com/developers/api/uploads/>`__
 
+  - Upload data to be processed and hosted by Mapbox.
+
+Other services coming soon.
 
 Installation
 ============
