@@ -1,9 +1,10 @@
-0.3.0 (2015-)
+0.3.0 (2015-11-10)
 ------------------
-- Rename `Uploader.extract` to `Uploader.create` (#58).
-- Rename `Directions.route` to `directions` (#60).
-- Move Directions API profile parameter from service object to directions
-  method (#61).
+- Remove CLI to its own project: mapbox/mapbox-cli-py (#53).
+- Add Surface API (#35).
+- Add Distance API (#23).
+- Add Directions API (#22).
+- Add Uploads API (#14).
 
 0.2.0 (2015-10-15)
 ------------------
