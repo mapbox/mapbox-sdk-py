@@ -45,7 +45,7 @@ def test_get_credentials():
 
 
 @responses.activate
-def test_extract():
+def test_create():
     responses.add(
         responses.POST,
         'https://api.mapbox.com/uploads/v1/{0}?access_token=pk.test'.format(username),
@@ -53,13 +53,13 @@ def test_extract():
         body=upload_response_body, status=201,
         content_type='application/json')
 
-    res = mapbox.Uploader(username, access_token='pk.test').extract(
+    res = mapbox.Uploader(username, access_token='pk.test').create(
         'http://example.com/test.json', 'test1')  # without username prefix
     assert res.status_code == 201
     job = res.json()
     assert job['tileset'] == "{0}.test1".format(username)
 
-    res2 = mapbox.Uploader(username, access_token='pk.test').extract(
+    res2 = mapbox.Uploader(username, access_token='pk.test').create(
         'http://example.com/test.json', 'testuser.test1')  # also takes full tileset
     assert res2.status_code == 201
     job = res2.json()

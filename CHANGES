@@ -1,3 +1,7 @@
+0.3.0 (2015-)
+------------------
+- Rename `Uploader.extract` to `Uploader.create` (#58).
+
 0.2.0 (2015-10-15)
 ------------------
 - This version uses version 5 of the geocoding web API.
