@@ -1,12 +1,12 @@
 from uritemplate import URITemplate
+
+from mapbox.services.base import Service
 from mapbox.encoding import encode_waypoints
-from .base import Service
 
 
 class Directions(Service):
 
-    def __init__(self, profile='mapbox.driving', access_token=None):
-        self.profile = self._validate_profile(profile)
+    def __init__(self, access_token=None):
         self.baseuri = 'https://api.mapbox.com/v4/directions'
         self.session = self.get_session(access_token)
 
@@ -16,13 +16,16 @@ class Directions(Service):
             raise ValueError("{} is not a valid profile".format(profile))
         return profile
 
-    def route(self,
-              features,
-              alternatives=None,
-              instructions=None,
-              geometry=None,
-              steps=None):
-
+    def directions(
+            self,
+            features,
+            profile='mapbox.driving',
+            alternatives=None,
+            instructions=None,
+            geometry=None,
+            steps=None):
+        """Request directions for waypoints encoded as GeoJSON features."""
+        profile = self._validate_profile(profile)
         waypoints = encode_waypoints(features, precision=6,
                                      min_limit=2, max_limit=30)
 
@@ -39,7 +42,7 @@ class Directions(Service):
                 {'steps': 'true' if steps is True else 'false'})
 
         uri = URITemplate('%s/{profile}/{waypoints}.json' % self.baseuri).expand(
-            profile=self.profile, waypoints=waypoints)
+            profile=profile, waypoints=waypoints)
 
         resp = self.session.get(uri, params=params)
         self.handle_http_error(resp)
