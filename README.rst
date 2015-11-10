@@ -113,7 +113,7 @@ represented by a GeoJSON point feature.
 .. code:: python
     
     from mapbox import Directions
-    resp = Directions('mapbox.driving').route([origin, destination])
+    resp = Directions('mapbox.driving').directions([origin, destination])
     driving_routes = resp.geojson()
     first_route = driving_routes['features'][0]
 

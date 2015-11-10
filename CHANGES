@@ -1,6 +1,9 @@
 0.3.0 (2015-)
 ------------------
 - Rename `Uploader.extract` to `Uploader.create` (#58).
+- Rename `Directions.route` to `directions` (#60).
+- Move Directions API profile parameter from service object to directions
+  method (#61).
 
 0.2.0 (2015-10-15)
 ------------------

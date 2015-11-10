@@ -1,6 +1,6 @@
-import responses
 import mapbox
 import pytest
+import responses
 
 
 points = [{
@@ -32,7 +32,7 @@ def test_directions():
         body=body, status=200,
         content_type='application/json')
 
-    res = mapbox.Directions(access_token='pk.test').route(points)
+    res = mapbox.Directions(access_token='pk.test').directions(points)
     assert res.status_code == 200
     assert sorted(res.json()['routes'][0].keys()) == ['distance', 'duration', 'geometry', 'steps', 'summary']
     assert sorted(res.json().keys()) == ['destination', 'origin', 'routes', 'waypoints']
@@ -50,7 +50,7 @@ def test_directions_geojson():
         body=body, status=200,
         content_type='application/json')
 
-    res = mapbox.Directions(access_token='pk.test').route(points)
+    res = mapbox.Directions(access_token='pk.test').directions(points)
     fc = res.geojson()
     assert fc['type'] == 'FeatureCollection'
     assert sorted(fc['features'][0]['properties'].keys()) == ['distance', 'duration', 'summary']
@@ -59,7 +59,8 @@ def test_directions_geojson():
 
 def test_invalid_profile():
     with pytest.raises(ValueError):
-        mapbox.Directions(profile="bogus", access_token='pk.test')
+        _ = mapbox.Directions(access_token='pk.test').directions(
+                None, profile='bogus')
 
 
 @responses.activate
@@ -73,7 +74,7 @@ def test_direction_params():
         body="not important, only testing URI templating", status=200,
         content_type='application/json')
 
-    res = mapbox.Directions(access_token='pk.test').route(points,
+    res = mapbox.Directions(access_token='pk.test').directions(points,
                                                           alternatives=False,
                                                           instructions='html',
                                                           geometry='polyline',
