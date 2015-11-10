@@ -13,16 +13,36 @@ A Python client for Mapbox web services
 Services
 ========
 
+Generally Available
+
 - `Geocoding <https://www.mapbox.com/developers/api/geocoding/>`__
 
   - Forward (place names ⇢ longitude, latitude)
   - Reverse (longitude, latitude ⇢ place names)
 
-- `Upload <https://www.mapbox.com/developers/api/uploads/>`__
+- `Uploads <https://www.mapbox.com/developers/api/uploads/>`__
 
   - Upload data to be processed and hosted by Mapbox.
 
--  Other services coming soon
+- `Directions <https://www.mapbox.com/developers/api/directions/>`__
+
+  - Profiles for driving, walking, and cycling
+  - GeoJSON & Polyline formatting
+  - Instructions as text or HTML
+
+Contact help@mapbox.com for information
+
+- `Distance <https://www.mapbox.com/developers/api/distance/>`__
+
+  - Travel-time tables between up to 100 points
+  - Profiles for driving, walking and cycling
+
+- `Surface <https://www.mapbox.com/developers/api/surface/>`__
+
+  - Interpolates values along lines. Useful for elevation traces.
+
+Other services coming soon
+
 
 Installation
 ============
@@ -30,6 +50,7 @@ Installation
 .. code:: bash
 
     $ pip install mapbox
+
 
 API Usage
 =========
@@ -61,6 +82,7 @@ To begin geocoding, import the mapbox module and create a new
 
 See ``import mapbox; help(mapbox.Geocoder)`` for more detailed usage.
 
+
 Upload
 ------
 To upload data, you must created a token with ``uploads:*`` scopes at https://www.mapbox.com/account/apps/.
@@ -80,6 +102,62 @@ Then upload any supported file to your account using the ``Uploader``
 See ``import mapbox; help(mapbox.Uploader)`` for more detailed usage.
 
 
+Directions
+----------
+To get travel directions between waypoints, you can use the Directions API to route up to 25 points.
+Each of your input waypoints will be visited in order and should be 
+represented by a GeoJSON point feature.
+
+.. code:: python
+    
+    from mapbox import Directions
+    resp = Directions('mapbox.driving').route([origin, destination])
+    driving_routes = resp.geojson()
+    first_route = driving_routes['features'][0]
+
+See ``import mapbox; help(mapbox.Directions)`` for more detailed usage.
+
+
+Distance
+--------
+If you need to optimize travel between several waypoints, you can use the Distance API to
+create a "Distance Matrix" showing travel times between all waypoints.
+Each of your input waypoints should be a GeoJSON point feature.
+
+.. code:: python
+    
+    from mapbox import Distance
+    resp = Distance('mapbox.driving').distance(points['features'])
+    resp.json()
+
+which returns::
+
+    {
+      "durations": [
+        [ 0,    2910, null ],
+        [ 2903, 0,    5839 ],
+        [ 4695, 5745, 0    ]
+      ]
+    }
+    
+See ``import mapbox; help(mapbox.Distance)`` for more detailed usage.
+
+
+Surface
+-------
+To query vector tile attributes along a series of points or a line, you can use the Surface API.
+For example, you could create an elevation profile against a GeoJSON LineString feature
+
+.. code:: python
+
+    from mapbox import Surface
+    Surface().surface([route], mapid='mapbox.mapbox-terrain-v1',
+                      layer='contour', fields=['ele'])
+    profile_pts = resp.geojson()
+
+See ``import mapbox; help(mapbox.Surface)`` for more detailed usage.
+
+
 Testing
 =======
 
@@ -91,5 +169,5 @@ Testing
 See Also
 ========
 
-https://github.com/mapbox/mbx-cli
-https://github.com/mapbox/mapbox-sdk-js
+* Command line interface: https://github.com/mapbox/mapbox-cli-py
+* Javascript SDK: https://github.com/mapbox/mapbox-sdk-js
