@@ -13,7 +13,7 @@ class Uploader(Service):
 
         u = Uploader('username')
         url = u.stage('test.tif')
-        job = u.extract(url, 'test1').json()
+        job = u.create(url, 'test1').json()
 
         assert job in u.list().json()
 
@@ -60,8 +60,8 @@ class Uploader(Service):
 
         return creds['url']
 
-    def extract(self, stage_url, tileset, name=None):
-        """Initiates the extraction process from the
+    def create(self, stage_url, tileset, name=None):
+        """Initiates the creation process from the
         staging S3 bucket into the user's tileset.
 
         Note: this step is refered to as "upload" in the API docs;
@@ -141,4 +141,4 @@ class Uploader(Service):
         Returns a response object where the json() is a dict with upload metadata
         """
         url = self.stage(filepath)
-        return self.extract(url, tileset)
+        return self.create(url, tileset)
