@@ -135,10 +135,10 @@ class Uploader(Service):
         self.handle_http_error(resp)
         return resp
 
-    def upload(self, filepath, tileset):
+    def upload(self, filepath, tileset, name=None):
         """High level function to upload a local file to mapbox tileset
         Effectively replicates the upload functionality using the HTML form
         Returns a response object where the json() is a dict with upload metadata
         """
         url = self.stage(filepath)
-        return self.create(url, tileset)
+        return self.create(url, tileset, name=name)

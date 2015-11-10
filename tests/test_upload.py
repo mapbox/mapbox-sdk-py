@@ -67,6 +67,37 @@ def test_create():
 
 
 @responses.activate
+def test_create_name():
+    upload_response_body = """
+        {"progress": 0,
+        "modified": "date.test",
+        "error": null,
+        "tileset": "testuser.test1",
+        "complete": false,
+        "owner": "testuser",
+        "created": "date.test",
+        "id": "id.test",
+        "name": "testname"}"""
+
+    def request_callback(request):
+        payload = json.loads(request.body)
+        assert payload['name'] == "testname"
+        return (201, {}, upload_response_body)
+
+    responses.add_callback(
+        responses.POST,
+        'https://api.mapbox.com/uploads/v1/{0}?access_token=pk.test'.format(username),
+        match_querystring=True,
+        callback=request_callback)
+
+    res = mapbox.Uploader(username, access_token='pk.test').create(
+        'http://example.com/test.json', 'testuser.test1', name="testname")
+    assert res.status_code == 201
+    job = res.json()
+    assert job['name'] == "testname"
+
+
+@responses.activate
 def test_list():
     responses.add(
         responses.GET,
