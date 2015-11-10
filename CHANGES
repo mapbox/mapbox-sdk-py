@@ -1,3 +1,7 @@
+0.3.1 (2015-11-10)
+------------------
+- New release to fix mispackaged 0.3.0 distributions.
+
 0.3.0 (2015-11-10)
 ------------------
 - Remove CLI to its own project: mapbox/mapbox-cli-py (#53).
