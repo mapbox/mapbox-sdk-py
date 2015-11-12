@@ -25,7 +25,7 @@ class Service:
     @property
     def product_token(self):
         """A product token for use in User-Agent headers."""
-        return 'mapbox-sdk-py/{}'.format(__version__)
+        return 'mapbox-sdk-py/{0}'.format(__version__)
 
     def handle_http_error(self, response, custom_messages=None,
                           raise_for_status=False):
