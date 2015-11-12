@@ -1,3 +1,7 @@
+0.3.2 (2015-11-11)
+------------------
+- Send a unique User-Agent header with API requests (#66).
+
 0.3.1 (2015-11-10)
 ------------------
 - New release to fix mispackaged 0.3.0 distributions.
