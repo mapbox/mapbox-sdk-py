@@ -35,7 +35,7 @@ def test_service_session_os_environ_caps(monkeypatch):
 
 
 def test_product_token():
-    assert mapbox.Service().product_token == 'mapbox-sdk-py/{}'.format(mapbox.__version__)
+    assert mapbox.Service().product_token == 'mapbox-sdk-py/{0}'.format(mapbox.__version__)
 
 
 def test_user_agent():
