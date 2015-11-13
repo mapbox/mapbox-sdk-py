@@ -1,5 +1,11 @@
+"""Base Service class"""
+
 import os
+
 import requests
+
+from .. import __version__
+
 
 class Service:
     """Base service class"""
@@ -11,7 +17,15 @@ class Service:
             (env or os.environ).get('MAPBOX_ACCESS_TOKEN'))
         session = requests.Session()
         session.params.update(access_token=access_token)
+        session.headers.update(
+            {'User-Agent': ' '.join(
+                [self.product_token, requests.utils.default_user_agent()])})
         return session
+
+    @property
+    def product_token(self):
+        """A product token for use in User-Agent headers."""
+        return 'mapbox-sdk-py/{0}'.format(__version__)
 
     def handle_http_error(self, response, custom_messages=None,
                           raise_for_status=False):

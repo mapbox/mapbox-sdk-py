@@ -1,7 +1,8 @@
-import mapbox
-import responses
 import pytest
 import requests
+import responses
+
+import mapbox
 
 
 def test_service_session():
@@ -31,6 +32,16 @@ def test_service_session_os_environ_caps(monkeypatch):
     session = mapbox.Service().get_session()
     assert session.params.get('access_token') == 'pk.test_os_environ'
     monkeypatch.undo()
+
+
+def test_product_token():
+    assert mapbox.Service().product_token == 'mapbox-sdk-py/{0}'.format(mapbox.__version__)
+
+
+def test_user_agent():
+    session = mapbox.Service().get_session()
+    assert session.headers['User-Agent'].startswith('mapbox-sdk-py')
+    assert 'python-requests' in session.headers['User-Agent']
 
 
 @responses.activate
