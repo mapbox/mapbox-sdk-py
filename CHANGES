@@ -1,6 +1,7 @@
-0.3.2 (2015-11-13)
+0.4.0 (2015-11-13)
 ------------------
 - Send a unique User-Agent header with API requests (#66).
+- Move profile parameter from Distance service object to request method (#68).
 
 0.3.1 (2015-11-10)
 ------------------
