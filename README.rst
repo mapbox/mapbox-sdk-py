@@ -61,9 +61,8 @@ To begin geocoding, import the mapbox module and create a new
 
 .. code:: python
 
-    import mapbox
-
-    geocoder = mapbox.Geocoder(access_token='YOUR_ACCESS_TOKEN')
+    >>> import mapbox
+    >>> geocoder = mapbox.Geocoder(access_token='YOUR_ACCESS_TOKEN')
 
 
 ``Geocoder``'s methods return `Requests <http://www.python-requests.org/en/latest/>`__ style response objects.

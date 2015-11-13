@@ -38,13 +38,4 @@ setup(name='mapbox',
           'polyline'
       ],
       extras_require={
-          'test': ['coveralls', 'pytest', 'pytest-cov', 'responses'],
-      },
-      entry_points="""
-      [console_scripts]
-      mbx=mapbox.scripts.cli:main_group
-
-      [mapbox.mapbox_commands]
-      geocode=mapbox.scripts.geocoder:geocode
-      """
-      )
+          'test': ['coveralls', 'pytest', 'pytest-cov', 'responses']})

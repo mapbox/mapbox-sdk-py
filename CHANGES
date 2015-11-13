@@ -1,4 +1,4 @@
-0.3.2 (2015-11-11)
+0.3.2 (2015-11-13)
 ------------------
 - Send a unique User-Agent header with API requests (#66).
 

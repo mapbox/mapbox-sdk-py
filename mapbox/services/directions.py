@@ -1,7 +1,7 @@
 from uritemplate import URITemplate
 
-from mapbox.services.base import Service
 from mapbox.encoding import encode_waypoints
+from mapbox.services.base import Service
 
 
 class Directions(Service):
