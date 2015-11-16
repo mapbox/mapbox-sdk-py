@@ -68,25 +68,39 @@ The JSON response extends GeoJSON's `FeatureCollection`.
 >>> data = response.json()
 >>> data['type'] == 'FeatureCollection'
 True
->>> sorted(key for key in data)
-['attribution', 'features', 'query', 'type']
->>> data['attribution']
-'NOTICE: © 2015 Mapbox and its suppliers...'
->>> data['query']
-['chester', 'nj']
+>>> for key in sorted(data.keys()):
+...     print(key)
+attribution
+features
+query
+type
+>>> for token in data['query']:
+...     print(token)
+chester
+nj
 
 ```
 
-Zero or more GeoJSON `Features` are contained in the collection, sorted by
-relevance to the query.
+Zero or more objects that extend GeoJSON's `Feature` are contained in the
+collection, sorted by relevance to the query.
 
 ```python
 
 >>> first = data['features'][0]
 >>> first['type'] == 'Feature'
 True
->>> sorted(key for key in first)
-['bbox', 'center', 'context', 'geometry', 'id', 'place_name', 'properties', 'relevance', 'text', 'type']
+>>> for key in sorted(first.keys()):
+...     print(key)
+bbox
+center
+context
+geometry
+id
+place_name
+properties
+relevance
+text
+type
 
 ```
 
