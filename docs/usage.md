@@ -58,3 +58,44 @@ or can be passed explicitly to service constructors.
 
 ```
 
+## Response format
+
+The JSON response extends GeoJSON's `FeatureCollection`.
+
+```python
+
+>>> response = geocoder.forward('Chester, NJ')
+>>> data = response.json()
+>>> data['type'] == 'FeatureCollection'
+True
+>>> sorted(key for key in data)
+['attribution', 'features', 'query', 'type']
+>>> data['attribution']
+'NOTICE: © 2015 Mapbox and its suppliers...'
+>>> data['query']
+['chester', 'nj']
+
+```
+
+Zero or more GeoJSON `Features` are contained in the collection, sorted by
+relevance to the query.
+
+```python
+
+>>> first = data['features'][0]
+>>> first['type'] == 'Feature'
+True
+>>> sorted(key for key in first)
+['bbox', 'center', 'context', 'geometry', 'id', 'place_name', 'properties', 'relevance', 'text', 'type']
+
+```
+
+## Forward geocoding
+
+```python
+
+>>> response = geocoder.forward('1600 pennsylvania ave nw')
+>>> response.status_code
+200
+
+```
