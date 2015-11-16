@@ -28,7 +28,7 @@ or can be passed explicitly to service constructors.
 
 >>> import os
 >>> YOUR_ACCESS_TOKEN = os.environ['MAPBOX_ACCESS_TOKEN']
->>> geocoder = mapbox.Geocoder(access_token="YOUR_ACCESS_TOKEN")
+>>> geocoder = mapbox.Geocoder(access_token=YOUR_ACCESS_TOKEN)
 
 ```
 
@@ -36,6 +36,25 @@ or can be passed explicitly to service constructors.
 
 ```python
 
->>> geocoder = mapbox.Geocoder(access_token='YOUR_ACCESS_TOKEN')
+>>> geocoder = mapbox.Geocoder()
 
 ```
+
+## Coverage
+
+## Limits
+
+```python
+
+>>> response = geocoder.forward('Chester, NJ')
+>>> response.headers['x-rate-limit-interval']
+'60'
+>>> response.headers['x-rate-limit-limit']
+'600'
+>>> response.headers['x-rate-limit-remaining'] # doctest: +SKIP
+'599'
+>>> response.headers['x-rate-limit-reset'] # doctest: +SKIP
+'1447701074'
+
+```
+
