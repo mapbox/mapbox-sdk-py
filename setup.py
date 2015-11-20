@@ -37,4 +37,4 @@ setup(name='mapbox',
           'boto3',
       ],
       extras_require={
-          'test': ['coveralls', 'pytest', 'pytest-cov', 'responses']})
+          'test': ['coveralls', 'pytest', 'pytest-cov', 'responses', 'tox']})

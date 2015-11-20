@@ -17,7 +17,7 @@ install:
   - pip install -e .[test] --cache-dir $HOME/.pip-cache
 script:
   - py.test --cov mapbox --cov-report term-missing
-  - py.test --doctest-glob='docs/*.md' docs/*.md
+  - py.test --doctest-glob='*.md' docs/*.md
 after_success:
   - coveralls
 deploy:
