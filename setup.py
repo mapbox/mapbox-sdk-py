@@ -38,4 +38,4 @@ setup(name='mapbox',
           'polyline'
       ],
       extras_require={
-          'test': ['coveralls', 'pytest', 'pytest-cov', 'responses']})
+          'test': ['coveralls', 'pytest', 'pytest-cov', 'responses', 'tox']})

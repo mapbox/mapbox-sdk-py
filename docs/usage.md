@@ -68,16 +68,10 @@ The JSON response extends GeoJSON's `FeatureCollection`.
 >>> data = response.json()
 >>> data['type'] == 'FeatureCollection'
 True
->>> for key in sorted(data.keys()):
-...     print(key)
-attribution
-features
-query
-type
->>> for token in data['query']:
-...     print(token)
-chester
-nj
+>>> sorted(data.keys())
+['attribution', 'features', 'query', 'type']
+>>> data['query']
+['chester', 'nj']
 
 ```
 
@@ -89,18 +83,8 @@ collection, sorted by relevance to the query.
 >>> first = data['features'][0]
 >>> first['type'] == 'Feature'
 True
->>> for key in sorted(first.keys()):
-...     print(key)
-bbox
-center
-context
-geometry
-id
-place_name
-properties
-relevance
-text
-type
+>>> sorted(first.keys())
+['bbox', 'center', 'context', 'geometry', 'id', 'place_name', 'properties', 'relevance', 'text', 'type']
 
 ```
 
