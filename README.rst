@@ -2,7 +2,7 @@
 mapbox-sdk-py
 =============
 
-.. image:: https://travis-ci.org/mapbox/mapbox-sdk-py.png
+.. image:: https://travis-ci.org/mapbox/mapbox-sdk-py.png?branch=master
    :target: https://travis-ci.org/mapbox/mapbox-sdk-py
 
 .. image:: https://coveralls.io/repos/mapbox/mapbox-sdk-py/badge.png
