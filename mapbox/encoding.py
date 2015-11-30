@@ -1,5 +1,6 @@
-from polyline.codec import PolylineCodec
 import json
+
+from .polyline.codec import PolylineCodec
 
 
 def _geom_points(geom):
