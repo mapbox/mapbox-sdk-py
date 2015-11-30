@@ -1,3 +1,10 @@
+import json
+from collections import OrderedDict
+try:
+    from urllib import quote
+except ImportError:
+    from urllib.parse import quote
+
 import pytest
 import responses
 
@@ -6,17 +13,21 @@ import mapbox
 
 @pytest.fixture
 def points():
-    return [{
-        "type": "Feature",
-        "properties": {'title': 'point1'},
-        "geometry": {
-            "type": "Point",
-            "coordinates": [-61.7, 12.1]}}, {
-        "type": "Feature",
-        "properties": {},
-        "geometry": {
-            "type": "Point",
-            "coordinates": [-61.6, 12.0]}}]
+    points = [
+        OrderedDict(
+            type="Feature",
+            properties=OrderedDict(title="point1"),
+            geometry=OrderedDict(
+                type="Point",
+                coordinates=[-61.7, 12.1])),
+        OrderedDict(
+            type="Feature",
+            properties=OrderedDict(title="point2"),
+            geometry=OrderedDict(
+                type="Point",
+                coordinates=[-61.6, 12.0]))]
+
+    return points
 
 
 @responses.activate
@@ -37,9 +48,14 @@ def test_staticmap_lonlatz_only():
 @responses.activate
 def test_staticmap_lonlatz_features(points):
 
+    overlay = json.dumps({'type': 'FeatureCollection',
+                          'features': points})
+    overlay = quote(overlay)
+    url = ('https://api.mapbox.com/v4/mapbox.satellite/geojson({0})/'
+           '-61.7,12.1,12/600x600.png256?access_token=pk.test'.format(overlay))
+
     responses.add(
-        responses.GET,
-        'https://api.mapbox.com/v4/mapbox.satellite/geojson(%7B%22type%22%3A%20%22FeatureCollection%22%2C%20%22features%22%3A%20%5B%7B%22geometry%22%3A%20%7B%22type%22%3A%20%22Point%22%2C%20%22coordinates%22%3A%20%5B-61.7%2C%2012.1%5D%7D%2C%20%22type%22%3A%20%22Feature%22%2C%20%22properties%22%3A%20%7B%22title%22%3A%20%22point1%22%7D%7D%2C%20%7B%22geometry%22%3A%20%7B%22type%22%3A%20%22Point%22%2C%20%22coordinates%22%3A%20%5B-61.6%2C%2012.0%5D%7D%2C%20%22type%22%3A%20%22Feature%22%2C%20%22properties%22%3A%20%7B%7D%7D%5D%7D)/-61.7,12.1,12/600x600.png256?access_token=pk.test', 
+        responses.GET, url,
         match_querystring=True,
         body='png123',
         status=200,
@@ -53,9 +69,14 @@ def test_staticmap_lonlatz_features(points):
 @responses.activate
 def test_staticmap_auto_features(points):
 
+    overlay = json.dumps({'type': 'FeatureCollection',
+                          'features': points})
+    overlay = quote(overlay)
+    url = ('https://api.mapbox.com/v4/mapbox.satellite/geojson({})/'
+           'auto/600x600.png256?access_token=pk.test'.format(overlay))
+
     responses.add(
-        responses.GET,
-        'https://api.mapbox.com/v4/mapbox.satellite/geojson(%7B%22type%22%3A%20%22FeatureCollection%22%2C%20%22features%22%3A%20%5B%7B%22geometry%22%3A%20%7B%22type%22%3A%20%22Point%22%2C%20%22coordinates%22%3A%20%5B-61.7%2C%2012.1%5D%7D%2C%20%22type%22%3A%20%22Feature%22%2C%20%22properties%22%3A%20%7B%22title%22%3A%20%22point1%22%7D%7D%2C%20%7B%22geometry%22%3A%20%7B%22type%22%3A%20%22Point%22%2C%20%22coordinates%22%3A%20%5B-61.6%2C%2012.0%5D%7D%2C%20%22type%22%3A%20%22Feature%22%2C%20%22properties%22%3A%20%7B%7D%7D%5D%7D)/auto/600x600.png256?access_token=pk.test',
+        responses.GET, url,
         match_querystring=True,
         body='png123',
         status=200,
