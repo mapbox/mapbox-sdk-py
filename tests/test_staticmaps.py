@@ -48,7 +48,7 @@ def test_staticmap_lonlatz_only():
         status=200,
         content_type='image/png')
 
-    res = mapbox.Static(access_token='pk.test').staticmap('mapbox.satellite', -61.7, 12.1, 12)
+    res = mapbox.Static(access_token='pk.test').image('mapbox.satellite', -61.7, 12.1, 12)
     assert res.status_code == 200
 
 
@@ -68,7 +68,7 @@ def test_staticmap_lonlatz_features(points):
         status=200,
         content_type='image/png')
 
-    res = mapbox.Static(access_token='pk.test').staticmap('mapbox.satellite',
+    res = mapbox.Static(access_token='pk.test').image('mapbox.satellite',
                                                           -61.7, 12.1, 12,
                                                           points)
     assert res.status_code == 200
@@ -89,11 +89,11 @@ def test_staticmap_auto_features(points):
         status=200,
         content_type='image/png')
 
-    res = mapbox.Static(access_token='pk.test').staticmap('mapbox.satellite',
+    res = mapbox.Static(access_token='pk.test').image('mapbox.satellite',
                                                           features=points)
     assert res.status_code == 200
 
 
 def test_staticmap_auto_nofeatures(points):
     with pytest.raises(ValueError):
-        mapbox.Static(access_token='pk.test').staticmap('mapbox.satellite')
+        mapbox.Static(access_token='pk.test').image('mapbox.satellite')

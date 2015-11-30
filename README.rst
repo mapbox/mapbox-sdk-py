@@ -150,9 +150,9 @@ Static maps are standalone images that can be displayed on web and mobile device
 .. code:: python
 
     from mapbox import Static
-    res = Static().staticmap('mapbox.satellite',
-                             lon=-61.7, lat=12.1, z=12,
-                             features=list_of_points)
+    res = Static().image('mapbox.satellite',
+                         lon=-61.7, lat=12.1, z=12,
+                         features=list_of_points)
 
     with open('map.png', 'wb') as output:
         output.write(res.content)

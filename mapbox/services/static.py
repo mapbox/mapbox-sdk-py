@@ -11,8 +11,8 @@ class Static(Service):
         self.baseuri = 'https://api.mapbox.com/v4'
         self.session = self.get_session(access_token)
 
-    def staticmap(self, mapid, lon=None, lat=None, z=None, features=None,
-                  width=600, height=600, image_format='png256'):
+    def image(self, mapid, lon=None, lat=None, z=None, features=None,
+              width=600, height=600, image_format='png256'):
 
         if lon and lat and z:
             auto = False
