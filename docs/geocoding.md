@@ -1,5 +1,5 @@
-SDK Usage Examples
-==================
+Geocoding
+=========
 
 # Module import
 
@@ -65,12 +65,12 @@ The JSON response extends GeoJSON's `FeatureCollection`.
 ```python
 
 >>> response = geocoder.forward('Chester, NJ')
->>> data = response.json()
->>> data['type'] == 'FeatureCollection'
+>>> collection = response.json()
+>>> collection['type'] == 'FeatureCollection'
 True
->>> sorted(data.keys())
+>>> sorted(collection.keys())
 ['attribution', 'features', 'query', 'type']
->>> data['query']
+>>> collection['query']
 ['chester', 'nj']
 
 ```
@@ -80,7 +80,7 @@ collection, sorted by relevance to the query.
 
 ```python
 
->>> first = data['features'][0]
+>>> first = collection['features'][0]
 >>> first['type'] == 'Feature'
 True
 >>> sorted(first.keys())
