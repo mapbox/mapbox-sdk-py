@@ -31,6 +31,11 @@ Services
   - Forward (place names ⇢ longitude, latitude)
   - Reverse (longitude, latitude ⇢ place names)
 
+- `Static Maps <https://www.mapbox.com/developers/api/static/>`__
+
+  - Generate standalone images from existing Mapbox mapids
+  - Render with GeoJSON overlays
+
 - `Surface <https://www.mapbox.com/developers/api/surface/>`__
 
   - Interpolates values along lines. Useful for elevation traces.
@@ -137,6 +142,20 @@ which returns::
     }
     
 See ``import mapbox; help(mapbox.Distance)`` for more detailed usage.
+
+Static Maps
+-----------
+Static maps are standalone images that can be displayed on web and mobile devices without the aid of a mapping library or API. Static maps can display GeoJSON overlays and the `simplestyle-spec <https://github.com/mapbox/simplestyle-spec>`_ styles will be respected and rendered.
+
+.. code:: python
+
+    from mapbox import Static
+    res = Static().staticmap('mapbox.satellite',
+                             lon=-61.7, lat=12.1, z=12,
+                             features=list_of_points)
+
+    with open('map.png', 'wb') as output:
+        output.write(res.content)
 
 
 Surface
