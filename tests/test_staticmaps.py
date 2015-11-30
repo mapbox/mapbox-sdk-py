@@ -1,9 +1,16 @@
 import json
-from collections import OrderedDict
+
 try:
     from urllib import quote
 except ImportError:
+    # python 3
     from urllib.parse import quote
+
+try:
+    from collections import OrderedDict
+except ImportError:
+    # python 2.6
+    from ordereddict import OrderedDict
 
 import pytest
 import responses
@@ -72,7 +79,7 @@ def test_staticmap_auto_features(points):
     overlay = json.dumps({'type': 'FeatureCollection',
                           'features': points})
     overlay = quote(overlay)
-    url = ('https://api.mapbox.com/v4/mapbox.satellite/geojson({})/'
+    url = ('https://api.mapbox.com/v4/mapbox.satellite/geojson({0})/'
            'auto/600x600.png256?access_token=pk.test'.format(overlay))
 
     responses.add(
