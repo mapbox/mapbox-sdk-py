@@ -35,7 +35,6 @@ setup(name='mapbox',
           'requests',
           'uritemplate.py',
           'boto3',
-          'polyline'
       ],
       extras_require={
           'test': ['coveralls', 'pytest', 'pytest-cov', 'responses']})
