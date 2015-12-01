@@ -156,14 +156,14 @@ Places at a longitude, latitude point may be found using `Geocoder.reverse()`.
 >>> response = geocoder.reverse(lon=-73.989, lat=40.733)
 >>> response.status_code
 200
->>> for place in response.geojson()['features']:
-...     print(place['place_name'], place['id'])
-Atlas Installation, 124 E 13th St, New York, New York 10003, United States poi.2701346205
-Gramercy-Flatiron, New York, 10003, New York, United States neighborhood.21161
-New York, New York, United States place.37501
-10003, New York, United States postcode.2254639497
-New York, United States region.628083222
-United States country.4150104525
+>>> for f in response.geojson()['features']:
+...     print('{place_name}: {id}'.format(**f))
+Atlas Installation, 124 E 13th St, New York, New York 10003, United States: poi.2701346205
+Gramercy-Flatiron, New York, 10003, New York, United States: neighborhood.21161
+New York, New York, United States: place.37501
+10003, New York, United States: postcode.2254639497
+New York, United States: region.628083222
+United States: country.4150104525
 
 ```
 
@@ -177,9 +177,9 @@ Both `forward()` and `reverse()` can be restricted to one or more place types.
 ...     lon=-73.989, lat=40.733, types=['poi', 'neighborhood'])
 >>> response.status_code
 200
->>> for place in response.geojson()['features']:
-...     print(place['place_name'], place['id'])
-Atlas Installation, 124 E 13th St, New York, New York 10003, United States poi.2701346205
-Gramercy-Flatiron, New York, 10003, New York, United States neighborhood.21161
+>>> for f in response.geojson()['features']:
+...     print('{place_name}: {id}'.format(**f))
+Atlas Installation, 124 E 13th St, New York, New York 10003, United States: poi.2701346205
+Gramercy-Flatiron, New York, 10003, New York, United States: neighborhood.21161
 
 ```
