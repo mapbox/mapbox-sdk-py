@@ -1,20 +1,23 @@
 Geocoding
 =========
 
-# Module import
-
-The Mapbox Python SDK is accessed from classes and methods of the `mapbox`
-module.
+The `Geocoder` class from the `mapbox.services.geocoding` module provides
+access to the Mapbox Geocoding API. You can also import it directly from the
+`mapbox` module.
 
 ```python
 
->>> import mapbox
+>>> from mapbox import Geocoder
 
 ```
 
+See https://www.mapbox.com/developers/api/geocoding/ for general documentation
+of the API.
+
 # Access Tokens
 
-Your Mapbox access token can be exported into your environment
+Geocoding requires an access token. Your Mapbox access token can be exported
+into your environment
 
 ```bash
 
@@ -22,27 +25,54 @@ export MAPBOX_ACCESS_TOKEN="YOUR_ACCESS_TOKEN"
 
 ```
 
-or can be passed explicitly to service constructors.
+and it will be found by the `Geocoder` class when creating a new instance.
 
 ```python
 
+>>> geocoder = Geocoder()
 >>> import os
->>> YOUR_ACCESS_TOKEN = os.environ['MAPBOX_ACCESS_TOKEN']
->>> geocoder = mapbox.Geocoder(access_token=YOUR_ACCESS_TOKEN)
+>>> geocoder.session.params['access_token'] == os.environ['MAPBOX_ACCESS_TOKEN']
+True
 
 ```
 
-# Geocoding
+Or it can be passed explicitly to the `Geocoder` constructor.
 
 ```python
 
->>> geocoder = mapbox.Geocoder()
+
+>>> YOUR_ACCESS_TOKEN = os.environ['MAPBOX_ACCESS_TOKEN']
+>>> geocoder = Geocoder(access_token=YOUR_ACCESS_TOKEN)
 
 ```
 
-## Coverage
+## Geocoding sources
+
+If your account enables access to the *mapbox.places-permanent* dataset, you
+can use it specify it with a keyword argument to the `Geocoder` constructor.
+
+```python
+
+>>> perm_geocoder = Geocoder(name='mapbox.places-permanent')
+
+```
+
+Best practice for access tokens and geocoding sources is to create a new
+instance for each new access token or source dataset.
+
+## Geocoder methods
+
+The methods of the `Geocoder` class that provide access to the Geocoding API
+return an instance of
+[`requests.Response`](http://docs.python-requests.org/en/latest/api/#requests.Response).
+In addition to the `json()` method that returns Python data parsed from the
+API, the `Geocoder` responses provide a `geojson()` method that converts that
+data to a GeoJSON like form.
 
 ## Limits
+
+The Geocoding API is rate limited. Details of the limits and current state
+are accessible through response headers.
 
 ```python
 
@@ -90,10 +120,66 @@ True
 
 ## Forward geocoding
 
+Places at an address may be found using `Geocoder.forward()`.
+
 ```python
 
->>> response = geocoder.forward('1600 pennsylvania ave nw')
+>>> response = geocoder.forward("200 queen street")
 >>> response.status_code
 200
+>>> response.geojson()['features'][0]['place_name']
+'200 Queen St W, Toronto, M5T 1T9, Canada'
+
+```
+
+## Forward geocoding with proximity
+
+Place results may be biased toward a given longitude and latitude.
+
+```python
+
+>>> response = geocoder.forward(
+...     "200 queen street", lon=-66.1, lat=45.3)
+>>> response.status_code
+200
+>>> response.geojson()['features'][0]['place_name']
+'200 Queen St, Saint John, E2L 2X1, Canada'
+
+```
+
+## Reverse geocoding
+
+Places at a longitude, latitude point may be found using `Geocoder.reverse()`.
+
+```python
+
+>>> response = geocoder.reverse(lon=-73.989, lat=40.733)
+>>> response.status_code
+200
+>>> for place in response.geojson()['features']:
+...     print(place['place_name'], place['id'])
+Atlas Installation, 124 E 13th St, New York, New York 10003, United States poi.2701346205
+Gramercy-Flatiron, New York, 10003, New York, United States neighborhood.21161
+New York, New York, United States place.37501
+10003, New York, United States postcode.2254639497
+New York, United States region.628083222
+United States country.4150104525
+
+```
+
+## Filtering by type
+
+Both `forward()` and `reverse()` can be restricted to one or more place types.
+
+```python
+
+>>> response = geocoder.reverse(
+...     lon=-73.989, lat=40.733, types=['poi', 'neighborhood'])
+>>> response.status_code
+200
+>>> for place in response.geojson()['features']:
+...     print(place['place_name'], place['id'])
+Atlas Installation, 124 E 13th St, New York, New York 10003, United States poi.2701346205
+Gramercy-Flatiron, New York, 10003, New York, United States neighborhood.21161
 
 ```
