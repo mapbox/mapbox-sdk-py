@@ -40,7 +40,9 @@ class Geocoder(Service):
         if types:
             params.update(self._validate_place_types(types))
         if lon is not None and lat is not None:
-            params.update(proximity='{0},{1}'.format(round(float(lon), self.precision.get('proximity', 3)), round(float(lat), self.precision.get('proximity', 3))))
+            params.update(proximity='{0},{1}'.format(
+                round(float(lon), self.precision.get('proximity', 3)),
+                round(float(lat), self.precision.get('proximity', 3))))
         resp = self.session.get(uri, params=params)
         self.handle_http_error(resp)
 
@@ -60,7 +62,9 @@ class Geocoder(Service):
 
         See: https://www.mapbox.com/developers/api/geocoding/#reverse."""
         uri = URITemplate(self.baseuri + '/{dataset}/{lon},{lat}.json').expand(
-            dataset=self.name, lon=str(round(float(lon), self.precision.get('reverse', 5))), lat=str(round(float(lat), self.precision.get('reverse', 5))))
+            dataset=self.name,
+            lon=str(round(float(lon), self.precision.get('reverse', 5))),
+            lat=str(round(float(lat), self.precision.get('reverse', 5))))
         params = {}
         if types:
             params.update(self._validate_place_types(types))
