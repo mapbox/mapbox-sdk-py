@@ -19,10 +19,8 @@ Your Mapbox access token should be set in your environment; see the [access toke
 The methods of the `Static` class that provide access to the Static Maps API
 return an instance of
 [`requests.Response`](http://docs.python-requests.org/en/latest/api/#requests.Response).
-The
-In addition to the `json()` method that returns Python data parsed from the
-API, the `Directions` responses provide a `geojson()` method that converts that
-data to a GeoJSON like form.
+The `content()` method returns the raw bytestring that can be saved into an image file 
+with the appropriate extension.
 
 ## Usage
 
