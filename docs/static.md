@@ -35,8 +35,8 @@ Static maps are standalone images that can be displayed on web and mobile device
 >>> response = service.image('mapbox.satellite',
 ...                          lon=-61.7, lat=12.1, z=12)
 
->>> response.content[1:4] == 'PNG'
-True
+>>> response.headers['Content-Type']
+'image/png'
 
 ```
 
@@ -50,8 +50,8 @@ Static maps can also display GeoJSON overlays and the [simplestyle-spec](https:/
 >>> response = service.image('mapbox.satellite',
 ...                          features=[portland, bend])
 
->>> response.content[1:4] == 'PNG'
-True
+>>> response.headers['Content-Type']
+'image/png'
 
 ```
 

@@ -13,7 +13,7 @@ access to the Mapbox Geocoding API. You can also import it directly from the
 See https://www.mapbox.com/developers/api/geocoding/ for general documentation
 of the API.
 
-Your Mapbox access token should be set in your environment; eee the [access tokens](access_tokens.md) documentation for more information.
+Your Mapbox access token should be set in your environment; see the [access tokens](access_tokens.md) documentation for more information.
 
 ## Geocoding sources
 
