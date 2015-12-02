@@ -15,32 +15,38 @@ The Mapbox Python SDK is a low-level client API, not a Resource API such as the 
 Services
 ========
 
-- `Directions <https://www.mapbox.com/developers/api/directions/>`__
+- **Directions** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/directions.md#directions>`__ ,
+`website <https://www.mapbox.com/developers/api/directions/>`__
 
   - Profiles for driving, walking, and cycling
   - GeoJSON & Polyline formatting
   - Instructions as text or HTML
 
-- `Distance <https://www.mapbox.com/developers/api/distance/>`__
+- **Distance** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/distance.md#distance>`__ ,
+`website <https://www.mapbox.com/developers/api/distance/>`__
 
   - Travel-time tables between up to 100 points
   - Profiles for driving, walking and cycling
 
-- `Geocoding <https://www.mapbox.com/developers/api/geocoding/>`__
+- **Geocoding** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/geocoding.md#geocoding>`__ ,
+`website <https://www.mapbox.com/developers/api/geocoding/>`__
 
   - Forward (place names ⇢ longitude, latitude)
   - Reverse (longitude, latitude ⇢ place names)
 
-- `Static Maps <https://www.mapbox.com/developers/api/static/>`__
+- **Static Maps** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/surface.md#surface>`__ ,
+  `website <https://www.mapbox.com/developers/api/static/>`__
 
   - Generate standalone images from existing Mapbox mapids
   - Render with GeoJSON overlays
 
-- `Surface <https://www.mapbox.com/developers/api/surface/>`__
+- **Surface** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/surface.md#surface>`__ ,
+`website <https://www.mapbox.com/developers/api/surface/>`__
 
   - Interpolates values along lines. Useful for elevation traces.
 
-- `Uploads <https://www.mapbox.com/developers/api/uploads/>`__
+- **Uploads** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/uploads.md#uploads>`__ ,
+  `website <https://www.mapbox.com/developers/api/uploads/>`__
 
   - Upload data to be processed and hosted by Mapbox.
 
@@ -53,126 +59,6 @@ Installation
 
     $ pip install mapbox
 
-
-API Usage
-=========
-
-Geocoder
---------
-
-To begin geocoding, import the mapbox module and create a new
-``Geocoder`` object with your `Mapbox access token 
-<https://www.mapbox.com/developers/api/#access-tokens>`__.
-
-.. code:: python
-
-    >>> import mapbox
-    >>> geocoder = mapbox.Geocoder(access_token='YOUR_ACCESS_TOKEN')
-
-
-``Geocoder``'s methods return `Requests <http://www.python-requests.org/en/latest/>`__ style response objects.
-
-.. code:: python
-
-    response = geocoder.forward('Chester, NJ')
-
-    # response.json() returns the geocoding result as GeoJSON.
-    # response.status_code returns the HTTP API status code.
-
-    response = geocoder.reverse(lon=-74.7083, lat=40.7851)
-
-See ``import mapbox; help(mapbox.Geocoder)`` for more detailed usage.
-
-
-Upload
-------
-To upload data, you must created a token with ``uploads:*`` scopes at https://www.mapbox.com/account/apps/.
-Then upload any supported file to your account using the ``Uploader`` 
-
-.. code:: python
-    
-    from mapbox import Uploader
-    conxn = Uploader('username', access_token='MY_TOKEN')
-    resp = conxn.upload('RGB.byte.tif', 'RGB-byte-tif')
-    upload_id = resp.json()['id']
-
-    resp = conxn.status(upload_id).json()
-    resp['complete']  # True
-    resp['tileset']   # "username.RGB-byte-tif"
-
-See ``import mapbox; help(mapbox.Uploader)`` for more detailed usage.
-
-
-Directions
-----------
-To get travel directions between waypoints, you can use the Directions API to route up to 25 points.
-Each of your input waypoints will be visited in order and should be 
-represented by a GeoJSON point feature.
-
-.. code:: python
-    
-    from mapbox import Directions
-    resp = Directions('mapbox.driving').directions([origin, destination])
-    driving_routes = resp.geojson()
-    first_route = driving_routes['features'][0]
-
-See ``import mapbox; help(mapbox.Directions)`` for more detailed usage.
-
-
-Distance
---------
-If you need to optimize travel between several waypoints, you can use the Distance API to
-create a "Distance Matrix" showing travel times between all waypoints.
-Each of your input waypoints should be a GeoJSON point feature.
-
-.. code:: python
-    
-    from mapbox import Distance
-    resp = Distance('mapbox.driving').distance(points['features'])
-    resp.json()
-
-which returns::
-
-    {
-      "durations": [
-        [ 0,    2910, null ],
-        [ 2903, 0,    5839 ],
-        [ 4695, 5745, 0    ]
-      ]
-    }
-    
-See ``import mapbox; help(mapbox.Distance)`` for more detailed usage.
-
-Static Maps
------------
-Static maps are standalone images that can be displayed on web and mobile devices without the aid of a mapping library or API. Static maps can display GeoJSON overlays and the `simplestyle-spec <https://github.com/mapbox/simplestyle-spec>`_ styles will be respected and rendered.
-
-.. code:: python
-
-    from mapbox import Static
-    res = Static().image('mapbox.satellite',
-                         lon=-61.7, lat=12.1, z=12,
-                         features=list_of_points)
-
-    with open('map.png', 'wb') as output:
-        output.write(res.content)
-
-
-Surface
--------
-To query vector tile attributes along a series of points or a line, you can use the Surface API.
-For example, you could create an elevation profile against a GeoJSON LineString feature
-
-.. code:: python
-
-    from mapbox import Surface
-    Surface().surface([route], mapid='mapbox.mapbox-terrain-v1',
-                      layer='contour', fields=['ele'])
-    profile_pts = resp.geojson()
-
-See ``import mapbox; help(mapbox.Surface)`` for more detailed usage.
-
-
 Testing
 =======
 
@@ -180,6 +66,12 @@ Testing
 
     pip install -e .[test]
     py.test
+
+To run the examples as integration tests on your own Mapbox account
+
+.. code:: bash
+
+    MAPBOX_ACCESS_TOKEN="MY_ACCESS_TOKEN" py.test --doctest-glob='*.md' *.md
 
 See Also
 ========

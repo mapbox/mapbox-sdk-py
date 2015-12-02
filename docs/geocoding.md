@@ -1,5 +1,4 @@
-Geocoding
-=========
+# Geocoding
 
 The `Geocoder` class from the `mapbox.services.geocoding` module provides
 access to the Mapbox Geocoding API. You can also import it directly from the
@@ -14,37 +13,7 @@ access to the Mapbox Geocoding API. You can also import it directly from the
 See https://www.mapbox.com/developers/api/geocoding/ for general documentation
 of the API.
 
-# Access Tokens
-
-Geocoding requires an access token. Your Mapbox access token can be exported
-into your environment
-
-```bash
-
-export MAPBOX_ACCESS_TOKEN="YOUR_ACCESS_TOKEN"
-
-```
-
-and it will be found by the `Geocoder` class when creating a new instance.
-
-```python
-
->>> geocoder = Geocoder()
->>> import os
->>> geocoder.session.params['access_token'] == os.environ['MAPBOX_ACCESS_TOKEN']
-True
-
-```
-
-Or it can be passed explicitly to the `Geocoder` constructor.
-
-```python
-
-
->>> YOUR_ACCESS_TOKEN = os.environ['MAPBOX_ACCESS_TOKEN']
->>> geocoder = Geocoder(access_token=YOUR_ACCESS_TOKEN)
-
-```
+Your Mapbox access token should be set in your environment; eee the [access tokens](access_tokens.md) documentation for more information.
 
 ## Geocoding sources
 
@@ -57,8 +26,13 @@ can use it specify it with a keyword argument to the `Geocoder` constructor.
 
 ```
 
-Best practice for access tokens and geocoding sources is to create a new
-instance for each new access token or source dataset.
+For the default *mapbox.places* geocoder, you don't need to specify any arguments
+
+```python
+
+>>> geocoder = Geocoder()
+
+```
 
 ## Geocoder methods
 
