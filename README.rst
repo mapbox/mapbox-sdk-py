@@ -15,38 +15,32 @@ The Mapbox Python SDK is a low-level client API, not a Resource API such as the 
 Services
 ========
 
-- **Directions** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/directions.md#directions>`__ ,
-`website <https://www.mapbox.com/developers/api/directions/>`__
+- **Directions** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/directions.md#directions>`__ , `website <https://www.mapbox.com/developers/api/directions/>`__
 
   - Profiles for driving, walking, and cycling
   - GeoJSON & Polyline formatting
   - Instructions as text or HTML
 
-- **Distance** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/distance.md#distance>`__ ,
-`website <https://www.mapbox.com/developers/api/distance/>`__
+- **Distance** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/distance.md#distance>`__ ,     `website <https://www.mapbox.com/developers/api/distance/>`__
 
   - Travel-time tables between up to 100 points
   - Profiles for driving, walking and cycling
 
-- **Geocoding** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/geocoding.md#geocoding>`__ ,
-`website <https://www.mapbox.com/developers/api/geocoding/>`__
+- **Geocoding** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/geocoding.md#geocoding>`__ , `website <https://www.mapbox.com/developers/api/geocoding/>`__
 
   - Forward (place names ⇢ longitude, latitude)
   - Reverse (longitude, latitude ⇢ place names)
 
-- **Static Maps** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/surface.md#surface>`__ ,
-  `website <https://www.mapbox.com/developers/api/static/>`__
+- **Static Maps** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/surface.md#surface>`__ , `website <https://www.mapbox.com/developers/api/static/>`__
 
   - Generate standalone images from existing Mapbox mapids
   - Render with GeoJSON overlays
 
-- **Surface** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/surface.md#surface>`__ ,
-`website <https://www.mapbox.com/developers/api/surface/>`__
+- **Surface** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/surface.md#surface>`__ , `website <https://www.mapbox.com/developers/api/surface/>`__
 
   - Interpolates values along lines. Useful for elevation traces.
 
-- **Uploads** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/uploads.md#uploads>`__ ,
-  `website <https://www.mapbox.com/developers/api/uploads/>`__
+- **Uploads** `examples <https://github.com/mapbox/mapbox-sdk-py/blob/master/docs/uploads.md#uploads>`__ , `website <https://www.mapbox.com/developers/api/uploads/>`__
 
   - Upload data to be processed and hosted by Mapbox.
 
