@@ -31,7 +31,7 @@ Services
   - Forward (place names ⇢ longitude, latitude)
   - Reverse (longitude, latitude ⇢ place names)
 
-- **Static Maps** `examples <./docs/surface.md#surface>`__, `website <https://www.mapbox.com/developers/api/static/>`__
+- **Static Maps** `examples <./docs/static.md#static-maps>`__, `website <https://www.mapbox.com/developers/api/static/>`__
 
   - Generate standalone images from existing Mapbox mapids
   - Render with GeoJSON overlays

@@ -1,4 +1,4 @@
-# Static
+# Static Maps
 
 The `Static` class from the `mapbox.services.static` module provides
 access to the Mapbox Static Maps API. You can also import it directly from the
