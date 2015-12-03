@@ -1,8 +1,8 @@
 import json
+
 import responses
 
-import mapbox
-from mapbox.services.datasets import Dataset, Datasets, batch, iter_features
+from mapbox.services.datasets import Datasets, batch, iter_features
 
 
 def test_datasets_name():
@@ -65,7 +65,7 @@ def test_datasets_list():
         body=body, status=200,
         content_type='application/json')
 
-    response = Datasets('juser', access_token='pk.test').list()
+    response = Datasets('juser', access_token='pk.test').list_datasets()
     assert response.status_code == 200
     assert [item['id'] for item in response.json()] == ['ds1', 'ds2']
 
@@ -92,7 +92,7 @@ def test_datasets_create_with_name_description():
         match_querystring=True,
         callback=request_callback)
 
-    response = Datasets('juser', access_token='pk.test').create(
+    response = Datasets('juser', access_token='pk.test').create_dataset(
         name='things', description='a collection of things')
     assert response.status_code == 200
     assert response.json()['name'] == 'things'
@@ -111,8 +111,7 @@ def test_dataset_retrieve_features():
         status=200,
         content_type='application/json')
 
-    response = Dataset(
-        'juser', 'test', access_token='pk.test').retrieve_features()
+    response = Datasets('juser', access_token='pk.test').list_features('test')
     assert response.status_code == 200
     assert response.json()['type'] == 'FeatureCollection'
 
@@ -132,7 +131,7 @@ def test_dataset_update_features():
         match_querystring=True,
         callback=request_callback)
 
-    response = Dataset(
-        'juser', 'test', access_token='pk.test').update_features(
+    response = Datasets('juser', access_token='pk.test').update_features(
+            'test',
             put=[{'type': 'Feature'}])
     assert response.status_code == 200
