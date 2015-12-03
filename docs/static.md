@@ -43,9 +43,19 @@ Static maps are standalone images that can be displayed on web and mobile device
 Static maps can also display GeoJSON overlays and the [simplestyle-spec](https://github.com/mapbox/simplestyle-spec) styles will be respected and rendered. If features are provided, the lat, lon and z can be set automatically.
 
 ```python
->>> portland = {'type': 'Feature', 'properties': { 'name': 'Portland, OR'}, 'geometry': { 'type': 'Point', 'coordinates': [-122.7282, 45.5801]}}
+>>> portland = {
+...    'type': 'Feature',
+...    'properties': {'name': 'Portland, OR'},
+...    'geometry': {
+...        'type': 'Point',
+...        'coordinates': [-122.7282, 45.5801]}}
 
->>> bend = { 'type': 'Feature', 'properties': { 'name': 'Bend, OR'}, 'geometry': { 'type': 'Point', 'coordinates': [-121.3153, 44.0582]}}
+>>> bend = {
+...    'type': 'Feature',
+...    'properties': {'name': 'Bend, OR'},
+...    'geometry': {
+...        'type': 'Point',
+...        'coordinates': [-121.3153, 44.0582]}}
 
 >>> response = service.image('mapbox.satellite',
 ...                          features=[portland, bend])

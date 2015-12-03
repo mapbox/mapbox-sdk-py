@@ -35,18 +35,26 @@ list of GeoJSON point features.
 Create a series of point features
 
 ```python
->>> a = {'type': 'Feature', 'geometry': {'type': 'Point', 'coordinates': [-112.084004, 36.053220]}, 'properties': {} }
-
->>> b = {'type': 'Feature', 'geometry': {'type': 'Point', 'coordinates': [-112.083914, 36.053573]}, 'properties': {} }
-
->>> c = {'type': 'Feature', 'geometry': {'type': 'Point', 'coordinates': [-112.083965, 36.053845]}, 'properties': {} }
+>>> features = [{
+...    'type': 'Feature',
+...    'geometry': {
+...        'type': 'Point',
+...        'coordinates': [-112.084004, 36.053220]}}, {
+...    'type': 'Feature',
+...    'geometry': {
+...        'type': 'Point',
+...        'coordinates': [-112.083914, 36.053573]}}, {
+...    'type': 'Feature',
+...    'geometry': {
+...        'type': 'Point',
+...        'coordinates': [-112.083965, 36.053845]}}]
 
 ```
 
 Use the `surface` method to query the terrain dataset
 
 ```python
->>> response = service.surface([a, b, c], mapid='mapbox.mapbox-terrain-v1', layer='contour', fields=['ele'])
+>>> response = service.surface(features, mapid='mapbox.mapbox-terrain-v1', layer='contour', fields=['ele'])
 
 ```
 

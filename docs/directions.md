@@ -37,9 +37,19 @@ represented by a GeoJSON point feature.
 The input waypoints to the `directions` method are [features](input_features.md), typically GeoJSON-like feature dictionaries.
 
 ```python
->>> origin = {'type': 'Feature', 'properties': { 'name': 'Portland, OR'}, 'geometry': { 'type': 'Point', 'coordinates': [-122.7282, 45.5801]}}
+>>> origin = {
+...    'type': 'Feature',
+...    'properties': {'name': 'Portland, OR'},
+...    'geometry': {
+...        'type': 'Point',
+...        'coordinates': [-122.7282, 45.5801]}}
 
->>> destination = { 'type': 'Feature', 'properties': { 'name': 'Bend, OR'}, 'geometry': { 'type': 'Point', 'coordinates': [-121.3153, 44.0582]}}
+>>> destination = {
+...    'type': 'Feature',
+...    'properties': {'name': 'Bend, OR'},
+...    'geometry': {
+...        'type': 'Point',
+...        'coordinates': [-121.3153, 44.0582]}}
 
 ```
 

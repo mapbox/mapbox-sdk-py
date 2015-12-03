@@ -35,11 +35,26 @@ Each of your input waypoints should be a GeoJSON point feature.
 
 The input waypoints to the `directions` method are [features](input_features.md), typically GeoJSON-like feature dictionaries.
 ```python
->>> portland = {'type': 'Feature', 'properties': { 'name': 'Portland, OR'}, 'geometry': { 'type': 'Point', 'coordinates': [-122.7282, 45.5801]}}
+>>> portland = {
+...    'type': 'Feature',
+...    'properties': {'name': 'Portland, OR'},
+...    'geometry': {
+...        'type': 'Point',
+...        'coordinates': [-122.7282, 45.5801]}}
 
->>> bend = { 'type': 'Feature', 'properties': { 'name': 'Bend, OR'}, 'geometry': { 'type': 'Point', 'coordinates': [-121.3153, 44.0582]}}
+>>> bend = {
+...    'type': 'Feature',
+...    'properties': {'name': 'Bend, OR'},
+...    'geometry': {
+...        'type': 'Point',
+...        'coordinates': [-121.3153, 44.0582]}}
 
->>> corvallis = { 'type': 'Feature', 'properties': { 'name': 'Corvallis, OR'}, 'geometry': { 'type': 'Point', 'coordinates': [-123.268, 44.5639]}}
+>>> corvallis = {
+...    'type': 'Feature',
+...    'properties': {'name': 'Corvallis, OR'},
+...    'geometry': {
+...        'type': 'Point',
+...        'coordinates': [-123.268, 44.5639]}}
 
 ```
 
