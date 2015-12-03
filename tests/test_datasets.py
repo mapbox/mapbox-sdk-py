@@ -19,6 +19,13 @@ def test_iter_features_collection():
     assert list(iter_features(iter(src))) == [{'type': 'Feature'}]
 
 
+def test_batch_features_collection():
+    src = json.dumps(
+        {'type': 'FeatureCollection', 'features': [{'type': 'Feature'}]},
+        indent=2).split('\n')
+    assert list(next(batch(iter_features(iter(src)), size=1))) == [{'type': 'Feature'}]
+
+
 def test_iter_features_sequence():
     src = [json.dumps({'type': 'Feature'}), json.dumps({'type': 'Feature'})]
     assert list(iter_features(iter(src), is_sequence=True)) == [{'type': 'Feature'}, {'type': 'Feature'}]
