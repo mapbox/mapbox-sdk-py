@@ -55,6 +55,10 @@ Use the `surface` method to query the terrain dataset
 
 ```python
 >>> response = service.surface(features, mapid='mapbox.mapbox-terrain-v1', layer='contour', fields=['ele'])
+>>> response.status_code
+200
+>>> response.headers['Content-Type']
+'application/json; charset=utf-8'
 
 ```
 

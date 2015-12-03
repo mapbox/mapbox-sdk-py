@@ -41,14 +41,12 @@ The input waypoints to the `directions` method are [features](input_features.md)
 ...    'geometry': {
 ...        'type': 'Point',
 ...        'coordinates': [-122.7282, 45.5801]}}
-
 >>> bend = {
 ...    'type': 'Feature',
 ...    'properties': {'name': 'Bend, OR'},
 ...    'geometry': {
 ...        'type': 'Point',
 ...        'coordinates': [-121.3153, 44.0582]}}
-
 >>> corvallis = {
 ...    'type': 'Feature',
 ...    'properties': {'name': 'Corvallis, OR'},
@@ -63,6 +61,10 @@ The `distance` method can be called with a list of point features and the travel
 
 ```python
 >>> response = service.distances([portland, bend, corvallis], 'driving')
+>>> response.status_code
+200
+>>> response.headers['Content-Type']
+'application/json; charset=utf-8'
 
 ```
 

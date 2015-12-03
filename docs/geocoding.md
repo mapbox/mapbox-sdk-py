@@ -101,6 +101,8 @@ Places at an address may be found using `Geocoder.forward()`.
 >>> response = geocoder.forward("200 queen street")
 >>> response.status_code
 200
+>>> response.headers['Content-Type']
+'application/vnd.geo+json; charset=utf-8'
 >>> response.geojson()['features'][0]['place_name']
 '200 Queen St W, Toronto, M5T 1T9, Canada'
 

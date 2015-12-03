@@ -43,7 +43,6 @@ The input waypoints to the `directions` method are [features](input_features.md)
 ...    'geometry': {
 ...        'type': 'Point',
 ...        'coordinates': [-122.7282, 45.5801]}}
-
 >>> destination = {
 ...    'type': 'Feature',
 ...    'properties': {'name': 'Bend, OR'},
@@ -57,6 +56,10 @@ The directions methods can be called with a list of features and the desired pro
 
 ```python
 >>> response = service.directions([origin, destination], 'mapbox.driving')
+>>> response.status_code
+200
+>>> response.headers['Content-Type']
+'application/json; charset=utf-8'
 
 ```
 
@@ -65,10 +68,8 @@ as a GeoJSON-like FeatureCollection dictionary.
 
 ```python
 >>> driving_routes = response.geojson()
-
 >>> driving_routes['features'][0]['geometry']['type']
 u'LineString'
-
 >>> driving_routes['features'][0]['properties']['summary']
 u'Mount Hood Highway (US 26) - Warm Springs Highway (US 26)'
 
