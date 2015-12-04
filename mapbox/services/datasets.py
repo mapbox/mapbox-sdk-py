@@ -79,6 +79,12 @@ class Datasets(Service):
         uri = URITemplate(self.baseuri + '/{owner}').expand(owner=self.name)
         return self.session.post(uri, json=kwargs)
 
+    def delete_dataset(self, dataset):
+        """Delete a dataset."""
+        uri = URITemplate(self.baseuri + '/{owner}/{id}').expand(
+            owner=self.name, id=dataset)
+        return self.session.delete(uri)
+
     def list_features(self, dataset):
         """Return a Requests response object that contains the features
         of the dataset.
