@@ -1,6 +1,8 @@
 """Base Service class"""
 
 import os
+import base64
+import json
 
 import requests
 
@@ -26,6 +28,20 @@ class Service:
     def product_token(self):
         """A product token for use in User-Agent headers."""
         return 'mapbox-sdk-py/{0}'.format(__version__)
+
+    @property
+    def username(self):
+        """Get username from access token
+        Token contains base64 encoded json object with username"""
+        token = self.session.params['access_token']
+        if not token:
+            raise ValueError("session does not have a valid access_token param")
+        data = token.split('.')[1]
+        data = data.replace('-', '+').replace('_', '/')
+        try:
+            return json.loads(base64.b64decode(data).decode('utf-8'))['u']
+        except (ValueError, KeyError):
+            raise ValueError("access_token does not contain username")
 
     def handle_http_error(self, response, custom_messages=None,
                           raise_for_status=False):
