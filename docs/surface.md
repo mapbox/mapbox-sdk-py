@@ -54,7 +54,8 @@ Create a series of point features
 Use the `surface` method to query the terrain dataset
 
 ```python
->>> response = service.surface(features, mapid='mapbox.mapbox-terrain-v1', layer='contour', fields=['ele'])
+>>> response = service.surface(features, mapid='mapbox.mapbox-terrain-v1',
+...    layer='contour', fields=['ele'])
 >>> response.status_code
 200
 >>> response.headers['Content-Type']
@@ -67,6 +68,21 @@ And the response geojson FeatureCollection contains your input points with an `e
 >>> points = response.geojson()
 >>> [f['properties']['ele'] for f in points['features']]
 [2186.361304424316, 2187.6233827411997, 2163.921475128245]
+
+```
+
+You can also send your data as an *encoded polyline* which may be more efficient than raw point data,
+specify the *zoom level* of the vector tiles and turn off the default *interpolation*. 
+(Note that in this case, turning off interpolation does not produce
+the desired results as the waypoints lie between contours)
+
+```python
+>>> response = service.surface(features, mapid='mapbox.mapbox-terrain-v1',
+...    layer='contour', fields=['ele'],
+...    polyline=True, zoom=12, interpolate=False)
+>>> points = response.geojson()
+>>> [f['properties']['ele'] for f in points['features']]
+[None, None, None]
 
 ```
 
