@@ -142,3 +142,17 @@ def test_dataset_update_features():
             'test',
             put=[{'type': 'Feature'}])
     assert response.status_code == 200
+
+
+@responses.activate
+def test_delete_dataset():
+    """Delete a dataset"""
+
+    responses.add(
+        responses.DELETE,
+        'https://api.mapbox.com/datasets/v1/juser/test?access_token=pk.test',
+        match_querystring=True,
+        status=204)
+
+    response = Datasets('juser', access_token='pk.test').delete_dataset('test')
+    assert response.status_code == 204
