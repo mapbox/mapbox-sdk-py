@@ -1,8 +1,7 @@
 # Uploads
 
 The `Uploads` class from the `mapbox.services.uploads` module provides
-access to the Mapbox Uploads API. You can also import it directly from the
-`mapbox` module.
+access to the Mapbox Uploads API. You can also import it directly from the `mapbox` module.
 
 ```python
 >>> from mapbox import Uploader
@@ -24,23 +23,20 @@ return an instance of
 Then upload any supported file to your account using the ``Uploader`` 
 
 ```python
->>> service = Uploader('username')
+>>> service = Uploader()
+>>> response = service.upload('tests/moors.json', 'test-data')
+>>> response.status_code
+201
+>>> upload_id = response.json()['id']
 
 ```
 
+You can check the status of the upload using the upload_id
 ```
->>> response = service.upload('RGB.byte.tif', 'RGB-byte-tif')  # doctest: +SKIP
->>> upload_id = response.json()['id']  # doctest: +SKIP 
+>>> response = service.status(upload_id).json()
+>>> "test-data" in response['tileset']
+True
 
-```
-
-
-```
->>> response = service.status(upload_id).json()  # doctest: +SKIP
->>> response['complete']  # doctest: +SKIP
-False
->>> response['tileset']  # doctest: +SKIP
-"username.RGB-byte-tif"
 ```
 
 See ``import mapbox; help(mapbox.Uploader)`` for more detailed usage.
