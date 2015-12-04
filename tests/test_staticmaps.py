@@ -97,3 +97,9 @@ def test_staticmap_auto_features(points):
 def test_staticmap_auto_nofeatures(points):
     with pytest.raises(ValueError):
         mapbox.Static(access_token='pk.test').image('mapbox.satellite')
+
+
+def test_staticmap_featurestoolarge(points):
+    with pytest.raises(ValueError):
+        mapbox.Static(access_token='pk.test').image(
+            'mapbox.satellite', -61.7, 12.1, 12, points * 100)
