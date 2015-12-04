@@ -14,7 +14,7 @@ of the API.
 
 Your Mapbox access token should be set in your environment; see the [access tokens](access_tokens.md) documentation for more information.
 
-## Directions methods
+## Static methods
 
 The methods of the `Static` class that provide access to the Static Maps API
 return an instance of

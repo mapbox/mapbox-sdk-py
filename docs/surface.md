@@ -67,7 +67,7 @@ And the response geojson FeatureCollection contains your input points with an `e
 ```python
 >>> points = response.geojson()
 >>> [f['properties']['ele'] for f in points['features']]
-[2186.361304424316, 2187.6233827411997, 2163.921475128245]
+[2186.3..., 2187.6..., 2163.9...]
 
 ```
 
