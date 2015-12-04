@@ -129,6 +129,8 @@ def test_status():
 
     res = mapbox.Uploader(access_token=access_token).status(job)
     assert res.status_code == 200
+    res = mapbox.Uploader(access_token=access_token).status(job['id'])
+    assert res.status_code == 200
     status = res.json()
     assert job == status
 
@@ -145,3 +147,32 @@ def test_delete():
 
     res = mapbox.Uploader(access_token=access_token).delete(job)
     assert res.status_code == 204
+
+    res = mapbox.Uploader(access_token=access_token).delete(job['id'])
+    assert res.status_code == 204
+
+
+@responses.activate
+def test_upload():
+
+    # Credentials
+    query_body = """
+       {{"key": "_pending/{username}/key.test",
+         "accessKeyId": "ak.test",
+         "bucket": "tilestream-tilesets-production",
+         "url": "https://tilestream-tilesets-production.s3.amazonaws.com/_pending/{username}/key.test",
+         "secretAccessKey": "sak.test",
+         "sessionToken": "st.test"}}""".format(username=username)
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        match_querystring=True,
+        body=query_body, status=200,
+        content_type='application/json')
+
+
+    res2 = mapbox.Uploader(access_token=access_token).upload(
+        'tests/moors.json', 'testuser.test1')  # also takes full tileset
+    assert res2.status_code == 201
+    job = res2.json()
+    assert job['tileset'] == "{0}.test1".format(username)
