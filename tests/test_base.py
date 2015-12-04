@@ -1,3 +1,6 @@
+import base64
+import os
+
 import pytest
 import requests
 import responses
@@ -60,3 +63,36 @@ def test_custom_messages():
     with pytest.raises(requests.exceptions.HTTPError) as exc:
         assert service.handle_http_error(response, raise_for_status=True)
         assert "401" in exc.value.message
+
+
+class MockService(mapbox.Service):
+    def __init__(self, access_token=None):
+        # In order to get a username, a session must be created on init
+        self.session = self.get_session(access_token)
+
+def test_username(monkeypatch):
+    token = 'pk.{0}.test'.format(base64.b64encode(b'{"u":"testuser"}').decode('utf-8'))
+    service = MockService(access_token=token)
+    assert service.username == 'testuser'
+
+def test_username_failures(monkeypatch):
+    # If your superclass doesn't create a session
+    service = mapbox.Service()
+    with pytest.raises(AttributeError) as exc:
+        service.username
+        assert 'session' in exc.value.message
+
+    if 'MAPBOX_ACCESS_TOKEN' in os.environ:
+        monkeypatch.delenv('MAPBOX_ACCESS_TOKEN')
+    service = MockService()
+    with pytest.raises(ValueError) as exc:
+        service.username
+        assert 'access_token' in exc.value.message
+        assert 'param' in exc.value.message
+
+    token = "not.good"
+    service = MockService(access_token=token)
+    with pytest.raises(ValueError) as exc:
+        service.username
+        assert 'access_token' in exc.value.message
+        assert 'username' in exc.value.message

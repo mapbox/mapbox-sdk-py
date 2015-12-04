@@ -11,7 +11,7 @@ class Uploader(Service):
 
         from mapbox import Uploader
 
-        u = Uploader('username')
+        u = Uploader()
         url = u.stage('test.tif')
         job = u.create(url, 'test1').json()
 
@@ -24,8 +24,7 @@ class Uploader(Service):
         assert job not in u.list().json()
     """
 
-    def __init__(self, username, access_token=None):
-        self.username = username
+    def __init__(self, access_token=None):
         self.baseuri = 'https://api.mapbox.com/uploads/v1'
         self.session = self.get_session(access_token)
 
