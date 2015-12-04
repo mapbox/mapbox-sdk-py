@@ -76,7 +76,7 @@ def test_username(monkeypatch):
     assert service.username == 'testuser'
 
 def test_username_failures(monkeypatch):
-    # If your superclass doesn't create a session
+    # If your child class doesn't create a session
     service = mapbox.Service()
     with pytest.raises(AttributeError) as exc:
         service.username
