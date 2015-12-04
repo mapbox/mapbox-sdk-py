@@ -28,18 +28,18 @@ Then upload any supported file to your account using the ``Uploader``
 
 ```
 
-```python
->>> response = service.upload('RGB.byte.tif', 'RGB-byte-tif')
->>> upload_id = resp.json()['id']
+```
+>>> response = service.upload('RGB.byte.tif', 'RGB-byte-tif')  # doctest: +SKIP
+>>> upload_id = response.json()['id']  # doctest: +SKIP 
 
 ```
 
 
-```python
->>> response = service.status(upload_id).json()
->>> resp['complete']
+```
+>>> response = service.status(upload_id).json()  # doctest: +SKIP
+>>> response['complete']  # doctest: +SKIP
 False
->>> resp['tileset']
+>>> response['tileset']  # doctest: +SKIP
 "username.RGB-byte-tif"
 ```
 
