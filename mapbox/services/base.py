@@ -1,8 +1,8 @@
 """Base Service class"""
 
-import os
 import base64
 import json
+import os
 
 import requests
 
@@ -10,7 +10,11 @@ from .. import __version__
 
 
 class Service:
-    """Base service class"""
+    """Service mixin class
+
+    Requires that sub-classes have a "session" property with value of
+    `requests.Session()`.
+    """
 
     def get_session(self, token=None, env=None):
         access_token = (
@@ -33,9 +37,10 @@ class Service:
     def username(self):
         """Get username from access token
         Token contains base64 encoded json object with username"""
-        token = self.session.params['access_token']
+        token = self.session.params.get('access_token')
         if not token:
-            raise ValueError("session does not have a valid access_token param")
+            raise ValueError(
+                "session does not have a valid access_token param")
         data = token.split('.')[1]
         data = data.replace('-', '+').replace('_', '/')
         try:
