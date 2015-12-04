@@ -30,7 +30,8 @@ class Static(Service):
 
         if features:
             values['overlay'] = json.dumps({'type': 'FeatureCollection',
-                                            'features': features})
+                                            'features': features},
+                                           separators=(',', ':'))
 
             if len(values['overlay']) > 4087:  # limit is 4096 minus the 'geojson()'
                 raise ValueError("geojson is too large for the static maps API, "
