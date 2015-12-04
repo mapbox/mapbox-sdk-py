@@ -152,9 +152,34 @@ def test_delete():
     assert res.status_code == 204
 
 
-@responses.activate
-def test_upload():
+class MockSession(object):
+    """ Mocks a boto3 session,
+    specifically for the purposes of an s3 key put
+    """
+    def __init__(self, *args, **kwargs):
+        self.bucket = None
+        self.key = None
+        pass
 
+    def resource(self, name):
+        self.resource_name = name
+        return self
+
+    def Object(self, bucket, key):
+        assert self.resource_name == 's3'
+        self.bucket = bucket
+        self.key = key
+        return self
+
+    def put(self, Body):
+        assert self.bucket
+        assert self.key
+        self.body = Body
+        return True
+
+
+@responses.activate
+def test_stage():
     # Credentials
     query_body = """
        {{"key": "_pending/{username}/key.test",
@@ -170,9 +195,8 @@ def test_upload():
         body=query_body, status=200,
         content_type='application/json')
 
+    stage_url = mapbox.Uploader(access_token=access_token).stage(
+        'tests/moors.json',
+        session_class=MockSession)
 
-    res2 = mapbox.Uploader(access_token=access_token).upload(
-        'tests/moors.json', 'testuser.test1')  # also takes full tileset
-    assert res2.status_code == 201
-    job = res2.json()
-    assert job['tileset'] == "{0}.test1".format(username)
+    assert stage_url.startswith("https://tilestream-tilesets-production.s3.amazonaws.com/_pending")
