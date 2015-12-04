@@ -129,6 +129,8 @@ def test_status():
 
     res = mapbox.Uploader(access_token=access_token).status(job)
     assert res.status_code == 200
+    res = mapbox.Uploader(access_token=access_token).status(job['id'])
+    assert res.status_code == 200
     status = res.json()
     assert job == status
 
@@ -145,3 +147,56 @@ def test_delete():
 
     res = mapbox.Uploader(access_token=access_token).delete(job)
     assert res.status_code == 204
+
+    res = mapbox.Uploader(access_token=access_token).delete(job['id'])
+    assert res.status_code == 204
+
+
+class MockSession(object):
+    """ Mocks a boto3 session,
+    specifically for the purposes of an s3 key put
+    """
+    def __init__(self, *args, **kwargs):
+        self.bucket = None
+        self.key = None
+        pass
+
+    def resource(self, name):
+        self.resource_name = name
+        return self
+
+    def Object(self, bucket, key):
+        assert self.resource_name == 's3'
+        self.bucket = bucket
+        self.key = key
+        return self
+
+    def put(self, Body):
+        assert self.bucket
+        assert self.key
+        self.body = Body
+        return True
+
+
+@responses.activate
+def test_stage():
+    # Credentials
+    query_body = """
+       {{"key": "_pending/{username}/key.test",
+         "accessKeyId": "ak.test",
+         "bucket": "tilestream-tilesets-production",
+         "url": "https://tilestream-tilesets-production.s3.amazonaws.com/_pending/{username}/key.test",
+         "secretAccessKey": "sak.test",
+         "sessionToken": "st.test"}}""".format(username=username)
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        match_querystring=True,
+        body=query_body, status=200,
+        content_type='application/json')
+
+    stage_url = mapbox.Uploader(access_token=access_token).stage(
+        'tests/moors.json',
+        session_class=MockSession)
+
+    assert stage_url.startswith("https://tilestream-tilesets-production.s3.amazonaws.com/_pending")

@@ -1,7 +1,7 @@
 # mapbox
+import boto3
 from uritemplate import URITemplate
 from .base import Service
-from boto3.session import Session
 
 
 class Uploader(Service):
@@ -39,7 +39,7 @@ class Uploader(Service):
             custom_messages={401: "Token does not have upload scope"})
         return resp
 
-    def stage(self, filepath, creds=None):
+    def stage(self, filepath, creds=None, session_class=boto3.session.Session):
         """Stages the user's file on S3
         If creds are not provided, temporary credientials will be generated
         Returns the URL to the staged resource.
@@ -48,10 +48,11 @@ class Uploader(Service):
             res = self._get_credentials()
             creds = res.json()
 
-        session = Session(aws_access_key_id=creds['accessKeyId'],
-                          aws_secret_access_key=creds['secretAccessKey'],
-                          aws_session_token=creds['sessionToken'],
-                          region_name="us-east-1")
+        session = session_class(
+            aws_access_key_id=creds['accessKeyId'],
+            aws_secret_access_key=creds['secretAccessKey'],
+            aws_session_token=creds['sessionToken'],
+            region_name="us-east-1")
 
         s3 = session.resource('s3')
         with open(filepath, 'rb') as data:
