@@ -12,7 +12,7 @@ class Static(Service):
         self.session = self.get_session(access_token)
 
     def image(self, mapid, lon=None, lat=None, z=None, features=None,
-              width=600, height=600, image_format='png256'):
+              width=600, height=600, image_format='png256', sort_keys=False):
 
         if lon and lat and z:
             auto = False
@@ -31,7 +31,8 @@ class Static(Service):
         if features:
             values['overlay'] = json.dumps({'type': 'FeatureCollection',
                                             'features': features},
-                                           separators=(',', ':'))
+                                           separators=(',', ':'),
+                                           sort_keys=sort_keys)
 
             if len(values['overlay']) > 4087:  # limit is 4096 minus the 'geojson()'
                 raise ValueError("geojson is too large for the static maps API, "
