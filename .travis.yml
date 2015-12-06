@@ -17,8 +17,7 @@ install:
   - pip install -e .[test] --cache-dir $HOME/.pip-cache
   - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]]; then pip install ordereddict; fi
 script:
-  - py.test --cov mapbox --cov-report term-missing
-  - py.test --doctest-glob='*.md' docs/*.md
+  - py.test --cov mapbox --cov-report term-missing --doctest-glob='*.md' docs/*.md tests/*.py
 after_success:
   - coveralls
 deploy:
