@@ -42,7 +42,9 @@ class Service:
             raise ValueError(
                 "session does not have a valid access_token param")
         data = token.split('.')[1]
-        data = data.replace('-', '+').replace('_', '/')
+        # replace url chars and add padding
+        # (https://gist.github.com/perrygeo/ee7c65bb1541ff6ac770)
+        data = data.replace('-', '+').replace('_', '/') + "==="
         try:
             return json.loads(base64.b64decode(data).decode('utf-8'))['u']
         except (ValueError, KeyError):
