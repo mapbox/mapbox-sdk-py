@@ -36,7 +36,7 @@ class Uploader(Service):
         resp = self.session.get(uri)
         self.handle_http_error(
             resp,
-            custom_messages={401: "Token does not have upload scope"})
+            custom_messages={404: "Token does not have upload scope"})
         return resp
 
     def stage(self, filepath, creds=None, session_class=boto3.session.Session):
