@@ -75,7 +75,7 @@ Finally, the contents can be written to file.
 
 ```python
 >>> with open('/tmp/map.png', 'wb') as output:
-...     output.write(response.content)
+...     _ = output.write(response.content)
 
 ```
 
