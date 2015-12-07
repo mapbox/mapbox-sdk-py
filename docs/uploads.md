@@ -20,11 +20,16 @@ return an instance of
 [`requests.Response`](http://docs.python-requests.org/en/latest/api/#requests.Response).
 
 ## Usage
-Then upload any supported file to your account using the ``Uploader`` 
+Then upload any supported file to your account using the ``Uploader``. Note
+that the Uploads API only supports destination names of <= 32 chars and
+that the default string representations of Python's standard UUIDs are
+36 chars long.
 
 ```python
 >>> service = Uploader()
->>> response = service.upload('tests/twopoints.geojson', 'test-data')
+>>> import uuid
+>>> dest_id = uuid.uuid4().hex
+>>> response = service.upload('tests/twopoints.geojson', dest_id)
 >>> response.status_code
 201
 >>> upload_id = response.json()['id']
@@ -34,7 +39,7 @@ Then upload any supported file to your account using the ``Uploader``
 You can check the status of the upload using the upload_id
 ```
 >>> response = service.status(upload_id).json()
->>> "test-data" in response['tileset']
+>>> dest_id in response['tileset']
 True
 
 ```
