@@ -24,7 +24,7 @@ Then upload any supported file to your account using the ``Uploader``
 
 ```python
 >>> service = Uploader()
->>> response = service.upload('tests/moors.json', 'test-data')
+>>> response = service.upload('tests/twopoints.geojson', 'test-data')
 >>> response.status_code
 201
 >>> upload_id = response.json()['id']
