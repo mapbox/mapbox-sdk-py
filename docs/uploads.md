@@ -25,7 +25,7 @@ return an instance of
 
 ## Usage
 
-Then upload any supported file to your account using the ``Uploader``. The
+Upload any supported file to your account using the ``Uploader``. The
 name of the destination dataset can be any string of <= 32 chars. Choose one
 suited to your application or generate one using, e.g., `uuid.uuid4().hex`.
 In the example below, we use a string defined in a test fixture.
@@ -33,18 +33,27 @@ In the example below, we use a string defined in a test fixture.
 ```python
 >>> service = Uploader()
 >>> dest_id = getfixture('uploads_dest_id') # 'uploads-test'
->>> response = service.upload('tests/twopoints.geojson', dest_id)
->>> response.status_code
+>>> upload_resp = service.upload('tests/twopoints.geojson', dest_id)
+>>> upload_resp.status_code
 201
->>> upload_id = response.json()['id']
 
 ```
 
-You can check the status of the upload using the upload_id
+This 201 Created response indicates that your data file has been received
+and is being processed. Poll the Upload API to determine if the processing
+has finished using the upload identifier from the the body of the above
+response.
 
 ```python
->>> response = service.status(upload_id).json()
->>> dest_id in response['tileset']
+>>> from time import sleep
+>>> upload_id = upload_resp.json()['id']
+>>> for i in range(5):
+...     status_resp = service.status(upload_id).json()
+...     if status_resp['complete']:
+...         break
+...     sleep(5)
+...
+>>> dest_id in status_resp['tileset']
 True
 
 ```

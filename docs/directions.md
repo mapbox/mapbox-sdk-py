@@ -12,7 +12,8 @@ access to the Mapbox Directions API. You can also import it directly from the
 See https://www.mapbox.com/developers/api/directions/ for general documentation
 of the API.
 
-Your Mapbox access token should be set in your environment; see the [access tokens](access_tokens.md) documentation for more information.
+Your Mapbox access token should be set in your environment; see the [access
+tokens](access_tokens.md) documentation for more information.
 
 ## Directions methods
 
@@ -25,16 +26,17 @@ data to a GeoJSON like form.
 
 ## Usage
 
-To get travel directions between waypoints, you can use the Directions API to route up to 25 points.
-Each of your input waypoints will be visited in order and should be
-represented by a GeoJSON point feature.
+To get travel directions between waypoints, you can use the Directions API to
+route up to 25 points.  Each of your input waypoints will be visited in order
+and should be represented by a GeoJSON point feature.
 
 ```python
 >>> service = Directions()
 
 ```
 
-The input waypoints to the `directions` method are [features](input_features.md), typically GeoJSON-like feature dictionaries.
+The input waypoints to the `directions` method are
+[features](input_features.md), typically GeoJSON-like feature dictionaries.
 
 ```python
 >>> origin = {
@@ -52,10 +54,12 @@ The input waypoints to the `directions` method are [features](input_features.md)
 
 ```
 
-The directions methods can be called with a list of features and the desired profile
+The `directions()` method can be called with a list of features and the desired
+profile.
 
 ```python
->>> response = service.directions([origin, destination], 'mapbox.driving')
+>>> response = service.directions([origin, destination],
+...     'mapbox.driving')
 >>> response.status_code
 200
 >>> response.headers['Content-Type']
@@ -63,17 +67,16 @@ The directions methods can be called with a list of features and the desired pro
 
 ```
 
-which returns a response object with a `geojson()` method for accessing the route(s)
-as a GeoJSON-like FeatureCollection dictionary.
+It returns a response object with a `geojson()` method for accessing the
+route(s) as a GeoJSON-like FeatureCollection dictionary.
 
 ```python
 >>> driving_routes = response.geojson()
 >>> driving_routes['features'][0]['geometry']['type']
-u'LineString'
+'LineString'
 >>> driving_routes['features'][0]['properties']['summary']
-u'Mount Hood Highway (US 26) - Warm Springs Highway (US 26)'
+'Mount Hood Highway (US 26) - Warm Springs Highway (US 26)'
 
 ```
 
 See ``import mapbox; help(mapbox.Directions)`` for more detailed usage.
-

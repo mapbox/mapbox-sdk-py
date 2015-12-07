@@ -12,7 +12,8 @@ access to the Mapbox Surface API. You can also import it directly from the
 See https://www.mapbox.com/developers/api/surface/ for general documentation
 of the API.
 
-Your Mapbox access token should be set in your environment; see the [access tokens](access_tokens.md) documentation for more information.
+Your Mapbox access token should be set in your environment; see the [access
+tokens](access_tokens.md) documentation for more information.
 
 ## Surface methods
 
@@ -22,9 +23,9 @@ return an instance of
 
 ## Usage
 
-To query vector tile attributes along a series of points or a line, you can use the Surface API.
-For example, you could create an elevation profile against a GeoJSON LineString feature or
-list of GeoJSON point features.
+To query vector tile attributes along a series of points or a line, you can use
+the Surface API.  For example, you could create an elevation profile against
+a GeoJSON LineString feature or list of GeoJSON point features.
 
 
 ```python
@@ -51,7 +52,7 @@ Create a series of point features
 
 ```
 
-Use the `surface` method to query the terrain dataset
+Use the `surface()` method to query the terrain dataset.
 
 ```python
 >>> response = service.surface(features, mapid='mapbox.mapbox-terrain-v1',
@@ -63,7 +64,9 @@ Use the `surface` method to query the terrain dataset
 
 ```
 
-And the response geojson FeatureCollection contains your input points with an `ele` property
+The response geojson FeatureCollection contains your input points with an `ele`
+property.
+
 ```python
 >>> points = response.geojson()
 >>> [f['properties']['ele'] for f in points['features']]
@@ -71,10 +74,11 @@ And the response geojson FeatureCollection contains your input points with an `e
 
 ```
 
-You can also send your data as an *encoded polyline* which may be more efficient than raw point data,
-specify the *zoom level* of the vector tiles and turn off the default *interpolation*. 
-(Note that in this case, turning off interpolation does not produce
-the desired results as the waypoints lie between contours)
+You can also send your data as an *encoded polyline* which may be more
+efficient than raw point data, specify the *zoom level* of the vector tiles and
+turn off the default *interpolation*.  (Note that in this case, turning off
+interpolation does not produce the desired results as the waypoints lie between
+contours).
 
 ```python
 >>> response = service.surface(features, mapid='mapbox.mapbox-terrain-v1',
@@ -87,4 +91,3 @@ the desired results as the waypoints lie between contours)
 ```
 
 See ``import mapbox; help(mapbox.Surface)`` for more detailed usage.
-
