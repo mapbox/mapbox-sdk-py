@@ -5,5 +5,5 @@ import pytest
 
 @pytest.fixture
 def uploads_dest_id():
-    return 'uploads-{0}'.format(
-        os.environ.get('TRAVIS_PYTHON_VERSION', 'test'))
+    version = os.environ.get('TRAVIS_PYTHON_VERSION', 'test')
+    return 'uploads-{0}'.format(version.replace(".", "-"))
