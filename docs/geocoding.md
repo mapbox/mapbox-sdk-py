@@ -54,7 +54,7 @@ are accessible through response headers.
 >>> response.headers['x-rate-limit-interval']
 '60'
 >>> response.headers['x-rate-limit-limit']
-'600'
+'60...'
 >>> response.headers['x-rate-limit-remaining'] # doctest: +SKIP
 '599'
 >>> response.headers['x-rate-limit-reset'] # doctest: +SKIP
