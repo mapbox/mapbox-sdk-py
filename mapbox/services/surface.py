@@ -35,7 +35,7 @@ class Surface(Service):
             params['encoded_polyline'] = encode_polyline(features)
         else:
             params['points'] = encode_waypoints(
-                features, precision=6, min_limit=2, max_limit=300)
+                features, precision=6, min_limit=1, max_limit=300)
 
         uri = URITemplate('%s/{mapid}.json' % self.baseuri).expand(mapid=mapid)
         res = self.session.get(uri, params=params)

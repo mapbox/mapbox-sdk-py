@@ -42,7 +42,7 @@ def read_points(features):
                 yield pt
 
         else:
-            raise ValueError("Unknown object: Not a GeoJSON feature or "
+            raise ValueError("Unknown object: Not a GeoJSON Point feature or "
                              "an object with __geo_interface__:\n{0}".format(feature))
 
 

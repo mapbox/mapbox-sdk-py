@@ -5,6 +5,7 @@ python:
   - '2.7'
   - '3.3'
   - '3.4'
+  - '3.5'
   - pypy
 cache:
   directories:
@@ -17,8 +18,8 @@ install:
   - pip install -e .[test] --cache-dir $HOME/.pip-cache
   - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]]; then pip install ordereddict; fi
 script:
-  - py.test --cov mapbox --cov-report term-missing
-  - py.test --doctest-glob='*.md' docs/*.md
+  - py.test --cov mapbox --cov-report term-missing tests/*.py
+  - if [[ $TRAVIS_PYTHON_VERSION == 2.7 ]]; then py.test --doctest-glob='*.md' docs/*.md; fi
 after_success:
   - coveralls
 deploy:
