@@ -32,10 +32,16 @@ In the example below, we use a string defined in a test fixture.
 
 ```python
 >>> service = Uploader()
->>> dest_id = getfixture('uploads_dest_id') # 'uploads-test'
->>> upload_resp = service.upload('tests/twopoints.geojson', dest_id)
->>> upload_resp.status_code
-201
+>>> from time import sleep
+>>> from random import randint
+>>> mapid = getfixture('uploads_dest_id') # 'uploads-test'
+>>> upload_resp = service.upload('tests/twopoints.geojson', mapid)
+>>> if upload_resp.status_code == 409:
+...     for i in range(5):
+...         sleep(5)
+...         upload_resp = service.upload('tests/twopoints.geojson', mapid)
+...         if upload_resp.status_code != 409:
+...             break
 
 ```
 
@@ -45,7 +51,8 @@ has finished using the upload identifier from the the body of the above
 response.
 
 ```python
->>> from time import sleep
+>>> upload_resp.status_code
+201
 >>> upload_id = upload_resp.json()['id']
 >>> for i in range(5):
 ...     status_resp = service.status(upload_id).json()
@@ -53,8 +60,25 @@ response.
 ...         break
 ...     sleep(5)
 ...
->>> dest_id in status_resp['tileset']
+>>> mapid in status_resp['tileset']
 True
+
+```
+
+You can list all of the uploads associated with your account
+
+```
+>>> service.list().json()
+[...]
+
+```
+
+Finally you can delete the upload. Note that this does *not* delete the tileset you just created.
+To delete the tileset itself, got to Mapbox Studio and delete it from the Data page.
+
+```
+>>> service.delete(upload_id)
+<Response [204]>
 
 ```
 
