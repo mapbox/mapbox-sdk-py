@@ -1,3 +1,11 @@
+0.5.0 (2015-12-08)
+------------------
+- We've vendorized the `polyline` module to work around its out of date `six`
+  dependency (#74, #77).
+- No more need to pass username arguments to SDK class constructors or methods
+  as we now get the username from the provided access token (#81, #85).
+- The python usage examples under `docs/` are now tested using doctest.
+
 0.4.0 (2015-11-13)
 ------------------
 - Send a unique User-Agent header with API requests (#66).

@@ -1,4 +1,5 @@
 from codecs import open as codecs_open
+
 from setuptools import setup, find_packages
 
 
@@ -37,4 +38,5 @@ setup(name='mapbox',
           'boto3',
       ],
       extras_require={
-          'test': ['coveralls', 'pytest>=2.8.3', 'pytest-cov', 'responses', 'tox']})
+          'test': [
+              'coveralls', 'pytest>=2.8.3', 'pytest-cov', 'responses', 'tox']})
