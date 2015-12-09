@@ -31,6 +31,10 @@ Services
   - Forward (place names ⇢ longitude, latitude)
   - Reverse (longitude, latitude ⇢ place names)
 
+- **Map Matching** `examples <./docs/mapmatching.md#map-matching>`__, `website <https://www.mapbox.com/developers/api/map-matching/>`__
+
+  - Snap GPS traces to OpenStreetMap data
+
 - **Static Maps** `examples <./docs/static.md#static-maps>`__, `website <https://www.mapbox.com/developers/api/static/>`__
 
   - Generate standalone images from existing Mapbox mapids
