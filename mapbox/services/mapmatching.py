@@ -17,15 +17,28 @@ class MapMatcher(Service):
             raise ValueError("{} is not a valid profile".format(profile))
         return profile
 
-    def match(self, feature, profile='mapbox.driving'):
+    def match(self, feature, gps_precision=None, profile='mapbox.driving'):
         profile = self._validate_profile(profile)
-        # todo validate single feature with linestring geometry up to 100 pts
+
+        # validate single feature with linestring geometry up to 100 pts
+        try:
+            assert feature['type'] == 'Feature'
+            assert feature['geometry']['type'] == 'LineString'
+            assert len(feature['geometry']['coordinates']) <= 100
+        except (TypeError, KeyError, AssertionError):
+            raise ValueError("feature must have LineString geometry "
+                             "with <= 100 points")
+
         geojson_line_feature = json.dumps(feature)
 
         uri = URITemplate('%s/{profile}.json' % self.baseuri).expand(
             profile=profile)
 
-        res = self.session.post(uri, data=geojson_line_feature,
+        params = None
+        if gps_precision:
+            params = {'gps_precision': gps_precision}
+
+        res = self.session.post(uri, data=geojson_line_feature, params=params,
                                 headers={'Content-Type': 'application/json'})
         self.handle_http_error(res)
 
