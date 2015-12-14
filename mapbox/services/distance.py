@@ -10,10 +10,10 @@ class Distance(Service):
     def __init__(self, access_token=None):
         self.baseuri = 'https://api.mapbox.com/distances/v1/mapbox'
         self.session = self.get_session(access_token)
+        self.valid_profiles = ['driving', 'cycling', 'walking']
 
     def _validate_profile(self, profile):
-        valid_profiles = ['driving', 'cycling', 'walking']
-        if profile not in valid_profiles:
+        if profile not in self.valid_profiles:
             raise InvalidProfileError("{} is not a valid profile".format(profile))
         return profile
 

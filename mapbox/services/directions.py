@@ -2,7 +2,7 @@ from uritemplate import URITemplate
 
 from mapbox.encoding import encode_waypoints
 from mapbox.services.base import Service
-from mapbox.validation import InvalidProfileError
+from mapbox.validation import InvalidProfileError, MapboxValidationError
 
 
 class Directions(Service):
@@ -10,12 +10,30 @@ class Directions(Service):
     def __init__(self, access_token=None):
         self.baseuri = 'https://api.mapbox.com/v4/directions'
         self.session = self.get_session(access_token)
+        self.valid_profiles = ['mapbox.driving',
+                               'mapbox.cycling',
+                               'mapbox.walking']
+        self.valid_instruction_formats = ['text', 'html']
+        self.valid_geom_encoding = ['geojson', 'polyline', 'false']
 
     def _validate_profile(self, profile):
-        valid_profiles = ['mapbox.driving', 'mapbox.cycling', 'mapbox.walking']
-        if profile not in valid_profiles:
+        if profile not in self.valid_profiles:
             raise InvalidProfileError("{} is not a valid profile".format(profile))
         return profile
+
+    def _validate_geom_encoding(self, geom_encoding):
+        if geom_encoding is not None and \
+           geom_encoding not in self.valid_geom_encoding:
+            raise MapboxValidationError(
+                "{} is not a valid geometry encoding".format(geom_encoding))
+        return geom_encoding
+
+    def _validate_instruction_formats(self, instruction_formats):
+        if instruction_formats is not None and \
+           instruction_formats not in self.valid_instruction_formats:
+            raise MapboxValidationError(
+                "{} is not a valid instruction format".format(instruction_formats))
+        return instruction_formats
 
     def directions(
             self,
@@ -27,6 +45,8 @@ class Directions(Service):
             steps=None):
         """Request directions for waypoints encoded as GeoJSON features."""
         profile = self._validate_profile(profile)
+        instructions = self._validate_instruction_formats(instructions)
+        geometry = self._validate_geom_encoding(geometry)
         waypoints = encode_waypoints(features, precision=6,
                                      min_limit=2, max_limit=30)
 
