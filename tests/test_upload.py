@@ -240,7 +240,11 @@ def test_upload(monkeypatch):
     assert job['tileset'] == "{0}.test1".format(username)
 
 @responses.activate
-def test_upload_doesnotexist():
+def test_upload(monkeypatch):
+    """Upload a file and create a tileset"""
+
+    monkeypatch.setattr(mapbox.services.uploads, 'boto3_session', MockSession)
+
     # Credentials
     query_body = """
        {{"key": "_pending/{username}/key.test",
@@ -257,6 +261,13 @@ def test_upload_doesnotexist():
         body=query_body, status=200,
         content_type='application/json')
 
-    service = mapbox.Uploader(access_token=access_token)
-    with pytest.raises(mapbox.errors.ValidationError):
-        service.upload('tests/doesnotexist.gml', 'test-dne')
+    responses.add(
+        responses.POST,
+        'https://api.mapbox.com/uploads/v1/{0}?access_token={1}'.format(username, access_token),
+        match_querystring=True,
+        body="", status=409,
+        content_type='application/json')
+
+    res = mapbox.Uploader(access_token=access_token).upload(
+        'tests/moors.json', 'test1')
+    assert res.status_code == 409
