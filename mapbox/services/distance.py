@@ -2,7 +2,7 @@ from uritemplate import URITemplate
 
 from mapbox.encoding import encode_coordinates_json
 from mapbox.services.base import Service
-from mapbox.validation import InvalidProfileError
+from mapbox.errors import InvalidProfileError
 
 
 class Distance(Service):

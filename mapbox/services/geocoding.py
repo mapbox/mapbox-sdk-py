@@ -1,7 +1,7 @@
 # mapbox
 from uritemplate import URITemplate
 from .base import Service
-from mapbox.validation import InvalidPlaceTypeError
+from mapbox.errors import InvalidPlaceTypeError
 
 
 class Geocoder(Service):

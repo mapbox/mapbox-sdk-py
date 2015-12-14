@@ -3,8 +3,7 @@ import json
 from uritemplate import URITemplate
 
 from mapbox.services.base import Service
-from mapbox.validation import \
-    InvalidProfileError, InvalidFeatureError, MapboxValidationError
+from mapbox import errors
 
 
 class MapMatcher(Service):
@@ -16,7 +15,8 @@ class MapMatcher(Service):
     def _validate_profile(self, profile):
         valid_profiles = ['mapbox.driving', 'mapbox.cycling', 'mapbox.walking']
         if profile not in valid_profiles:
-            raise InvalidProfileError("{} is not a valid profile".format(profile))
+            raise errors.InvalidProfileError(
+                "{0} is not a valid profile".format(profile))
         return profile
 
     def _validate_feature(self, val):
@@ -26,7 +26,7 @@ class MapMatcher(Service):
             assert val['geometry']['type'] == 'LineString'
             assert len(val['geometry']['coordinates']) <= 100
         except (TypeError, KeyError, AssertionError):
-            raise InvalidFeatureError(
+            raise errors.InvalidFeatureError(
                 "Feature must have LineString geometry with <= 100 points")
         return val
 

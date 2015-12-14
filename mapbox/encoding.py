@@ -1,6 +1,6 @@
 import json
 
-from .validation import InvalidFeatureError
+from .errors import InvalidFeatureError
 from .polyline.codec import PolylineCodec
 
 

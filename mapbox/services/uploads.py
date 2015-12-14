@@ -5,7 +5,7 @@ from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
 
 from .base import Service
-from mapbox import validation
+from mapbox import errors
 
 
 class Uploader(Service):
@@ -62,7 +62,7 @@ class Uploader(Service):
 
         s3 = session.resource('s3')
         if not os.path.exists(filepath):
-            raise validation.MapboxValidationError(
+            raise errors.FileIOError(
                 "{0} does not exist".format(filepath))
         with open(filepath, 'rb') as data:
             res = s3.Object(creds['bucket'], creds['key']).put(Body=data)

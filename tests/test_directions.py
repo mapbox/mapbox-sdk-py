@@ -85,11 +85,11 @@ def test_direction_params():
 
 def test_invalid_geom_encoding():
     service = mapbox.Directions(access_token='pk.test')
-    with pytest.raises(mapbox.validation.MapboxValidationError):
+    with pytest.raises(mapbox.errors.ValidationError):
         service._validate_geom_encoding('wkb')
 
 
 def test_invalid_instruction_format():
     service = mapbox.Directions(access_token='pk.test')
-    with pytest.raises(mapbox.validation.MapboxValidationError):
+    with pytest.raises(mapbox.errors.ValidationError):
         service._validate_instruction_format('markdown')

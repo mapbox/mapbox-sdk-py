@@ -258,5 +258,5 @@ def test_upload_doesnotexist():
         content_type='application/json')
 
     service = mapbox.Uploader(access_token=access_token)
-    with pytest.raises(mapbox.validation.MapboxValidationError):
+    with pytest.raises(mapbox.errors.ValidationError):
         service.upload('tests/doesnotexist.gml', 'test-dne')
