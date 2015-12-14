@@ -57,7 +57,6 @@ class Service:
         if not custom_messages:
             custom_messages = {}
         if response.status_code in custom_messages.keys():
-            raise requests.exceptions.HTTPError(
-                custom_messages[response.status_code])
+            raise validation.MapboxHTTPError(custom_messages[response.status_code])
         if raise_for_status:
             response.raise_for_status()
