@@ -1,5 +1,6 @@
 import json
 
+from .validation import InvalidFeatureError
 from .polyline.codec import PolylineCodec
 
 
@@ -12,7 +13,7 @@ def _geom_points(geom):
         for position in geom['coordinates']:
             yield tuple(position)
     else:
-        raise ValueError(
+        raise InvalidFeatureError(
             "Unsupported geometry type:{0}".format(geom['type']))
 
 
@@ -42,8 +43,9 @@ def read_points(features):
                 yield pt
 
         else:
-            raise ValueError("Unknown object: Not a GeoJSON Point feature or "
-                             "an object with __geo_interface__:\n{0}".format(feature))
+            raise InvalidFeatureError(
+                "Unknown object: Not a GeoJSON Point feature or "
+                "an object with __geo_interface__:\n{0}".format(feature))
 
 
 def encode_waypoints(features, min_limit=None, max_limit=None, precision=6):
@@ -55,11 +57,13 @@ def encode_waypoints(features, min_limit=None, max_limit=None, precision=6):
               for lon, lat in read_points(features)]
 
     if min_limit is not None and len(coords) < min_limit:
-        raise ValueError("Not enough features to encode waypoints, "
-                         "need at least {0}".format(min_limit))
+        raise InvalidFeatureError(
+            "Not enough features to encode waypoints, "
+            "need at least {0}".format(min_limit))
     if max_limit is not None and len(coords) > max_limit:
-        raise ValueError("Too many features to encode waypoints, "
-                         "need at most {0}".format(max_limit))
+        raise InvalidFeatureError(
+            "Too many features to encode waypoints, "
+            "need at most {0}".format(max_limit))
 
     return ';'.join(coords)
 

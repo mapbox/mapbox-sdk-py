@@ -11,6 +11,14 @@ class InvalidProfileError(MapboxValidationError):
     pass
 
 
+class InvalidFeatureError(MapboxValidationError):
+    pass
+
+
+class MapboxHTTPError(MapboxValidationError):
+    pass
+
+
 def lat(val):
     if val is not None and (val < -90 or val > 90):
         raise MapboxValidationError("Latitude must be between -90 and 90")

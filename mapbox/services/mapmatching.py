@@ -3,7 +3,9 @@ import json
 from uritemplate import URITemplate
 
 from mapbox.services.base import Service
-from mapbox.validation import InvalidProfileError, MapboxValidationError
+from mapbox.validation import \
+    InvalidProfileError, InvalidFeatureError, MapboxValidationError
+
 
 class MapMatcher(Service):
 
@@ -24,7 +26,7 @@ class MapMatcher(Service):
             assert val['geometry']['type'] == 'LineString'
             assert len(val['geometry']['coordinates']) <= 100
         except (TypeError, KeyError, AssertionError):
-            raise MapboxValidationError(
+            raise InvalidFeatureError(
                 "Feature must have LineString geometry with <= 100 points")
         return val
 
