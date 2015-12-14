@@ -25,14 +25,14 @@ class Directions(Service):
         if geom_encoding is not None and \
            geom_encoding not in self.valid_geom_encoding:
             raise MapboxValidationError(
-                "{} is not a valid geometry encoding".format(geom_encoding))
+                "{0} is not a valid geometry encoding".format(geom_encoding))
         return geom_encoding
 
     def _validate_instruction_format(self, instruction_format):
         if instruction_format is not None and \
            instruction_format not in self.valid_instruction_formats:
             raise MapboxValidationError(
-                "{} is not a valid instruction format".format(instruction_format))
+                "{0} is not a valid instruction format".format(instruction_format))
         return instruction_format
 
     def directions(
