@@ -14,7 +14,7 @@ class Distance(Service):
 
     def _validate_profile(self, profile):
         if profile not in self.valid_profiles:
-            raise InvalidProfileError("{} is not a valid profile".format(profile))
+            raise InvalidProfileError("{0} is not a valid profile".format(profile))
         return profile
 
     def distances(self, features, profile='driving'):
