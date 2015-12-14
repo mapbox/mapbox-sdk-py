@@ -4,6 +4,7 @@ from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
 
 from .base import Service
+from mapbox import validation
 
 
 class Uploader(Service):

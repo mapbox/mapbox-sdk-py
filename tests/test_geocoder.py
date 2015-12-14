@@ -110,7 +110,7 @@ def test_validate_place_types_err():
     try:
         mapbox.Geocoder()._validate_place_types(('address', 'bogus'))
     except mapbox.InvalidPlaceTypeError as err:
-        assert str(err) == "'bogus'"
+        assert str(err) == "bogus"
 
 
 def test_validate_place_types():

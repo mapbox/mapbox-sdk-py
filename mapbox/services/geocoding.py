@@ -1,10 +1,7 @@
 # mapbox
 from uritemplate import URITemplate
 from .base import Service
-
-
-class InvalidPlaceTypeError(KeyError):
-    pass
+from mapbox.validation import InvalidPlaceTypeError
 
 
 class Geocoder(Service):

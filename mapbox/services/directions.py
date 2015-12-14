@@ -2,6 +2,7 @@ from uritemplate import URITemplate
 
 from mapbox.encoding import encode_waypoints
 from mapbox.services.base import Service
+from mapbox.validation import InvalidProfileError
 
 
 class Directions(Service):
@@ -13,7 +14,7 @@ class Directions(Service):
     def _validate_profile(self, profile):
         valid_profiles = ['mapbox.driving', 'mapbox.cycling', 'mapbox.walking']
         if profile not in valid_profiles:
-            raise ValueError("{} is not a valid profile".format(profile))
+            raise InvalidProfileError("{} is not a valid profile".format(profile))
         return profile
 
     def directions(

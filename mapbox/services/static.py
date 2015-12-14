@@ -3,6 +3,7 @@ import json
 from uritemplate import URITemplate
 
 from mapbox.services.base import Service
+from mapbox import validation
 
 
 class Static(Service):
@@ -11,13 +12,31 @@ class Static(Service):
         self.baseuri = 'https://api.mapbox.com/v4'
         self.session = self.get_session(access_token)
 
+    def _validate_image_size(self, val):
+        if not (1 < val < 1280):
+            raise validation.MapboxValidationError(
+                "Image height and width must be between 1 and 1280")
+        return val
+
+    def _validate_overlay(self, val):
+        if len(val) > 4087:  # limit is 4096 minus the 'geojson()'
+            raise validation.MapboxValidationError(
+                "GeoJSON is too large for the static maps API, "
+                "must be less than 4096 characters")
+        return val
+
     def image(self, mapid, lon=None, lat=None, z=None, features=None,
               width=600, height=600, image_format='png256', sort_keys=False):
 
         if lon and lat and z:
             auto = False
+            lat = validation.lat(lat)
+            lon = validation.lon(lon)
         else:
             auto = True
+
+        width = self._validate_image_size(width)
+        height = self._validate_image_size(height)
 
         values = dict(
             mapid=mapid,
@@ -34,9 +53,7 @@ class Static(Service):
                                            separators=(',', ':'),
                                            sort_keys=sort_keys)
 
-            if len(values['overlay']) > 4087:  # limit is 4096 minus the 'geojson()'
-                raise ValueError("geojson is too large for the static maps API, "
-                                 "must be less than 4096 characters")
+            self._validate_overlay(values['overlay'])
 
             if auto:
                 uri = URITemplate(
@@ -48,7 +65,8 @@ class Static(Service):
                     self.baseuri).expand(**values)
         else:
             if auto:
-                raise ValueError("Must provide features if lat, lon, z are None")
+                raise validation.MapboxValidationError(
+                    "Must provide features if lat, lon, z are None")
 
             # No overlay
             uri = URITemplate(
