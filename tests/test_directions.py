@@ -59,8 +59,8 @@ def test_directions_geojson():
 
 def test_invalid_profile():
     with pytest.raises(ValueError):
-        _ = mapbox.Directions(access_token='pk.test').directions(
-                None, profile='bogus')
+        mapbox.Directions(access_token='pk.test').directions(
+            None, profile='bogus')
 
 
 @responses.activate
@@ -74,9 +74,22 @@ def test_direction_params():
         body="not important, only testing URI templating", status=200,
         content_type='application/json')
 
-    res = mapbox.Directions(access_token='pk.test').directions(points,
-                                                          alternatives=False,
-                                                          instructions='html',
-                                                          geometry='polyline',
-                                                          steps=False)
+    res = mapbox.Directions(access_token='pk.test').directions(
+        points,
+        alternatives=False,
+        instructions='html',
+        geometry='polyline',
+        steps=False)
     assert res.status_code == 200
+
+
+def test_invalid_geom_encoding():
+    service = mapbox.Directions(access_token='pk.test')
+    with pytest.raises(mapbox.errors.ValidationError):
+        service._validate_geom_encoding('wkb')
+
+
+def test_invalid_instruction_format():
+    service = mapbox.Directions(access_token='pk.test')
+    with pytest.raises(mapbox.errors.ValidationError):
+        service._validate_instruction_format('markdown')

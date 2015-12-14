@@ -57,7 +57,7 @@ def test_custom_messages():
 
     assert service.handle_http_error(response) is None
 
-    with pytest.raises(requests.exceptions.HTTPError) as exc:
+    with pytest.raises(mapbox.errors.HTTPError) as exc:
         assert service.handle_http_error(response, custom_messages={401: "error"})
         assert exc.value.message == 'error'
 

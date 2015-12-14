@@ -2,6 +2,7 @@ from uritemplate import URITemplate
 
 from mapbox.encoding import encode_coordinates_json
 from mapbox.services.base import Service
+from mapbox.errors import InvalidProfileError
 
 
 class Distance(Service):
@@ -9,11 +10,11 @@ class Distance(Service):
     def __init__(self, access_token=None):
         self.baseuri = 'https://api.mapbox.com/distances/v1/mapbox'
         self.session = self.get_session(access_token)
+        self.valid_profiles = ['driving', 'cycling', 'walking']
 
     def _validate_profile(self, profile):
-        valid_profiles = ['driving', 'cycling', 'walking']
-        if profile not in valid_profiles:
-            raise ValueError("{} is not a valid profile".format(profile))
+        if profile not in self.valid_profiles:
+            raise InvalidProfileError("{0} is not a valid profile".format(profile))
         return profile
 
     def distances(self, features, profile='driving'):

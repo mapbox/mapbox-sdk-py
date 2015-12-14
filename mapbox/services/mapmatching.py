@@ -3,6 +3,7 @@ import json
 from uritemplate import URITemplate
 
 from mapbox.services.base import Service
+from mapbox import errors
 
 
 class MapMatcher(Service):
@@ -14,21 +15,25 @@ class MapMatcher(Service):
     def _validate_profile(self, profile):
         valid_profiles = ['mapbox.driving', 'mapbox.cycling', 'mapbox.walking']
         if profile not in valid_profiles:
-            raise ValueError("{} is not a valid profile".format(profile))
+            raise errors.InvalidProfileError(
+                "{0} is not a valid profile".format(profile))
         return profile
+
+    def _validate_feature(self, val):
+        # validate single feature with linestring geometry up to 100 pts
+        try:
+            assert val['type'] == 'Feature'
+            assert val['geometry']['type'] == 'LineString'
+            assert len(val['geometry']['coordinates']) <= 100
+        except (TypeError, KeyError, AssertionError):
+            raise errors.InvalidFeatureError(
+                "Feature must have LineString geometry with <= 100 points")
+        return val
 
     def match(self, feature, gps_precision=None, profile='mapbox.driving'):
         profile = self._validate_profile(profile)
 
-        # validate single feature with linestring geometry up to 100 pts
-        try:
-            assert feature['type'] == 'Feature'
-            assert feature['geometry']['type'] == 'LineString'
-            assert len(feature['geometry']['coordinates']) <= 100
-        except (TypeError, KeyError, AssertionError):
-            raise ValueError("feature must have LineString geometry "
-                             "with <= 100 points")
-
+        feature = self._validate_feature(feature)
         geojson_line_feature = json.dumps(feature)
 
         uri = URITemplate('%s/{profile}.json' % self.baseuri).expand(

@@ -1,9 +1,11 @@
 # mapbox
+import os
 
 from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
 
 from .base import Service
+from mapbox import errors
 
 
 class Uploader(Service):
@@ -38,7 +40,9 @@ class Uploader(Service):
         resp = self.session.get(uri)
         self.handle_http_error(
             resp,
-            custom_messages={404: "Token does not have upload scope"})
+            custom_messages={
+                401: "Token is not authorized",
+                404: "Token does not have upload scope"})
         return resp
 
     def stage(self, filepath, creds=None):
@@ -57,6 +61,9 @@ class Uploader(Service):
             region_name="us-east-1")
 
         s3 = session.resource('s3')
+        if not os.path.exists(filepath):
+            raise errors.FileIOError(
+                "{0} does not exist".format(filepath))
         with open(filepath, 'rb') as data:
             res = s3.Object(creds['bucket'], creds['key']).put(Body=data)
 

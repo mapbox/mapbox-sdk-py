@@ -2,6 +2,7 @@ import base64
 import json
 
 import responses
+import pytest
 
 import mapbox
 import mapbox.services.uploads
@@ -237,3 +238,25 @@ def test_upload(monkeypatch):
     assert res.status_code == 201
     job = res.json()
     assert job['tileset'] == "{0}.test1".format(username)
+
+@responses.activate
+def test_upload_doesnotexist():
+    # Credentials
+    query_body = """
+       {{"key": "_pending/{username}/key.test",
+         "accessKeyId": "ak.test",
+         "bucket": "tilestream-tilesets-production",
+         "url": "https://tilestream-tilesets-production.s3.amazonaws.com/_pending/{username}/key.test",
+         "secretAccessKey": "sak.test",
+         "sessionToken": "st.test"}}""".format(username=username)
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        match_querystring=True,
+        body=query_body, status=200,
+        content_type='application/json')
+
+    service = mapbox.Uploader(access_token=access_token)
+    with pytest.raises(mapbox.errors.ValidationError):
+        service.upload('tests/doesnotexist.gml', 'test-dne')

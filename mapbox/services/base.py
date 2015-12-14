@@ -7,6 +7,7 @@ import os
 import requests
 
 from .. import __version__
+from mapbox import errors
 
 
 class Service:
@@ -39,7 +40,7 @@ class Service:
         Token contains base64 encoded json object with username"""
         token = self.session.params.get('access_token')
         if not token:
-            raise ValueError(
+            raise errors.TokenError(
                 "session does not have a valid access_token param")
         data = token.split('.')[1]
         # replace url chars and add padding
@@ -48,14 +49,14 @@ class Service:
         try:
             return json.loads(base64.b64decode(data).decode('utf-8'))['u']
         except (ValueError, KeyError):
-            raise ValueError("access_token does not contain username")
+            raise errors.TokenError(
+                "access_token does not contain username")
 
     def handle_http_error(self, response, custom_messages=None,
                           raise_for_status=False):
         if not custom_messages:
             custom_messages = {}
         if response.status_code in custom_messages.keys():
-            raise requests.exceptions.HTTPError(
-                custom_messages[response.status_code])
+            raise errors.HTTPError(custom_messages[response.status_code])
         if raise_for_status:
             response.raise_for_status()
