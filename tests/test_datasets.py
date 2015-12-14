@@ -72,7 +72,7 @@ def test_datasets_list():
         body=body, status=200,
         content_type='application/json')
 
-    response = Datasets('juser', access_token='pk.test').list_datasets()
+    response = Datasets('juser', access_token='pk.test').list()
     assert response.status_code == 200
     assert [item['id'] for item in response.json()] == ['ds1', 'ds2']
 
@@ -99,7 +99,7 @@ def test_datasets_create_with_name_description():
         match_querystring=True,
         callback=request_callback)
 
-    response = Datasets('juser', access_token='pk.test').create_dataset(
+    response = Datasets('juser', access_token='pk.test').create(
         name='things', description='a collection of things')
     assert response.status_code == 200
     assert response.json()['name'] == 'things'

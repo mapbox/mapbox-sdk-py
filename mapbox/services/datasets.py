@@ -57,7 +57,7 @@ class Datasets(Service):
         self.baseuri = 'https://api.mapbox.com/datasets/v1'
         self.session = self.get_session(access_token)
 
-    def list_datasets(self):
+    def list(self):
         """Returns a Requests response object that contains a list of
         objects describing the owner's datasets.
 
@@ -68,7 +68,7 @@ class Datasets(Service):
         uri = URITemplate(self.baseuri + '/{owner}').expand(owner=self.name)
         return self.session.get(uri)
 
-    def create_dataset(self, **kwargs):
+    def create(self, **kwargs):
         """Create a new dataset and return a Requests response object
         that contains information about the new dataset.
 
