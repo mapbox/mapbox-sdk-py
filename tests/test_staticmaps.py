@@ -100,6 +100,14 @@ def test_staticmap_auto_nofeatures(points):
 
 
 def test_staticmap_featurestoolarge(points):
-    with pytest.raises(ValueError):
-        mapbox.Static(access_token='pk.test').image(
-            'mapbox.satellite', -61.7, 12.1, 12, points * 100)
+    service = mapbox.Static(access_token='pk.test')
+    with pytest.raises(mapbox.validation.MapboxValidationError):
+        service._validate_overlay(json.dumps(points * 100))
+
+def test_staticmap_imagesize():
+    service = mapbox.Static(access_token='pk.test')
+    with pytest.raises(mapbox.validation.MapboxValidationError):
+        service._validate_image_size(0)
+    with pytest.raises(mapbox.validation.MapboxValidationError):
+        service._validate_image_size(2000)
+

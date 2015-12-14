@@ -28,12 +28,12 @@ class Directions(Service):
                 "{} is not a valid geometry encoding".format(geom_encoding))
         return geom_encoding
 
-    def _validate_instruction_formats(self, instruction_formats):
-        if instruction_formats is not None and \
-           instruction_formats not in self.valid_instruction_formats:
+    def _validate_instruction_format(self, instruction_format):
+        if instruction_format is not None and \
+           instruction_format not in self.valid_instruction_formats:
             raise MapboxValidationError(
-                "{} is not a valid instruction format".format(instruction_formats))
-        return instruction_formats
+                "{} is not a valid instruction format".format(instruction_format))
+        return instruction_format
 
     def directions(
             self,
@@ -45,7 +45,7 @@ class Directions(Service):
             steps=None):
         """Request directions for waypoints encoded as GeoJSON features."""
         profile = self._validate_profile(profile)
-        instructions = self._validate_instruction_formats(instructions)
+        instructions = self._validate_instruction_format(instructions)
         geometry = self._validate_geom_encoding(geometry)
         waypoints = encode_waypoints(features, precision=6,
                                      min_limit=2, max_limit=30)
