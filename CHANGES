@@ -1,3 +1,8 @@
+0.6.0 (TBD)
+------------------
+- The Upload API methods `upload` and `stage` take an open file object
+  instead of a file path. Client code will need to be updated.
+
 0.5.0 (2015-12-08)
 ------------------
 - We've vendorized the `polyline` module to work around its out of date `six`
