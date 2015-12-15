@@ -3,7 +3,7 @@ import json
 
 import responses
 
-from mapbox.services.datasets import Datasets, batch, iter_features
+from mapbox.services.datasets import Datasets
 
 
 username = 'testuser'
@@ -11,43 +11,11 @@ access_token = 'pk.{0}.test'.format(
     base64.b64encode(b'{"u":"testuser"}').decode('utf-8'))
 
 
-def test_datasets_name():
-    """Default name is set"""
+def test_datasets_service_properties():
+    """Get expected username and baseuri."""
     datasets = Datasets(access_token=access_token)
     assert datasets.username == username
     assert datasets.baseuri == 'https://api.mapbox.com/datasets/v1'
-
-
-def test_iter_features_collection():
-    src = json.dumps(
-        {'type': 'FeatureCollection', 'features': [{'type': 'Feature'}]},
-        indent=2).split('\n')
-    assert list(iter_features(iter(src))) == [{'type': 'Feature'}]
-
-
-def test_batch_features_collection():
-    src = json.dumps(
-        {'type': 'FeatureCollection', 'features': [{'type': 'Feature'}]},
-        indent=2).split('\n')
-    assert list(next(batch(iter_features(iter(src)), size=1))) == [{'type': 'Feature'}]
-
-
-def test_iter_features_sequence():
-    src = [json.dumps({'type': 'Feature'}), json.dumps({'type': 'Feature'})]
-    assert list(iter_features(iter(src), is_sequence=True)) == [{'type': 'Feature'}, {'type': 'Feature'}]
-
-
-def test_iter_features_rs_sequence():
-    src = (u'\x1e' + 
-            json.dumps(
-                {'type': 'Feature', 'id': '1', 'properties': {'foo': 'bar'}},
-                indent=2) +
-            '\n'
-            u'\x1e' + 
-            json.dumps(
-                {'type': 'Feature', 'id': '2', 'properties': {'foo': 'bar'}},
-                indent=2)).split('\n')
-    assert [ob['id'] for ob in iter_features(iter(src))] == ['1', '2']
 
 
 @responses.activate

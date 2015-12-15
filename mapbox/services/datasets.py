@@ -10,43 +10,6 @@ from mapbox.services.base import Service
 
 # Constants
 BASE_URI = 'https://api.mapbox.com/datasets/v1'
-MAX_BATCH_SIZE = 100
-
-
-def iter_features(src, is_sequence=False):
-    """Yield features from a src that may be either a GeoJSON feature
-    text sequence or GeoJSON feature collection."""
-    first_line = next(src)
-    # If input is RS-delimited JSON sequence.
-    if first_line.startswith(u'\x1e'):
-        buffer = first_line.strip(u'\x1e')
-        for line in src:
-            if line.startswith(u'\x1e'):
-                if buffer:
-                    feat = json.loads(buffer)
-                    yield feat
-                buffer = line.strip(u'\x1e')
-            else:
-                buffer += line
-        else:
-            feat = json.loads(buffer)
-            yield feat
-    elif is_sequence:
-        yield json.loads(first_line)
-        for line in src:
-            feat = json.loads(line)
-            yield feat
-    else:
-        text = "".join(chain([first_line], src))
-        for feat in json.loads(text)['features']:
-            yield feat
-
-
-def batch(iterable, size=MAX_BATCH_SIZE):
-    """Yield batches of features."""
-    c = count()
-    for k, g in groupby(iterable, lambda x:next(c)//size):
-         yield g
 
 
 class Datasets(Service):
