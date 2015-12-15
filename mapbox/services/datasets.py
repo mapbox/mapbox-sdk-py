@@ -107,7 +107,7 @@ class Datasets(Service):
             params['limit'] = int(limit)
         return self.session.get(uri, params=params)
 
-    def update_features(self, dataset, put=None, delete=None):
+    def batch_update_features(self, dataset, put=None, delete=None):
         """Update features of a dataset.
 
         Up to 100 features may be deleted or modified in one request.
@@ -136,7 +136,10 @@ class Datasets(Service):
         :param dataset: the dataset identifier string.
         :param fid: the feature identifier string.
         """
-        pass
+        uri = URITemplate(
+            self.baseuri + '/{owner}/{did}/features/{fid}').expand(
+                owner=self.username, did=dataset, fid=fid)
+        return self.session.get(uri)
 
     def update_feature(self, dataset, fid, feature):
         """Create or update a dataset feature.
@@ -150,7 +153,10 @@ class Datasets(Service):
         :param fid: the feature identifier string.
         :param feature: a GeoJSON feature object.
         """
-        pass
+        uri = URITemplate(
+            self.baseuri + '/{owner}/{did}/features/{fid}').expand(
+                owner=self.username, did=dataset, fid=fid)
+        return self.session.put(uri, json=feature)
 
     def delete_feature(self, dataset, fid):
         """Delete a dataset feature.
@@ -158,4 +164,7 @@ class Datasets(Service):
         :param dataset: the dataset identifier string.
         :param fid: the feature identifier string.
         """
-        pass
+        uri = URITemplate(
+            self.baseuri + '/{owner}/{did}/features/{fid}').expand(
+                owner=self.username, did=dataset, fid=fid)
+        return self.session.delete(uri)
