@@ -1,5 +1,4 @@
 # mapbox.datasets
-from itertools import chain, count, groupby
 import json
 
 import requests
@@ -30,7 +29,7 @@ class Datasets(Service):
 
     def create(self, name=None, description=None):
         """Create a new dataset.
-        
+
         Returns a :class:`requests.Response` containing the attributes
         of the new dataset as a JSON object.
 
@@ -43,7 +42,7 @@ class Datasets(Service):
 
     def list(self):
         """List datasets.
-        
+
         Returns a :class:`requests.Response` containing a list of
         objects describing datasets.
         """
@@ -53,10 +52,10 @@ class Datasets(Service):
 
     def read_dataset(self, dataset):
         """Read the attributes of a dataset.
-        
+
         Returns a :class:`requests.Response` containing the attributes
-        as a JSON object. The attributes: owner (a Mapbox account), 
-        id (dataset id), created (Unix timestamp), modified 
+        as a JSON object. The attributes: owner (a Mapbox account),
+        id (dataset id), created (Unix timestamp), modified
         (timestamp), name (string), and description (string).
 
         :param dataset: the dataset identifier string.
@@ -67,7 +66,7 @@ class Datasets(Service):
 
     def update_dataset(self, dataset, name=None, description=None):
         """Update the name and description of a dataset.
-        
+
         Returns a :class:`requests.Response` containing the updated
         attributes as a JSON object.
 
@@ -90,7 +89,7 @@ class Datasets(Service):
 
     def list_features(self, dataset, reverse=False, start=None, limit=None):
         """Get features of a dataset.
-        
+
         Returns a :class:`requests.Response` containing the features of
         the dataset as a GeoJSON feature collection.
 
@@ -110,7 +109,7 @@ class Datasets(Service):
 
     def update_features(self, dataset, put=None, delete=None):
         """Update features of a dataset.
-        
+
         Up to 100 features may be deleted or modified in one request.
 
         :param dataset: the dataset identifier string.
