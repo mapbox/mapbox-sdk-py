@@ -52,59 +52,115 @@ def batch(iterable, size=MAX_BATCH_SIZE):
 class Datasets(Service):
     """A Datasets API proxy"""
 
-    def __init__(self, name, access_token=None):
-        self.name = name
+    def __init__(self, access_token=None):
         self.baseuri = 'https://api.mapbox.com/datasets/v1'
         self.session = self.get_session(access_token)
 
+    def _attribs(self, name=None, description=None):
+        """Form an attributes dictionary from keyword args."""
+        a = {}
+        if name:
+            a['name'] = name
+        if description:
+            a['description'] = description
+        return a
+
+    def create(self, name=None, description=None):
+        """Create a new dataset.
+        
+        Returns a :class:`requests.Response` containing the attributes
+        of the new dataset as a JSON object.
+
+        :param name: the dataset name (optional).
+        :param description: the dataset description (optional).
+        """
+        uri = URITemplate(self.baseuri + '/{owner}').expand(
+            owner=self.username)
+        return self.session.post(uri, json=self._attribs(name, description))
+
     def list(self):
-        """Returns a Requests response object that contains a list of
-        objects describing the owner's datasets.
-
-        `response.json()` returns the geocoding result as GeoJSON.
-        `response.status_code` returns the HTTP API status code.
-
-        See: https://www.mapbox.com/developers/api/datasets/."""
-        uri = URITemplate(self.baseuri + '/{owner}').expand(owner=self.name)
+        """List datasets.
+        
+        Returns a :class:`requests.Response` containing a list of
+        objects describing datasets.
+        """
+        uri = URITemplate(self.baseuri + '/{owner}').expand(
+            owner=self.username)
         return self.session.get(uri)
 
-    def create(self, **kwargs):
-        """Create a new dataset and return a Requests response object
-        that contains information about the new dataset.
+    def read_dataset(self, dataset):
+        """Read the attributes of a dataset.
+        
+        Returns a :class:`requests.Response` containing the attributes
+        as a JSON object. The attributes: owner (a Mapbox account), 
+        id (dataset id), created (Unix timestamp), modified 
+        (timestamp), name (string), and description (string).
 
-        `response.json()` returns the geocoding result as GeoJSON.
-        `response.status_code` returns the HTTP API status code.
+        :param dataset: the dataset identifier string.
+        """
+        uri = URITemplate(self.baseuri + '/{owner}/{id}').expand(
+            owner=self.username, id=dataset)
+        return self.session.get(uri)
 
-        See: https://www.mapbox.com/developers/api/datasets/."""
-        uri = URITemplate(self.baseuri + '/{owner}').expand(owner=self.name)
-        return self.session.post(uri, json=kwargs)
+    def update_dataset(self, dataset, name=None, description=None):
+        """Update the name and description of a dataset.
+        
+        Returns a :class:`requests.Response` containing the updated
+        attributes as a JSON object.
+
+        :param dataset: the dataset identifier string.
+        :param name: the dataset name.
+        :param description: the dataset description.
+        """
+        uri = URITemplate(self.baseuri + '/{owner}/{id}').expand(
+            owner=self.username, id=dataset)
+        return self.session.patch(uri, json=self._attribs(name, description))
 
     def delete_dataset(self, dataset):
-        """Delete a dataset."""
+        """Delete a dataset.
+
+        :param dataset: the dataset identifier string.
+        """
         uri = URITemplate(self.baseuri + '/{owner}/{id}').expand(
-            owner=self.name, id=dataset)
+            owner=self.username, id=dataset)
         return self.session.delete(uri)
 
-    def list_features(self, dataset):
-        """Return a Requests response object that contains the features
-        of the dataset.
+    def list_features(self, dataset, reverse=False, start=None, limit=None):
+        """Get features of a dataset.
+        
+        Return a :class:`requests.Response` containing the features of
+        the dataset as a GeoJSON feature collection.
 
-        `response.json()` returns the geocoding result as GeoJSON.
-        `response.status_code` returns the HTTP API status code.
+        :param dataset: the dataset identifier string.
+        """
+        uri = URITemplate(
+            self.baseuri + '/{owner}/{id}/features').expand(
+            owner=self.username, id=dataset)
+        params = {}
+        if reverse:
+            params['reverse'] = 'true'
+        if start:
+            params['start'] = start
+        if limit:
+            params['limit'] = int(limit)
+        return self.session.get(uri, params=params)
 
-        See: https://www.mapbox.com/developers/api/datasets/."""
+    def update_features(self, dataset, put=None, delete=None):
+        """Update features of a dataset.
+        
+        Up to 100 features may be deleted or modified in one request.
+
+        :param dataset: the dataset identifier string.
+        :param put: an array of GeoJSON features to be created or
+            modified with the semantics of HTTP PUT.
+        :param delete: an array of feature ids to be deleted with
+            the semantics of HTTP DELETE.
+        """
         uri = URITemplate(self.baseuri + '/{owner}/{id}/features').expand(
-            owner=self.name, id=dataset)
-        return self.session.get(uri)
-
-    def update_features(self, dataset, **updates):
-        """Return a Requests response object that contains the features
-        of the dataset.
-
-        `response.json()` returns the geocoding result as GeoJSON.
-        `response.status_code` returns the HTTP API status code.
-
-        See: https://www.mapbox.com/developers/api/datasets/."""
-        uri = URITemplate(self.baseuri + '/{owner}/{id}/features').expand(
-            owner=self.name, id=dataset)
+            owner=self.username, id=dataset)
+        updates = {}
+        if put:
+            updates['put'] = put
+        if delete:
+            updates['delete'] = delete
         return self.session.post(uri, json=updates)
