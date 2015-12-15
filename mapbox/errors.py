@@ -39,5 +39,5 @@ class InvalidParameterError(ValidationError):
     pass
 
 
-class FileIOError(ValidationError):
+class InvalidFileError(ValidationError):
     pass

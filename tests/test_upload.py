@@ -200,7 +200,8 @@ def test_stage(monkeypatch):
         body=query_body, status=200,
         content_type='application/json')
 
-    stage_url = mapbox.Uploader(access_token=access_token).stage('tests/moors.json')
+    with open('tests/moors.json', 'r') as src:
+        stage_url = mapbox.Uploader(access_token=access_token).stage(src)
     assert stage_url.startswith("https://tilestream-tilesets-production.s3.amazonaws.com/_pending")
 
 
@@ -233,15 +234,17 @@ def test_upload(monkeypatch):
         body=upload_response_body, status=201,
         content_type='application/json')
 
-    res = mapbox.Uploader(access_token=access_token).upload(
-        'tests/moors.json', 'test1')
+    with open('tests/moors.json', 'r') as src:
+        res = mapbox.Uploader(access_token=access_token).upload(src, 'test1')
+
     assert res.status_code == 201
     job = res.json()
     assert job['tileset'] == "{0}.test1".format(username)
 
+
 @responses.activate
-def test_upload(monkeypatch):
-    """Upload a file and create a tileset"""
+def test_upload_error(monkeypatch):
+    """Upload a file and create a tileset, fails with 409"""
 
     monkeypatch.setattr(mapbox.services.uploads, 'boto3_session', MockSession)
 
@@ -268,6 +271,14 @@ def test_upload(monkeypatch):
         body="", status=409,
         content_type='application/json')
 
-    res = mapbox.Uploader(access_token=access_token).upload(
-        'tests/moors.json', 'test1')
+    with open('tests/moors.json', 'r') as src:
+        res = mapbox.Uploader(access_token=access_token).upload(src, 'test1')
+
     assert res.status_code == 409
+
+
+def test_invalid_fileobj():
+    """Must be file object, not path"""
+    with pytest.raises(mapbox.errors.InvalidFileError):
+        mapbox.Uploader(access_token=access_token).upload(
+            'tests/moors.json', 'test1')

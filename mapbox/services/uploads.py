@@ -3,6 +3,7 @@ from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
 
 from .base import Service
+from mapbox.errors import InvalidFileError
 
 
 class Uploader(Service):
@@ -47,6 +48,11 @@ class Uploader(Service):
         If creds are not provided, temporary credientials will be generated
         Returns the URL to the staged resource.
         """
+        if not hasattr(fileobj, 'read'):
+            raise InvalidFileError(
+                "Object `{0}` has no .read method, "
+                "a file-like object is required".format(fileobj))
+
         if not creds:
             res = self._get_credentials()
             creds = res.json()
