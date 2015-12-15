@@ -37,7 +37,7 @@ description. The `id` of the created dataset is in JSON data of the response.
 'example'
 >>> new['description']
 'An example dataset'
->>> new_id = create_resp.json()['id']
+>>> new_id = new['id']
 
 ```
 
@@ -64,6 +64,22 @@ True
 
 ```
 
+If you want to change a dataset's name or description, you can.
+
+```python
+>>> _ = datasets.update_dataset(
+...     new_id, name='updated example', description='An updated example dataset'
+...     ).json()
+>>> attrs = datasets.read_dataset(new_id).json()
+>>> attrs['id'] == new_id
+True
+>>> attrs['name']
+'updated example'
+>>> attrs['description']
+'An updated example dataset'
+
+```
+
 You can delete the dataset and it will no longer be present in your listing.
 
 ```python
@@ -75,3 +91,122 @@ You can delete the dataset and it will no longer be present in your listing.
 False
 
 ```
+
+## Dataset features
+
+The main point of a dataset is store a collection of GeoJSON features. Let us
+create a new dataset and then add a GeoJSON feature to it.
+
+```python
+>>> resp = datasets.create(
+...     name='features-example', description='An example dataset with features')
+>>> new_id = resp.json()['id']
+>>> feature = {
+...     'type': 'Feature', 'id': '1', 'properties': {'name': 'Insula Nulla'},
+...     'geometry': {'type': 'Point', 'coordinates': [0, 0]}}
+>>> resp = datasets.batch_update_features(new_id, put=[feature])
+
+```
+
+In the feature collection of the dataset you will see this feature.
+
+```python
+>>> collection = datasets.list_features(new_id).json()
+>>> len(collection['features'])
+1
+>>> first = collection['features'][0]
+>>> first['id']
+'1'
+>>> first['properties']['name']
+'Insula Nulla'
+
+```
+
+Using the same `batch_update_features()` method, you can modify or delete
+up to 100 features.
+
+```python
+>>> feature2 = {
+...     'type': 'Feature', 'id': '2', 'properties': {'name': 'Insula Nulla B'},
+...     'geometry': {'type': 'Point', 'coordinates': [0, 0]}}
+>>> resp = datasets.batch_update_features(new_id, put=[feature2], delete=['1'])
+>>> resp.status_code
+200
+
+```
+
+The results:
+
+```python
+
+>>> updated_collection = datasets.list_features(new_id).json()
+>>> len(updated_collection['features'])
+1
+>>> updated_first = updated_collection['features'][0]
+>>> updated_first['id'] # should return '2'
+'1'
+>>> updated_first['properties']['name'] # should return 'Insula Nulla B'
+'Insula Nulla'
+
+```
+
+## Individual feature access
+
+You can also read, update, and delete features individually.
+
+### Read
+
+The `read_feature()` method has the semantics of HTTP GET.
+
+```python
+>>> resp = datasets.read_feature(new_id, '2')
+>>> resp.status_code
+200
+>>> feature = resp.json()
+>>> feature['id']
+'2'
+>>> feature['properties']['name']
+'Insula Nulla B'
+
+```
+
+### Update
+
+The `update_feature()` method has the semantics of HTTP PUT. If there is no
+feature in the dataset with the given id, a new feature will be created.
+
+```python
+>>> update = {
+...     'type': 'Feature', 'id': '2', 'properties': {'name': 'Insula Nulla C'},
+...     'geometry': {'type': 'Point', 'coordinates': [0, 0]}}
+>>> update = datasets.update_feature(new_id, '2', update).json()
+>>> update['id']
+'2'
+>>> update['properties']['name']
+'Insula Nulla C'
+
+```
+
+### Delete
+
+The `delete_feature()` method has the semantics of HTTP DELETE.
+
+```python
+>>> resp = datasets.delete_feature(new_id, '2')
+>>> resp.status_code
+204
+
+```
+
+Finally, let's clean up the features example dataset.
+
+```python
+>>> resp = datasets.delete_dataset(new_id)
+>>> resp.status_code
+204
+>>> listing_resp = datasets.list()
+>>> new_id in [ds['id'] for ds in listing_resp.json()]
+False
+
+```
+
