@@ -35,11 +35,13 @@ In the example below, we use a string defined in a test fixture.
 >>> from time import sleep
 >>> from random import randint
 >>> mapid = getfixture('uploads_dest_id') # 'uploads-test'
->>> upload_resp = service.upload('tests/twopoints.geojson', mapid)
+>>> with open('tests/twopoints.geojson', 'r') as src:
+...     upload_resp = service.upload(src, mapid)
 >>> if upload_resp.status_code == 409:
 ...     for i in range(5):
 ...         sleep(5)
-...         upload_resp = service.upload('tests/twopoints.geojson', mapid)
+...         with open('tests/twopoints.geojson', 'r') as src:
+...             upload_resp = service.upload(src, mapid)
 ...         if upload_resp.status_code != 409:
 ...             break
 
