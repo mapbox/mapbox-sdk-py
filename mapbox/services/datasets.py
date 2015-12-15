@@ -128,7 +128,7 @@ class Datasets(Service):
     def list_features(self, dataset, reverse=False, start=None, limit=None):
         """Get features of a dataset.
         
-        Return a :class:`requests.Response` containing the features of
+        Returns a :class:`requests.Response` containing the features of
         the dataset as a GeoJSON feature collection.
 
         :param dataset: the dataset identifier string.
@@ -164,3 +164,36 @@ class Datasets(Service):
         if delete:
             updates['delete'] = delete
         return self.session.post(uri, json=updates)
+
+    def read_feature(self, dataset, fid):
+        """Read a dataset feature.
+
+        Returns a :class:`requests.Response` containing a GeoJSON
+        representation of the feature.
+
+        :param dataset: the dataset identifier string.
+        :param fid: the feature identifier string.
+        """
+        pass
+
+    def update_feature(self, dataset, fid, feature):
+        """Create or update a dataset feature.
+
+        The semantics of HTTP PUT apply: if the dataset has no feature
+        with the given `fid` a new feature will be created. Returns a
+        :class:`requests.Response` containing a GeoJSON representation
+        of the new or updated feature.
+
+        :param dataset: the dataset identifier string.
+        :param fid: the feature identifier string.
+        :param feature: a GeoJSON feature object.
+        """
+        pass
+
+    def delete_feature(self, dataset, fid):
+        """Delete a dataset feature.
+
+        :param dataset: the dataset identifier string.
+        :param fid: the feature identifier string.
+        """
+        pass
