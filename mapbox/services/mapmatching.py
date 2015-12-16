@@ -11,10 +11,10 @@ class MapMatcher(Service):
     def __init__(self, access_token=None):
         self.baseuri = 'https://api.mapbox.com/matching/v4'
         self.session = self.get_session(access_token)
+        self.valid_profiles = ['mapbox.driving', 'mapbox.cycling', 'mapbox.walking']
 
     def _validate_profile(self, profile):
-        valid_profiles = ['mapbox.driving', 'mapbox.cycling', 'mapbox.walking']
-        if profile not in valid_profiles:
+        if profile not in self.valid_profiles:
             raise errors.InvalidProfileError(
                 "{0} is not a valid profile".format(profile))
         return profile
