@@ -105,6 +105,8 @@ create a new dataset and then add a GeoJSON feature to it.
 ...     'type': 'Feature', 'id': '1', 'properties': {'name': 'Insula Nulla'},
 ...     'geometry': {'type': 'Point', 'coordinates': [0, 0]}}
 >>> resp = datasets.batch_update_features(new_id, put=[feature])
+>>> resp.status_code
+200
 
 ```
 
@@ -135,20 +137,9 @@ up to 100 features.
 
 ```
 
-The results:
-
-```python
-
->>> updated_collection = datasets.list_features(new_id).json()
->>> len(updated_collection['features'])
-1
->>> updated_first = updated_collection['features'][0]
->>> updated_first['id'] # should return '2'
-'1'
->>> updated_first['properties']['name'] # should return 'Insula Nulla B'
-'Insula Nulla'
-
-```
+Replication of the updates across data centers takes a small but finite amount
+of time. Your next call to `datasets.list_features()` may not reflect the most
+recent updates.
 
 ## Individual feature access
 
