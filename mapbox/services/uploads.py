@@ -1,11 +1,9 @@
 # mapbox
-import os
-
 from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
 
 from .base import Service
-from mapbox import errors
+from mapbox.errors import InvalidFileError
 
 
 class Uploader(Service):
@@ -16,7 +14,7 @@ class Uploader(Service):
         from mapbox import Uploader
 
         u = Uploader()
-        url = u.stage('test.tif')
+        url = u.stage(open('test.tif'))
         job = u.create(url, 'test1').json()
 
         assert job in u.list().json()
@@ -45,11 +43,16 @@ class Uploader(Service):
                 404: "Token does not have upload scope"})
         return resp
 
-    def stage(self, filepath, creds=None):
+    def stage(self, fileobj, creds=None):
         """Stages the user's file on S3
         If creds are not provided, temporary credientials will be generated
         Returns the URL to the staged resource.
         """
+        if not hasattr(fileobj, 'read'):
+            raise InvalidFileError(
+                "Object `{0}` has no .read method, "
+                "a file-like object is required".format(fileobj))
+
         if not creds:
             res = self._get_credentials()
             creds = res.json()
@@ -61,11 +64,7 @@ class Uploader(Service):
             region_name="us-east-1")
 
         s3 = session.resource('s3')
-        if not os.path.exists(filepath):
-            raise errors.FileIOError(
-                "{0} does not exist".format(filepath))
-        with open(filepath, 'rb') as data:
-            res = s3.Object(creds['bucket'], creds['key']).put(Body=data)
+        res = s3.Object(creds['bucket'], creds['key']).put(Body=fileobj)
 
         return creds['url']
 
@@ -144,10 +143,10 @@ class Uploader(Service):
         self.handle_http_error(resp)
         return resp
 
-    def upload(self, filepath, tileset, name=None):
-        """High level function to upload a local file to mapbox tileset
+    def upload(self, fileobj, tileset, name=None):
+        """High level function to upload a file object to mapbox tileset
         Effectively replicates the upload functionality using the HTML form
         Returns a response object where the json() is a dict with upload metadata
         """
-        url = self.stage(filepath)
+        url = self.stage(fileobj)
         return self.create(url, tileset, name=name)
