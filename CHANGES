@@ -1,7 +1,10 @@
-0.6.0 (TBD)
+0.6.0 (2015-12-17)
 ------------------
 - The Upload API methods `upload` and `stage` take an open file object
   instead of a file path. Client code will need to be updated.
+- Add Map Matching API (#91).
+- Add Datasets API (#15, #80). This API is currently beta and not publicly
+  available.
 
 0.5.0 (2015-12-08)
 ------------------
