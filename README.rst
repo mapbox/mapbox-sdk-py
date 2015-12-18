@@ -15,6 +15,11 @@ The Mapbox Python SDK is a low-level client API, not a Resource API such as the 
 Services
 ========
 
+- **Datasets** `examples <./docs/datasets.md#datasets>`__, `website <https://www.mapbox.com/developers/api/datasets/>`__
+
+  - Manage editable collections of GeoJSON features
+  - Persistent storage for custom geographic data
+
 - **Directions** `examples <./docs/directions.md#directions>`__, `website <https://www.mapbox.com/developers/api/directions/>`__
 
   - Profiles for driving, walking, and cycling
