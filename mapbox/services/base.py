@@ -4,40 +4,50 @@ import base64
 import json
 import os
 
+from cachecontrol import CacheControl
 import requests
 
 from .. import __version__
 from mapbox import errors
 
 
-class Service:
-    """Service mixin class
+def Session(access_token=None, env=os.environ):
+    """Returns an HTTP session.
 
-    Requires that sub-classes have a "session" property with value of
-    `requests.Session()`.
+    :param access_token: Mapbox access token string (optional).
+    :param env: a dict.
     """
+    access_token = (
+        access_token or
+        env.get('MapboxAccessToken') or
+        env.get('MAPBOX_ACCESS_TOKEN'))
+    session = requests.Session()
+    session.params.update(access_token=access_token)
+    session.headers.update({
+        'User-Agent': 'mapbox-sdk-py/{0} {1}'.format(
+            __version__, requests.utils.default_user_agent())})
+    return session
 
-    def get_session(self, token=None, env=None):
-        access_token = (
-            token or
-            (env or os.environ).get('MapboxAccessToken') or
-            (env or os.environ).get('MAPBOX_ACCESS_TOKEN'))
-        session = requests.Session()
-        session.params.update(access_token=access_token)
-        session.headers.update(
-            {'User-Agent': ' '.join(
-                [self.product_token, requests.utils.default_user_agent()])})
-        return session
 
-    @property
-    def product_token(self):
-        """A product token for use in User-Agent headers."""
-        return 'mapbox-sdk-py/{0}'.format(__version__)
+class Service(object):
+    """Service base class."""
+
+    def __init__(self, access_token=None, cache=None):
+        """Constructs a Service object.
+
+        :param access_token: Mapbox access token string.
+        :param cache: CacheControl cache instance (Dict or FileCache).
+        """
+        self.session = Session(access_token)
+        if cache:
+            self.session = CacheControl(self.session, cache=cache)
 
     @property
     def username(self):
-        """Get username from access token
-        Token contains base64 encoded json object with username"""
+        """Get username from access token.
+
+        Token contains base64 encoded json object with username.
+        """
         token = self.session.params.get('access_token')
         if not token:
             raise errors.TokenError(

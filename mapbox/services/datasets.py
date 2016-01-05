@@ -12,11 +12,9 @@ BASE_URI = 'https://api.mapbox.com/datasets/v1'
 
 
 class Datasets(Service):
-    """A Datasets API proxy"""
+    """Access to the Datasets API."""
 
-    def __init__(self, access_token=None):
-        self.baseuri = 'https://api.mapbox.com/datasets/v1'
-        self.session = self.get_session(access_token)
+    baseuri = 'https://api.mapbox.com/datasets/v1'
 
     def _attribs(self, name=None, description=None):
         """Form an attributes dictionary from keyword args."""

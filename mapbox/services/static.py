@@ -2,15 +2,14 @@ import json
 
 from uritemplate import URITemplate
 
-from mapbox.services.base import Service
 from mapbox import errors
+from mapbox.services.base import Service
 
 
 class Static(Service):
+    """Access to the Static Map API."""
 
-    def __init__(self, access_token=None):
-        self.baseuri = 'https://api.mapbox.com/v4'
-        self.session = self.get_session(access_token)
+    baseuri = 'https://api.mapbox.com/v4'
 
     def _validate_lat(self, val):
         if val < -85.0511 or val > 85.0511:

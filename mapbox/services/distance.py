@@ -1,16 +1,15 @@
 from uritemplate import URITemplate
 
 from mapbox.encoding import encode_coordinates_json
-from mapbox.services.base import Service
 from mapbox.errors import InvalidProfileError
+from mapbox.services.base import Service
 
 
 class Distance(Service):
+    """Access to the Distance API."""
 
-    def __init__(self, access_token=None):
-        self.baseuri = 'https://api.mapbox.com/distances/v1/mapbox'
-        self.session = self.get_session(access_token)
-        self.valid_profiles = ['driving', 'cycling', 'walking']
+    baseuri = 'https://api.mapbox.com/distances/v1/mapbox'
+    valid_profiles = ['driving', 'cycling', 'walking']
 
     def _validate_profile(self, profile):
         if profile not in self.valid_profiles:
