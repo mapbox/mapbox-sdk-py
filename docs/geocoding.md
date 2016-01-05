@@ -104,7 +104,7 @@ Places at an address may be found using `Geocoder.forward()`.
 >>> response.headers['Content-Type']
 'application/vnd.geo+json; charset=utf-8'
 >>> response.geojson()['features'][0]['place_name']
-'200 Queen St W, Toronto, M5T 1T9, Canada'
+'200 Queen St W, Toronto, Ontario M5T 1T9, Canada'
 
 ```
 
@@ -119,7 +119,7 @@ Place results may be biased toward a given longitude and latitude.
 >>> response.status_code
 200
 >>> response.geojson()['features'][0]['place_name']
-'200 Queen St, Saint John, E2L 2X1, Canada'
+'200 Queen St, Saint John, New Brunswick E2L 2X1, Canada'
 
 ```
 
