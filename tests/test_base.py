@@ -76,12 +76,6 @@ def test_username(monkeypatch):
 
 
 def test_username_failures(monkeypatch):
-    # If your child class doesn't create a session
-    service = base.Service()
-    with pytest.raises(TokenError) as exc:
-        service.username
-        assert 'session' in exc.value.message
-
     if 'MAPBOX_ACCESS_TOKEN' in os.environ:
         monkeypatch.delenv('MAPBOX_ACCESS_TOKEN')
     service = MockService()
