@@ -1,3 +1,4 @@
+from cachecontrol.cache import DictCache
 import mapbox
 import pytest
 import responses
@@ -21,7 +22,8 @@ points = [{
 
 
 @responses.activate
-def test_directions():
+@pytest.mark.parametrize("cache", [None, DictCache()])
+def test_directions(cache):
     with open('tests/moors.json') as fh:
         body = fh.read()
 
@@ -32,13 +34,14 @@ def test_directions():
         body=body, status=200,
         content_type='application/json')
 
-    res = mapbox.Directions(access_token='pk.test').directions(points)
+    res = mapbox.Directions(access_token='pk.test', cache=cache).directions(points)
     assert res.status_code == 200
     assert sorted(res.json()['routes'][0].keys()) == ['distance', 'duration', 'geometry', 'steps', 'summary']
     assert sorted(res.json().keys()) == ['destination', 'origin', 'routes', 'waypoints']
 
 
 @responses.activate
+
 def test_directions_geojson():
     with open('tests/moors.json') as fh:
         body = fh.read()

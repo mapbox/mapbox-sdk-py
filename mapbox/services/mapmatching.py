@@ -2,16 +2,15 @@ import json
 
 from uritemplate import URITemplate
 
-from mapbox.services.base import Service
 from mapbox import errors
+from mapbox.services.base import Service
 
 
 class MapMatcher(Service):
+    """Access to the Map Matching API."""
 
-    def __init__(self, access_token=None):
-        self.baseuri = 'https://api.mapbox.com/matching/v4'
-        self.session = self.get_session(access_token)
-        self.valid_profiles = ['mapbox.driving', 'mapbox.cycling', 'mapbox.walking']
+    baseuri = 'https://api.mapbox.com/matching/v4'
+    valid_profiles = ['mapbox.driving', 'mapbox.cycling', 'mapbox.walking']
 
     def _validate_profile(self, profile):
         if profile not in self.valid_profiles:
@@ -31,6 +30,7 @@ class MapMatcher(Service):
         return val
 
     def match(self, feature, gps_precision=None, profile='mapbox.driving'):
+        """Match features to OpenStreetMap data."""
         profile = self._validate_profile(profile)
 
         feature = self._validate_feature(feature)
@@ -51,5 +51,4 @@ class MapMatcher(Service):
             return res.json()
 
         res.geojson = geojson
-
         return res

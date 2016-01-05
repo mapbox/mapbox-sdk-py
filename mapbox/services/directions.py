@@ -6,15 +6,14 @@ from mapbox import errors
 
 
 class Directions(Service):
+    """Access to the Directions API."""
 
-    def __init__(self, access_token=None):
-        self.baseuri = 'https://api.mapbox.com/v4/directions'
-        self.session = self.get_session(access_token)
-        self.valid_profiles = ['mapbox.driving',
-                               'mapbox.cycling',
-                               'mapbox.walking']
-        self.valid_instruction_formats = ['text', 'html']
-        self.valid_geom_encoding = ['geojson', 'polyline', 'false']
+    baseuri = 'https://api.mapbox.com/v4/directions'
+    valid_profiles = ['mapbox.driving',
+                      'mapbox.cycling',
+                      'mapbox.walking']
+    valid_instruction_formats = ['text', 'html']
+    valid_geom_encoding = ['geojson', 'polyline', 'false']
 
     def _validate_profile(self, profile):
         if profile not in self.valid_profiles:
@@ -36,15 +35,13 @@ class Directions(Service):
                 "{0} is not a valid instruction format".format(instruction_format))
         return instruction_format
 
-    def directions(
-            self,
-            features,
-            profile='mapbox.driving',
-            alternatives=None,
-            instructions=None,
-            geometry=None,
-            steps=None):
-        """Request directions for waypoints encoded as GeoJSON features."""
+    def directions(self, features, profile='mapbox.driving', alternatives=None,
+                   instructions=None, geometry=None, steps=None):
+        """Request directions for waypoints encoded as GeoJSON features.
+        
+        :param features: sequence of GeoJSON features.
+        :param profile: name of a profile.
+        """
         profile = self._validate_profile(profile)
         instructions = self._validate_instruction_format(instructions)
         geometry = self._validate_geom_encoding(geometry)

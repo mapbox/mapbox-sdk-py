@@ -1,13 +1,13 @@
 from uritemplate import URITemplate
+
 from mapbox.encoding import encode_waypoints, encode_polyline
-from .base import Service
+from mapbox.services.base import Service
 
 
 class Surface(Service):
+    """Access to the Surface API."""
 
-    def __init__(self, access_token=None):
-        self.baseuri = 'https://api.mapbox.com/v4/surface'
-        self.session = self.get_session(access_token)
+    baseuri = 'https://api.mapbox.com/v4/surface'
 
     def surface(self,
                 features,

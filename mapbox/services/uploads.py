@@ -2,12 +2,12 @@
 from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
 
-from .base import Service
 from mapbox.errors import InvalidFileError
+from mapbox.services.base import Service
 
 
 class Uploader(Service):
-    """Mapbox Upload API
+    """Access to the Upload API.
 
     Example usage:
 
@@ -26,9 +26,7 @@ class Uploader(Service):
         assert job not in u.list().json()
     """
 
-    def __init__(self, access_token=None):
-        self.baseuri = 'https://api.mapbox.com/uploads/v1'
-        self.session = self.get_session(access_token)
+    baseuri = 'https://api.mapbox.com/uploads/v1'
 
     def _get_credentials(self):
         """Gets temporary S3 credentials to stage user-uploaded files

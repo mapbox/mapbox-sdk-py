@@ -30,6 +30,7 @@ setup(name='mapbox',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
+          'cachecontrol',
           'click',
           'click-plugins',
           'cligj',

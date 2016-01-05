@@ -1,20 +1,28 @@
 # mapbox
 from uritemplate import URITemplate
-from .base import Service
+
 from mapbox.errors import InvalidPlaceTypeError
+from mapbox.services.base import Service
 
 
 class Geocoder(Service):
-    """A very simple Geocoding API proxy"""
+    """Access to the Geocoding API."""
 
-    def __init__(self, name='mapbox.places', access_token=None):
+    baseuri = 'https://api.mapbox.com/geocoding/v5'
+    precision = {'reverse': 5, 'proximity': 3}
+
+    def __init__(self, name='mapbox.places', access_token=None, cache=None):
+        """Constructs a Geocoding Service object.
+
+        :param name: name of a geocoding dataset.
+        :param access_token: Mapbox access token string.
+        :param cache: CacheControl cache instance (Dict or FileCache).
+        """
         self.name = name
-        self.baseuri = 'https://api.mapbox.com/geocoding/v5'
-        self.session = self.get_session(access_token)
-        self.precision = {'reverse': 5, 'proximity': 3}
+        super(Geocoder, self).__init__(access_token, cache)
 
     def _validate_place_types(self, types):
-        """Validate place types and return a mapping for use in requests"""
+        """Validate place types and return a mapping for use in requests."""
         for pt in types:
             if pt not in self.place_types:
                 raise InvalidPlaceTypeError(pt)
