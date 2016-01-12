@@ -71,7 +71,7 @@ travel profile.
 
 ```
 
-And the response json contains a durations matrix, a 2-D list with travel
+And the response JSON contains a durations matrix, a 2-D list with travel
 times, in seconds, between all input waypoints.
 
 ```python
