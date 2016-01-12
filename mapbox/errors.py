@@ -3,6 +3,10 @@ class ValidationError(ValueError):
     pass
 
 
+class InvalidCountryCodeError(ValidationError):
+    pass
+
+
 class InvalidPlaceTypeError(ValidationError):
     pass
 
