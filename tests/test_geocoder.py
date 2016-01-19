@@ -114,7 +114,8 @@ def test_validate_country_codes_err():
 
 
 def test_validate_country():
-    assert mapbox.Geocoder()._validate_country_codes(('us', 'br')) == 'us,br'
+    assert mapbox.Geocoder()._validate_country_codes(
+        ('us', 'br')) ==  {'country': 'us,br'}
 
 
 def test_validate_place_types_err():
