@@ -1,8 +1,8 @@
 # mapbox
+from iso3166 import countries
 from uritemplate import URITemplate
 
-from mapbox.errors import InvalidCountryCodeError
-from mapbox.errors import InvalidPlaceTypeError
+from mapbox.errors import InvalidCountryCodeError, InvalidPlaceTypeError
 from mapbox.services.base import Service
 
 
@@ -27,7 +27,7 @@ class Geocoder(Service):
         for cc in ccs:
             if cc not in self.country_codes:
                 raise InvalidCountryCodeError(cc)
-        return ','.join(ccs)
+        return {'country': ",".join(ccs)}
 
     def _validate_place_types(self, types):
         """Validate place types and return a mapping for use in requests."""
@@ -51,7 +51,7 @@ class Geocoder(Service):
             dataset=self.name, query=address)
         params = {}
         if country:
-            params.update(country=self._validate_country_codes(country))
+            params.update(self._validate_country_codes(country))
         if types:
             params.update(self._validate_place_types(types))
         if lon is not None and lat is not None:
@@ -96,7 +96,7 @@ class Geocoder(Service):
     @property
     def country_codes(self):
         """A list of valid country codes"""
-        return ('ad', 'ae', 'al', 'ao', 'ar', 'at', 'au', 'ba', 'be', 'bg', 'bh', 'bn', 'br', 'bw', 'by', 'ca', 'ch', 'cl', 'cn', 'co', 'cu', 'cy', 'cz', 'de', 'dk', 'dz', 'ee', 'eg', 'es', 'fi', 'fr', 'gb', 'gf', 'gp', 'gr', 'hr', 'hu', 'id', 'ie', 'in', 'is', 'it', 'jo', 'jp', 'ke', 'kw', 'lb', 'lt', 'lu', 'lv', 'ma', 'md', 'me', 'mk', 'mt', 'mx', 'my', 'nl', 'no', 'nz', 'pe', 'ph', 'pl', 'pt', 'ro', 'rs', 'ru', 'se', 'sg', 'si', 'sk', 'sm', 'th', 'tr', 'tw', 'ua', 'us', 'uy', 've', 'vn', 'za')
+        return [c.alpha2.lower() for c in countries]
 
     @property
     def place_types(self):

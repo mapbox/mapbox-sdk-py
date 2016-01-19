@@ -145,11 +145,11 @@ United States: country...
 
 ## Filtering by country code
 
-`forward()` can be restricted to a country code.
+`forward()` can be restricted to a list of country codes.
 
 ```python
 
->>> response = geocoder.forward("200 queen street", country=('us','ca'))
+>>> response = geocoder.forward("200 queen street", country=['us','ca'])
 >>> response.status_code
 200
 >>> response.headers['Content-Type']
