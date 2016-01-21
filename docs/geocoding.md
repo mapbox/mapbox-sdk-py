@@ -143,6 +143,23 @@ United States: country...
 
 ```
 
+## Filtering by country code
+
+`forward()` can be restricted to a list of country codes.
+
+```python
+
+>>> response = geocoder.forward("200 queen street", country=['us','ca'])
+>>> response.status_code
+200
+>>> response.headers['Content-Type']
+'application/vnd.geo+json; charset=utf-8'
+>>> response.geojson()['features'][0]['place_name']
+'200 Queen St W, Toronto, Ontario M5T 1T9, Canada'
+
+```
+
+
 ## Filtering by type
 
 Both `forward()` and `reverse()` can be restricted to one or more place types.

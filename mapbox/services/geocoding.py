@@ -1,7 +1,8 @@
 # mapbox
+from iso3166 import countries
 from uritemplate import URITemplate
 
-from mapbox.errors import InvalidPlaceTypeError
+from mapbox.errors import InvalidCountryCodeError, InvalidPlaceTypeError
 from mapbox.services.base import Service
 
 
@@ -21,6 +22,13 @@ class Geocoder(Service):
         self.name = name
         super(Geocoder, self).__init__(access_token, cache)
 
+    def _validate_country_codes(self, ccs):
+        """Validate country code filters for use in requests."""
+        for cc in ccs:
+            if cc not in self.country_codes:
+                raise InvalidCountryCodeError(cc)
+        return {'country': ",".join(ccs)}
+
     def _validate_place_types(self, types):
         """Validate place types and return a mapping for use in requests."""
         for pt in types:
@@ -28,7 +36,7 @@ class Geocoder(Service):
                 raise InvalidPlaceTypeError(pt)
         return {'types': ",".join(types)}
 
-    def forward(self, address, types=None, lon=None, lat=None):
+    def forward(self, address, types=None, lon=None, lat=None, country=None):
         """Returns a Requests response object that contains a GeoJSON
         collection of places matching the given address.
 
@@ -42,6 +50,8 @@ class Geocoder(Service):
         uri = URITemplate('%s/{dataset}/{query}.json' % self.baseuri).expand(
             dataset=self.name, query=address)
         params = {}
+        if country:
+            params.update(self._validate_country_codes(country))
         if types:
             params.update(self._validate_place_types(types))
         if lon is not None and lat is not None:
@@ -82,6 +92,11 @@ class Geocoder(Service):
         resp.geojson = geojson
 
         return resp
+
+    @property
+    def country_codes(self):
+        """A list of valid country codes"""
+        return [c.alpha2.lower() for c in countries]
 
     @property
     def place_types(self):

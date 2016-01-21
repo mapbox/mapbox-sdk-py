@@ -106,6 +106,18 @@ def test_geocoder_place_types():
         ('region', "First order administrative divisions within a country, usually provinces or states. Examples: California, Ontario, Essonne.")]
 
 
+def test_validate_country_codes_err():
+    try:
+        mapbox.Geocoder()._validate_country_codes(('us', 'bogus'))
+    except mapbox.InvalidCountryCodeError as err:
+        assert str(err) == "bogus"
+
+
+def test_validate_country():
+    assert mapbox.Geocoder()._validate_country_codes(
+        ('us', 'br')) ==  {'country': 'us,br'}
+
+
 def test_validate_place_types_err():
     try:
         mapbox.Geocoder()._validate_place_types(('address', 'bogus'))

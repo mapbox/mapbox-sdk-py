@@ -30,13 +30,14 @@ setup(name='mapbox',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
+          'boto3',
           'cachecontrol',
           'click',
           'click-plugins',
           'cligj',
+          'iso3166',
           'requests',
           'uritemplate.py',
-          'boto3',
       ],
       extras_require={
           'test': [
