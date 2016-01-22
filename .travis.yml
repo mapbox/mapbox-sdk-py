@@ -19,7 +19,7 @@ install:
   - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]]; then pip install ordereddict; fi
 script:
   - py.test --cov mapbox --cov-report term-missing tests/*.py
-  - if [[ $TRAVIS_PYTHON_VERSION == 2.7 ]]; then py.test --doctest-glob='*.md' docs/*.md; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 2.7 && ! -z "$MAPBOX_ACCESS_TOKEN" ]]; then py.test --doctest-glob='*.md' docs/*.md; fi
 after_success:
   - coveralls
 deploy:
