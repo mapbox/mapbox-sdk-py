@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import json
 import re
 import responses
@@ -234,3 +236,26 @@ def test_geocoder_reverse_rounding():
     assert match is not None
     for coord in re.split(r'(%2C|,)', match.group(1)):
         assert _check_coordinate_precision(coord, 5)
+
+
+@responses.activate
+def test_geocoder_unicode():
+    """Forward geocoding works with non-ascii inputs
+    Specifically, the URITemplate needs to utf-8 encode all inputs
+    """
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/Florian%C3%B3polis%2C%20Brazil.json?access_token=pk.test',
+        match_querystring=True,
+        body='{}', status=200,
+        content_type='application/json')
+
+    query = "Florianópolis, Brazil"
+    try:
+        query = query.decode('utf-8')  # Python 2
+    except:
+        pass  # Python 3
+
+    response = mapbox.Geocoder(access_token='pk.test').forward(query)
+    assert response.status_code == 200
