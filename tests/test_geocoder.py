@@ -255,8 +255,7 @@ def test_geocoder_unicode():
     try:
         query = query.decode('utf-8')  # Python 2
     except:
-        pass  # Python 3 
-    assert type(query) in (str, unicode)  # py3, py2
+        pass  # Python 3
 
     response = mapbox.Geocoder(access_token='pk.test').forward(query)
     assert response.status_code == 200
