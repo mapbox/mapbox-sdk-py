@@ -48,7 +48,7 @@ class Geocoder(Service):
 
         See: https://www.mapbox.com/developers/api/geocoding/#forward."""
         uri = URITemplate('%s/{dataset}/{query}.json' % self.baseuri).expand(
-            dataset=self.name, query=address)
+            dataset=self.name, query=address.encode('utf-8'))
         params = {}
         if country:
             params.update(self._validate_country_codes(country))
