@@ -1,3 +1,9 @@
+0.7.0 (2016-02-22)
+------------------
+- All services support HTTP Caching via cachecontrol (#101)
+- Country code filtering and unicode support for geocoding (#107, #111)
+- Documentation and testing improvements (#106, #108)
+
 0.6.0 (2015-12-17)
 ------------------
 - The Upload API methods `upload` and `stage` take an open file object
