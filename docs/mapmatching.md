@@ -61,7 +61,7 @@ containing timestamps to help make the matching more accurate.
 
 ```
 
-Use the `surface()` method to query the terrain dataset.
+Use the `match()` method to match the LineString to a profile.
 
 ```python
 >>> response = service.match(line, profile='mapbox.driving')
