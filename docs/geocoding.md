@@ -103,8 +103,11 @@ Places at an address may be found using `Geocoder.forward()`.
 200
 >>> response.headers['Content-Type']
 'application/vnd.geo+json; charset=utf-8'
->>> response.geojson()['features'][0]['place_name']
+>>> first = response.geojson()['features'][0]
+>>> first['place_name']
 '200 Queen St W, Toronto, Ontario M5T 1T9, Canada'
+>>> first['geometry']['coordinates']
+[-79.388951, 43.650579]
 
 ```
 
@@ -118,8 +121,26 @@ Place results may be biased toward a given longitude and latitude.
 ...     "200 queen street", lon=-66.1, lat=45.3)
 >>> response.status_code
 200
->>> response.geojson()['features'][0]['place_name']
+>>> first = response.geojson()['features'][0]
+>>> first['place_name']
 '200 Queen St, Saint John, New Brunswick E2L 2X1, Canada'
+>>> first['geometry']['coordinates']
+[-66.050985, 45.270093]
+
+```
+
+## Forward geocoding with country code filtering
+
+No results in Canada will be returned if the query is filtered for 'us' results
+only.
+
+```python
+
+>>> response = geocoder.forward("200 queen street", country=['us'])
+>>> response.status_code
+200
+>>> any(['Canada' in f['place_name'] for f in response.geojson()['features']])
+False
 
 ```
 
