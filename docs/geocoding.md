@@ -129,21 +129,6 @@ Place results may be biased toward a given longitude and latitude.
 
 ```
 
-## Forward geocoding with country code filtering
-
-No results in Canada will be returned if the query is filtered for 'us' results
-only.
-
-```python
-
->>> response = geocoder.forward("200 queen street", country=['us'])
->>> response.status_code
-200
->>> any(['Canada' in f['place_name'] for f in response.geojson()['features']])
-False
-
-```
-
 ## Reverse geocoding
 
 Places at a longitude, latitude point may be found using `Geocoder.reverse()`.
@@ -166,20 +151,18 @@ United States: country...
 
 ## Filtering by country code
 
-`forward()` can be restricted to a list of country codes.
+`forward()` can be restricted to a list of country codes. No results in Canada
+will be returned if the query is filtered for 'us' results only.
 
 ```python
 
->>> response = geocoder.forward("200 queen street", country=['us','ca'])
+>>> response = geocoder.forward("200 queen street", country=['us'])
 >>> response.status_code
 200
->>> response.headers['Content-Type']
-'application/vnd.geo+json; charset=utf-8'
->>> response.geojson()['features'][0]['place_name']
-'200 Queen St W, Toronto, Ontario M5T 1T9, Canada'
+>>> any(['Canada' in f['place_name'] for f in response.geojson()['features']])
+False
 
 ```
-
 
 ## Filtering by type
 
@@ -188,12 +171,11 @@ Both `forward()` and `reverse()` can be restricted to one or more place types.
 ```python
 
 >>> response = geocoder.reverse(
-...     lon=-73.989, lat=40.733, types=['poi', 'neighborhood'])
+...     lon=-73.989, lat=40.733, types=['poi'])
 >>> response.status_code
 200
->>> for f in response.geojson()['features']:
-...     print('{place_name}: {id}'.format(**f))
-Atlas Installation, 124 E 13th St, New York, New York 10003, United States: poi...
-Gramercy-Flatiron, New York, 10003, New York, United States: neighborhood...
+>>> features = response.geojson()['features']
+>>> all([f['id'].startswith('poi') for f in features])
+True
 
 ```
