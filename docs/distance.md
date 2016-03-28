@@ -72,11 +72,13 @@ travel profile.
 ```
 
 And the response JSON contains a durations matrix, a 2-D list with travel
-times, in seconds, between all input waypoints.
+times (seconds) between all input waypoints. The diagonal will be
+zeros.
 
 ```python
->>> response.json()['durations']
-[[0, 14..., 6...], [14..., 0, 11...], [6..., 11..., 0]]
+>>> from pprint import pprint
+>>> pprint(response.json()['durations'])
+[[0, ..., ...], [..., 0, ...], [..., ..., 0]]
 
 ```
 
