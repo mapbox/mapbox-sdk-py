@@ -155,9 +155,8 @@ def test_delete():
 
 
 class MockSession(object):
-    """ Mocks a boto3 session,
-    specifically for the purposes of an s3 key put
-    """
+    """Mocks a boto3 session."""
+
     def __init__(self, *args, **kwargs):
         self.bucket = None
         self.key = None
@@ -177,6 +176,16 @@ class MockSession(object):
         assert self.bucket
         assert self.key
         self.body = Body
+        return True
+
+    def Bucket(self, bucket):
+        self.bucket = bucket
+        return self
+
+    def upload_file(self, filename, key):
+        assert self.bucket
+        self.filename = filename
+        self.key = key
         return True
 
 
@@ -201,6 +210,37 @@ def test_stage(monkeypatch):
         content_type='application/json')
 
     with open('tests/moors.json', 'r') as src:
+        stage_url = mapbox.Uploader(access_token=access_token).stage(src)
+    assert stage_url.startswith("https://tilestream-tilesets-production.s3.amazonaws.com/_pending")
+
+
+@responses.activate
+def test_big_stage(tmpdir, monkeypatch):
+    """Files larger than 1M are multipart uploaded."""
+
+    monkeypatch.setattr(mapbox.services.uploads, 'boto3_session', MockSession)
+
+    # Credentials
+    query_body = """
+       {{"key": "_pending/{username}/key.test",
+         "accessKeyId": "ak.test",
+         "bucket": "tilestream-tilesets-production",
+         "url": "https://tilestream-tilesets-production.s3.amazonaws.com/_pending/{username}/key.test",
+         "secretAccessKey": "sak.test",
+         "sessionToken": "st.test"}}""".format(username=username)
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        match_querystring=True,
+        body=query_body, status=200,
+        content_type='application/json')
+
+    # Make a temp file larger than 1MB.
+    bigfile = tmpdir.join('big.txt')
+    bigfile.write(','.join(('num' for num in range(1000000))))
+    assert bigfile.size() > 1000000
+
+    with bigfile.open() as src:
         stage_url = mapbox.Uploader(access_token=access_token).stage(src)
     assert stage_url.startswith("https://tilestream-tilesets-production.s3.amazonaws.com/_pending")
 

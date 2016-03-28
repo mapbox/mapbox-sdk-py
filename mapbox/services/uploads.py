@@ -1,4 +1,7 @@
 # mapbox
+import os.path
+import uuid
+
 from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
 
@@ -62,7 +65,12 @@ class Uploader(Service):
             region_name="us-east-1")
 
         s3 = session.resource('s3')
-        res = s3.Object(creds['bucket'], creds['key']).put(Body=fileobj)
+        # We'll use Bucket.upload_file() for actual files.
+        # Progress reporting for the CLI is a TODO.
+        if hasattr(fileobj, 'name') and os.path.exists(fileobj.name):
+            s3.Bucket(creds['bucket']).upload_file(fileobj.name, creds['key'])
+        else:
+            res = s3.Object(creds['bucket'], creds['key']).put(Body=fileobj)
 
         return creds['url']
 
