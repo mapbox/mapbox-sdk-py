@@ -36,10 +36,10 @@ class Directions(Service):
                     instruction_format))
         return instruction_format
 
-    def directions(self, features, profile='mapbox.driving',
-            alternatives=None, instructions=None, geometry=None, steps=None):
+    def directions(self, features, profile='mapbox.driving', alternatives=None,
+                   instructions=None, geometry=None, steps=None):
         """Request directions for waypoints encoded as GeoJSON features.
-        
+
         :param features: sequence of GeoJSON features.
         :param profile: name of a profile.
         """
