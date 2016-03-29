@@ -47,7 +47,7 @@ class Geocoder(Service):
         or be biased toward a given longitude and latitude.
 
         See: https://www.mapbox.com/developers/api/geocoding/#forward."""
-        uri = URITemplate('%s/{dataset}/{query}.json' % self.baseuri).expand(
+        uri = URITemplate(self.baseuri + '/{dataset}/{query}.json').expand(
             dataset=self.name, query=address.encode('utf-8'))
         params = {}
         if country:

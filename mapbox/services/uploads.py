@@ -34,7 +34,7 @@ class Uploader(Service):
     def _get_credentials(self):
         """Gets temporary S3 credentials to stage user-uploaded files
         """
-        uri = URITemplate('%s/{username}/credentials' % self.baseuri).expand(
+        uri = URITemplate(self.baseuri + '/{username}/credentials').expand(
             username=self.username)
         resp = self.session.get(uri)
         self.handle_http_error(
@@ -99,7 +99,7 @@ class Uploader(Service):
         if name is not None:
             msg['name'] = name
 
-        uri = URITemplate('%s/{username}' % self.baseuri).expand(
+        uri = URITemplate(self.baseuri + '/{username}').expand(
             username=self.username)
 
         resp = self.session.post(uri, json=msg)
@@ -112,7 +112,7 @@ class Uploader(Service):
         Returns a response object where the json() contents are
         a list of uploads
         """
-        uri = URITemplate('%s/{username}' % self.baseuri).expand(
+        uri = URITemplate(self.baseuri + '/{username}').expand(
             username=self.username)
         resp = self.session.get(uri)
         self.handle_http_error(resp)
@@ -126,7 +126,7 @@ class Uploader(Service):
         else:
             upload_id = upload
 
-        uri = URITemplate('%s/{username}/{upload_id}' % self.baseuri).expand(
+        uri = URITemplate(self.baseuri + '/{username}/{upload_id}').expand(
             username=self.username, upload_id=upload_id)
         resp = self.session.delete(uri)
         self.handle_http_error(resp)
@@ -143,7 +143,7 @@ class Uploader(Service):
         else:
             upload_id = upload
 
-        uri = URITemplate('%s/{username}/{upload_id}' % self.baseuri).expand(
+        uri = URITemplate(self.baseuri + '/{username}/{upload_id}').expand(
             username=self.username, upload_id=upload_id)
         resp = self.session.get(uri)
         self.handle_http_error(resp)
