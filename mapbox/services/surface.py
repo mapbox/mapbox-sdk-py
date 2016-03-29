@@ -37,7 +37,7 @@ class Surface(Service):
             params['points'] = encode_waypoints(
                 features, precision=6, min_limit=1, max_limit=300)
 
-        uri = URITemplate('%s/{mapid}.json' % self.baseuri).expand(mapid=mapid)
+        uri = URITemplate(self.baseuri + '/{mapid}.json').expand(mapid=mapid)
         res = self.session.get(uri, params=params)
         self.handle_http_error(res)
 

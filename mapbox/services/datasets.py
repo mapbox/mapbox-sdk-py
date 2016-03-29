@@ -93,9 +93,8 @@ class Datasets(Service):
 
         :param dataset: the dataset identifier string.
         """
-        uri = URITemplate(
-            self.baseuri + '/{owner}/{id}/features').expand(
-            owner=self.username, id=dataset)
+        uri = URITemplate(self.baseuri + '/{owner}/{id}/features').expand(
+                owner=self.username, id=dataset)
         params = {}
         if reverse:
             params['reverse'] = 'true'

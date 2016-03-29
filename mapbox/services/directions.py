@@ -32,13 +32,14 @@ class Directions(Service):
         if instruction_format is not None and \
            instruction_format not in self.valid_instruction_formats:
             raise errors.InvalidParameterError(
-                "{0} is not a valid instruction format".format(instruction_format))
+                "{0} is not a valid instruction format".format(
+                    instruction_format))
         return instruction_format
 
     def directions(self, features, profile='mapbox.driving', alternatives=None,
                    instructions=None, geometry=None, steps=None):
         """Request directions for waypoints encoded as GeoJSON features.
-        
+
         :param features: sequence of GeoJSON features.
         :param profile: name of a profile.
         """
@@ -55,12 +56,13 @@ class Directions(Service):
         if instructions is not None:
             params.update({'instructions': instructions})
         if geometry is not None:
-            params.update({'geometry': 'false' if geometry is False else geometry})
+            params.update(
+                {'geometry': 'false' if geometry is False else geometry})
         if steps is not None:
             params.update(
                 {'steps': 'true' if steps is True else 'false'})
 
-        uri = URITemplate('%s/{profile}/{waypoints}.json' % self.baseuri).expand(
+        uri = URITemplate(self.baseuri + '/{profile}/{waypoints}.json').expand(
             profile=profile, waypoints=waypoints)
 
         resp = self.session.get(uri, params=params)

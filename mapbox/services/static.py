@@ -56,7 +56,7 @@ class Static(Service):
             z=str(z),
             width=str(width),
             height=str(height),
-            format=image_format)
+            fmt=image_format)
 
         if features:
             values['overlay'] = json.dumps({'type': 'FeatureCollection',
@@ -67,23 +67,19 @@ class Static(Service):
             self._validate_overlay(values['overlay'])
 
             if auto:
-                uri = URITemplate(
-                    '%s/{mapid}/geojson({overlay})/auto/{width}x{height}.{format}' %
-                    self.baseuri).expand(**values)
+                pth = '/{mapid}/geojson({overlay})/auto/{width}x{height}.{fmt}'
             else:
-                uri = URITemplate(
-                    '%s/{mapid}/geojson({overlay})/{lon},{lat},{z}/{width}x{height}.{format}' %
-                    self.baseuri).expand(**values)
+                pth = ('/{mapid}/geojson({overlay})/{lon},{lat},{z}'
+                       '/{width}x{height}.{fmt}')
         else:
             if auto:
                 raise errors.InvalidCoordError(
                     "Must provide features if lat, lon, z are None")
 
             # No overlay
-            uri = URITemplate(
-                '%s/{mapid}/{lon},{lat},{z}/{width}x{height}.{format}' %
-                self.baseuri).expand(**values)
-
+            pth = '/{mapid}/{lon},{lat},{z}/{width}x{height}.{fmt}'
+        
+        uri = URITemplate(self.baseuri + pth).expand(**values)
         res = self.session.get(uri)
         self.handle_http_error(res)
         return res

@@ -36,7 +36,7 @@ class MapMatcher(Service):
         feature = self._validate_feature(feature)
         geojson_line_feature = json.dumps(feature)
 
-        uri = URITemplate('%s/{profile}.json' % self.baseuri).expand(
+        uri = URITemplate(self.baseuri + '/{profile}.json').expand(
             profile=profile)
 
         params = None
