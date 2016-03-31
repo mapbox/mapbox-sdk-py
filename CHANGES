@@ -1,5 +1,5 @@
-Next
-----
+0.8.0 (2016-03-31)
+------------------
 - New feature: use boto Bucket's `upload_file()` to stage files, acquiring
   benefits of multipart uploading (#116).
 
