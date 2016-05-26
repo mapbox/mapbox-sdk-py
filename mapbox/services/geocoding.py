@@ -36,7 +36,7 @@ class Geocoder(Service):
                 raise InvalidPlaceTypeError(pt)
         return {'types': ",".join(types)}
 
-    def forward(self, address, types=None, lon=None, lat=None, country=None):
+    def forward(self, address, options={}):
         """Returns a Requests response object that contains a GeoJSON
         collection of places matching the given address.
 
@@ -46,7 +46,16 @@ class Geocoder(Service):
         Place results may be constrained to those of one or more types
         or be biased toward a given longitude and latitude.
 
-        See: https://www.mapbox.com/developers/api/geocoding/#forward."""
+        See: https://www.mapbox.com/api-documentation/#geocoding."""
+        proximity = options.get('proximity', None)
+        types = options.get('types', None)
+        country = options.get('country', None)
+        bbox = options.get('bbox', None)
+
+        if proximity is not None:
+            lon = proximity['lon']
+            lat = proximity['lat']
+
         uri = URITemplate(self.baseuri + '/{dataset}/{query}.json').expand(
             dataset=self.name, query=address.encode('utf-8'))
         params = {}
@@ -54,10 +63,16 @@ class Geocoder(Service):
             params.update(self._validate_country_codes(country))
         if types:
             params.update(self._validate_place_types(types))
-        if lon is not None and lat is not None:
+        if proximity is not None:
             params.update(proximity='{0},{1}'.format(
                 round(float(lon), self.precision.get('proximity', 3)),
                 round(float(lat), self.precision.get('proximity', 3))))
+        if bbox is not None:
+            params.update(bbox='{0},{1},{2},{3}'.format(
+                bbox[0],
+                bbox[1],
+                bbox[2],
+                bbox[3]))
         resp = self.session.get(uri, params=params)
         self.handle_http_error(resp)
 
@@ -75,7 +90,7 @@ class Geocoder(Service):
         `response.geojson()` returns the geocoding result as GeoJSON.
         `response.status_code` returns the HTTP API status code.
 
-        See: https://www.mapbox.com/developers/api/geocoding/#reverse."""
+        See: https://www.mapbox.com/api-documentation/#geocoding."""
         uri = URITemplate(self.baseuri + '/{dataset}/{lon},{lat}.json').expand(
             dataset=self.name,
             lon=str(round(float(lon), self.precision.get('reverse', 5))),

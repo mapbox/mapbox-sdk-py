@@ -146,7 +146,7 @@ def test_geocoder_forward_types():
     response = mapbox.Geocoder(
         access_token='pk.test').forward(
             '1600 pennsylvania ave nw',
-            types=('address', 'country', 'place', 'poi', 'postcode', 'region'))
+            options={'types':('address', 'country', 'place', 'poi', 'postcode', 'region')})
     assert response.status_code == 200
     assert response.json()['query'] == ["1600", "pennsylvania", "ave", "nw"]
 
@@ -187,7 +187,7 @@ def test_geocoder_forward_proximity():
 
     response = mapbox.Geocoder(
         access_token='pk.test').forward(
-            '1600 pennsylvania ave nw', lon=0, lat=0)
+            '1600 pennsylvania ave nw', options={'proximity':{'lon':0, 'lat':0}})
     assert response.status_code == 200
     assert response.json()['query'] == ["1600", "pennsylvania", "ave", "nw"]
 
@@ -204,13 +204,30 @@ def test_geocoder_proximity_rounding():
 
     response = mapbox.Geocoder(
         access_token='pk.test').forward(
-            '1600 pennsylvania ave nw', lon=0.123456, lat=0.987654)
+            '1600 pennsylvania ave nw', options={'proximity':{'lon':0.123456, 'lat':0.987654}})
 
     # check coordinate precision for proximity flag
     match = re.search(r'[&\?]proximity=([^&$]+)', response.url)
     assert match is not None
     for coord in re.split(r'(%2C|,)', match.group(1)):
         assert _check_coordinate_precision(coord, 3)
+
+@responses.activate
+def test_geocoder_forward_bbox():
+    """Bbox parameter works"""
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/washington.json?bbox=-78.3284%2C38.6039%2C-78.0428%2C38.7841&access_token=pk.test',
+        match_querystring=True,
+        body='{"query": ["washington"]}', status=200,
+        content_type='application/json')
+
+    response = mapbox.Geocoder(
+        access_token='pk.test').forward(
+            'washington', options={'bbox':(-78.3284,38.6039,-78.0428,38.7841)})
+    assert response.status_code == 200
+    assert response.json()['query'] == ["washington"]
 
 @responses.activate
 def test_geocoder_reverse_rounding():
