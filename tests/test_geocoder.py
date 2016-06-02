@@ -146,7 +146,7 @@ def test_geocoder_forward_types():
     response = mapbox.Geocoder(
         access_token='pk.test').forward(
             '1600 pennsylvania ave nw',
-            options={'types':('address', 'country', 'place', 'poi', 'postcode', 'region')})
+            types=('address', 'country', 'place', 'poi', 'postcode', 'region'))
     assert response.status_code == 200
     assert response.json()['query'] == ["1600", "pennsylvania", "ave", "nw"]
 
@@ -187,7 +187,7 @@ def test_geocoder_forward_proximity():
 
     response = mapbox.Geocoder(
         access_token='pk.test').forward(
-            '1600 pennsylvania ave nw', options={'proximity':{'lon':0, 'lat':0}})
+            '1600 pennsylvania ave nw', lon=0, lat=0)
     assert response.status_code == 200
     assert response.json()['query'] == ["1600", "pennsylvania", "ave", "nw"]
 
@@ -204,7 +204,7 @@ def test_geocoder_proximity_rounding():
 
     response = mapbox.Geocoder(
         access_token='pk.test').forward(
-            '1600 pennsylvania ave nw', options={'proximity':{'lon':0.123456, 'lat':0.987654}})
+            '1600 pennsylvania ave nw', lon=0.123456, lat=0.987654)
 
     # check coordinate precision for proximity flag
     match = re.search(r'[&\?]proximity=([^&$]+)', response.url)
@@ -225,7 +225,7 @@ def test_geocoder_forward_bbox():
 
     response = mapbox.Geocoder(
         access_token='pk.test').forward(
-            'washington', options={'bbox':(-78.3284,38.6039,-78.0428,38.7841)})
+            'washington', bbox=(-78.3284,38.6039,-78.0428,38.7841))
     assert response.status_code == 200
     assert response.json()['query'] == ["washington"]
 

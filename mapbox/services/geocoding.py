@@ -36,7 +36,7 @@ class Geocoder(Service):
                 raise InvalidPlaceTypeError(pt)
         return {'types': ",".join(types)}
 
-    def forward(self, address, options={}):
+    def forward(self, address, types=None, lon=None, lat=None, country=None, bbox=None):
         """Returns a Requests response object that contains a GeoJSON
         collection of places matching the given address.
 
@@ -47,15 +47,6 @@ class Geocoder(Service):
         or be biased toward a given longitude and latitude.
 
         See: https://www.mapbox.com/api-documentation/#geocoding."""
-        proximity = options.get('proximity', None)
-        types = options.get('types', None)
-        country = options.get('country', None)
-        bbox = options.get('bbox', None)
-
-        if proximity is not None:
-            lon = proximity['lon']
-            lat = proximity['lat']
-
         uri = URITemplate(self.baseuri + '/{dataset}/{query}.json').expand(
             dataset=self.name, query=address.encode('utf-8'))
         params = {}
@@ -63,7 +54,7 @@ class Geocoder(Service):
             params.update(self._validate_country_codes(country))
         if types:
             params.update(self._validate_place_types(types))
-        if proximity is not None:
+        if lon is not None and lat is not None:
             params.update(proximity='{0},{1}'.format(
                 round(float(lon), self.precision.get('proximity', 3)),
                 round(float(lat), self.precision.get('proximity', 3))))
