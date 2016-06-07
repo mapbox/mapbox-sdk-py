@@ -59,11 +59,7 @@ class Geocoder(Service):
                 round(float(lon), self.precision.get('proximity', 3)),
                 round(float(lat), self.precision.get('proximity', 3))))
         if bbox is not None:
-            params.update(bbox='{0},{1},{2},{3}'.format(
-                bbox[0],
-                bbox[1],
-                bbox[2],
-                bbox[3]))
+            params.update(bbox='{0},{1},{2},{3}'.format(*bbox))
         resp = self.session.get(uri, params=params)
         self.handle_http_error(resp)
 
@@ -81,7 +77,7 @@ class Geocoder(Service):
         `response.geojson()` returns the geocoding result as GeoJSON.
         `response.status_code` returns the HTTP API status code.
 
-        See: https://www.mapbox.com/api-documentation/#geocoding."""
+        See: https://www.mapbox.com/api-documentation/#retrieve-places-near-a-location."""
         uri = URITemplate(self.baseuri + '/{dataset}/{lon},{lat}.json').expand(
             dataset=self.name,
             lon=str(round(float(lon), self.precision.get('reverse', 5))),
