@@ -129,6 +129,24 @@ Place results may be biased toward a given longitude and latitude.
 
 ```
 
+## Forward geocoding with bounding box
+
+Place results may be limited to those falling within a given bounding box.
+
+```python
+
+>>> response = geocoder.forward(
+...     "washington", bbox=[-78.338320,38.520792,-77.935454,38.864909])
+>>> response.status_code
+200
+>>> first = response.geojson()['features'][0]
+>>> first['place_name']
+'Washington, Virginia, United States'
+>>> first['geometry']['coordinates']
+[-78.1594, 38.7135]
+
+```
+
 ## Reverse geocoding
 
 Places at a longitude, latitude point may be found using `Geocoder.reverse()`.
