@@ -25,7 +25,7 @@ generally take dataset id and feature id arguments and return an instance of
 
 ## Usage
 
-Create a new dataset using the `Dataset` class, giving it a name and 
+Create a new dataset using the `Dataset` class, giving it a name and
 description. The `id` of the created dataset is in JSON data of the response.
 
 ```python
@@ -67,10 +67,10 @@ True
 If you want to change a dataset's name or description, you can.
 
 ```python
->>> _ = datasets.update_dataset(
+>>> attrs = datasets.update_dataset(
 ...     new_id, name='updated example', description='An updated example dataset'
 ...     ).json()
->>> attrs = datasets.read_dataset(new_id).json()
+>>> # attrs = datasets.read_dataset(new_id).json()
 >>> attrs['id'] == new_id
 True
 >>> attrs['name']
