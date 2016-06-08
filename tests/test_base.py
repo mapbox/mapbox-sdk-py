@@ -33,9 +33,19 @@ def test_service_session_os_environ(monkeypatch):
 
 def test_service_session_os_environ_caps(monkeypatch):
     """Get a session using os.environ's token"""
+    monkeypatch.delenv('MapboxAccessToken', raising=False)
     monkeypatch.setenv('MAPBOX_ACCESS_TOKEN', 'pk.test_os_environ')
     session = base.Session()
     assert session.params.get('access_token') == 'pk.test_os_environ'
+    monkeypatch.undo()
+
+
+def test_service_session_os_environ_precedence(monkeypatch):
+    """Get a session using os.environ's token"""
+    monkeypatch.setenv('MapboxAccessToken', 'pk.test_os_environ_camel')
+    monkeypatch.setenv('MAPBOX_ACCESS_TOKEN', 'pk.test_os_environ_upper')
+    session = base.Session()
+    assert session.params.get('access_token') == 'pk.test_os_environ_camel'
     monkeypatch.undo()
 
 
@@ -76,8 +86,8 @@ def test_username(monkeypatch):
 
 
 def test_username_failures(monkeypatch):
-    if 'MAPBOX_ACCESS_TOKEN' in os.environ:
-        monkeypatch.delenv('MAPBOX_ACCESS_TOKEN')
+    monkeypatch.delenv('MAPBOX_ACCESS_TOKEN', raising=False)
+    monkeypatch.delenv('MapboxAccessToken', raising=False)
     service = MockService()
     with pytest.raises(ValueError) as exc:
         service.username

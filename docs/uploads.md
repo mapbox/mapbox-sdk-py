@@ -79,7 +79,14 @@ Finally you can delete the upload. Note that this does *not* delete the tileset 
 To delete the tileset itself, got to Mapbox Studio and delete it from the Data page.
 
 ```
->>> service.delete(upload_id)
+>>> response = service.delete(upload_id)
+>>> for i in range(5):
+...     if response.status_code == 204:
+...         break
+...     else:
+...         sleep(5)
+...         response = service.delete(upload_id)
+>>> response
 <Response [204]>
 
 ```
