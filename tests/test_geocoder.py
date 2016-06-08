@@ -213,6 +213,23 @@ def test_geocoder_proximity_rounding():
         assert _check_coordinate_precision(coord, 3)
 
 @responses.activate
+def test_geocoder_forward_bbox():
+    """Bbox parameter works"""
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/washington.json?bbox=-78.3284%2C38.6039%2C-78.0428%2C38.7841&access_token=pk.test',
+        match_querystring=True,
+        body='{"query": ["washington"]}', status=200,
+        content_type='application/json')
+
+    response = mapbox.Geocoder(
+        access_token='pk.test').forward(
+            'washington', bbox=(-78.3284,38.6039,-78.0428,38.7841))
+    assert response.status_code == 200
+    assert response.json()['query'] == ["washington"]
+
+@responses.activate
 def test_geocoder_reverse_rounding():
     """Reverse geocoding parameters are rounded to 5 decimal places"""
 

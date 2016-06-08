@@ -75,7 +75,7 @@ To run the examples as integration tests on your own Mapbox account
 
 .. code:: bash
 
-    MAPBOX_ACCESS_TOKEN="MY_ACCESS_TOKEN" py.test --doctest-glob='*.md' *.md
+    MAPBOX_ACCESS_TOKEN="MY_ACCESS_TOKEN" py.test --doctest-glob='*.md' docs/*.md
 
 See Also
 ========
