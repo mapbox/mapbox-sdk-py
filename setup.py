@@ -37,6 +37,7 @@ setup(name='mapbox',
           'cligj',
           'iso3166',
           'requests',
+          'polyline>=1.3.0',
           'uritemplate.py',
       ],
       extras_require={

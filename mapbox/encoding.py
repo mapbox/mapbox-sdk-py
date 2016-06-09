@@ -1,7 +1,7 @@
 import json
 
 from .errors import InvalidFeatureError
-from .polyline.codec import PolylineCodec
+import polyline
 
 
 def _geom_points(geom):
@@ -72,8 +72,7 @@ def encode_polyline(features, zoom_level=18):
     """Encode and iterable of features as a polyline
     """
     points = list(read_points(features))
-    codec = PolylineCodec()
-    return codec.encode(points)
+    return polyline.encode(points)
 
 
 def encode_coordinates_json(features):
