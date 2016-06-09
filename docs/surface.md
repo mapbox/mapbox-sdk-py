@@ -86,7 +86,7 @@ contours).
 ...    polyline=True, zoom=12, interpolate=False)
 >>> points = response.geojson()
 >>> [f['properties']['ele'] for f in points['features']]
-[None, None, None]
+[2190, 2190, 2160]
 
 ```
 
