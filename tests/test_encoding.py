@@ -113,7 +113,7 @@ def test_unknown_object():
 
 
 def test_encode_polyline():
-    expected = "wp_~EvdatO{xiAhupD"
+    expected = "wp_~EvdatO{xiAfupD"
     assert expected == encode_polyline(gj_point_features)
     assert expected == encode_polyline(gj_multipoint_features)
     assert expected == encode_polyline(gj_line_features)
