@@ -68,11 +68,12 @@ def encode_waypoints(features, min_limit=None, max_limit=None, precision=6):
     return ';'.join(coords)
 
 
-def encode_polyline(features, zoom_level=18):
+def encode_polyline(features):
     """Encode and iterable of features as a polyline
     """
     points = list(read_points(features))
-    return polyline.encode(points)
+    latlon_points = [(x[1], x[0]) for x in points]
+    return polyline.encode(latlon_points)
 
 
 def encode_coordinates_json(features):

@@ -55,7 +55,7 @@ def test_surface_geojson():
 @responses.activate
 def test_surface_params():
 
-    params = "&encoded_polyline=~kbkTss%60%7BEQeAHw%40&zoom=16&interpolate=false"
+    params = "&encoded_polyline=ss%60%7BE~kbkTeAQw%40J&zoom=16&interpolate=false"
     responses.add(
         responses.GET,
         'https://api.mapbox.com/v4/surface/mapbox.mapbox-terrain-v1.json?access_token=pk.test&fields=ele&layer=contour&geojson=true' + params,
