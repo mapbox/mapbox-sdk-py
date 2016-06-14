@@ -1,3 +1,9 @@
+0.9.0 (2016-06014)
+------------------
+- bbox support for forward geocoding (#124)
+- Added dependency for external polyline module (#126)
+- fixed polyline coordinate order bug in Surface (#128)
+
 0.8.0 (2016-03-31)
 ------------------
 - New feature: use boto Bucket's `upload_file()` to stage files, acquiring
