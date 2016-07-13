@@ -39,7 +39,7 @@ class Static(Service):
     def image(self, mapid, lon=None, lat=None, z=None, features=None,
               width=600, height=600, image_format='png256', sort_keys=False):
 
-        if lon and lat and z:
+        if lon is not None and lat is not None and z is not None:
             auto = False
             lat = self._validate_lat(lat)
             lon = self._validate_lon(lon)
