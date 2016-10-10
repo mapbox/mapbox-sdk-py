@@ -36,7 +36,7 @@ class Geocoder(Service):
                 raise InvalidPlaceTypeError(pt)
         return {'types': ",".join(types)}
 
-    def forward(self, address, types=None, lon=None, lat=None, country=None, bbox=None):
+    def forward(self, address, types=None, lon=None, lat=None, country=None, bbox=None, limit=None):
         """Returns a Requests response object that contains a GeoJSON
         collection of places matching the given address.
 
@@ -60,6 +60,8 @@ class Geocoder(Service):
                 round(float(lat), self.precision.get('proximity', 3))))
         if bbox is not None:
             params.update(bbox='{0},{1},{2},{3}'.format(*bbox))
+        if limit is not None:
+            params.update(limit='{0}'.format(limit))
         resp = self.session.get(uri, params=params)
         self.handle_http_error(resp)
 

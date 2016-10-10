@@ -146,6 +146,20 @@ Place results may be limited to those falling within a given bounding box.
 [-78.1594, 38.7135]
 
 ```
+## Forward geocoding with limited results
+
+The number of results may be limited.
+
+```python
+
+>>> response = geocoder.forward(
+...     "washington", limit=3)
+>>> response.status_code
+200
+>>> len(response.geojson()['features'])
+3
+
+```
 
 ## Reverse geocoding
 

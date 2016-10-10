@@ -230,6 +230,23 @@ def test_geocoder_forward_bbox():
     assert response.json()['query'] == ["washington"]
 
 @responses.activate
+def test_geocoder_forward_limit():
+    """Limit parameter works"""
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/washington.json?limit=3&access_token=pk.test',
+        match_querystring=True,
+        body='{"query": ["washington"]}', status=200,
+        content_type='application/json')
+
+    response = mapbox.Geocoder(
+        access_token='pk.test').forward(
+            'washington', limit=3)
+    assert response.status_code == 200
+    assert len(response.json()['features']) == 3
+
+@responses.activate
 def test_geocoder_reverse_rounding():
     """Reverse geocoding parameters are rounded to 5 decimal places"""
 
