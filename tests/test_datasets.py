@@ -57,7 +57,7 @@ def test_datasets_create():
     """Creating a named and described dataset works."""
 
     def request_callback(request):
-        payload = json.loads(request.body)
+        payload = json.loads(request.body.decode())
         resp_body = {
             'owner': username,
             'id': 'new',
@@ -106,7 +106,7 @@ def test_dataset_update():
     """Updating dataset name and description works."""
 
     def request_callback(request):
-        payload = json.loads(request.body)
+        payload = json.loads(request.body.decode())
         resp_body = {
             'owner': username,
             'id': 'foo',
@@ -207,7 +207,7 @@ def test_batch_update_features():
     """Features update works"""
 
     def request_callback(request):
-        payload = json.loads(request.body)
+        payload = json.loads(request.body.decode())
         assert payload['put'] == [{'type': 'Feature'}]
         assert payload['delete'] == ['1']
         return (200, {}, "")
@@ -250,7 +250,7 @@ def test_update_feature():
     """Feature update works."""
 
     def request_callback(request):
-        payload = json.loads(request.body)
+        payload = json.loads(request.body.decode())
         assert payload == {'type': 'Feature'}
         return (200, {}, "")
 
