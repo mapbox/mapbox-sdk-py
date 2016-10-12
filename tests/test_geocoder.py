@@ -237,7 +237,7 @@ def test_geocoder_forward_limit():
         responses.GET,
         'https://api.mapbox.com/geocoding/v5/mapbox.places/washington.json?limit=3&access_token=pk.test',
         match_querystring=True,
-        body='{"query": ["washington"]}', status=200,
+        body='{"query": ["washington"], "features": [1, 2, 3]}', status=200,
         content_type='application/json')
 
     response = mapbox.Geocoder(
