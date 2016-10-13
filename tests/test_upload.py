@@ -86,7 +86,7 @@ def test_create_name():
         "name": "testname"}"""
 
     def request_callback(request):
-        payload = json.loads(request.body)
+        payload = json.loads(request.body.decode())
         assert payload['name'] == "testname"
         return (201, {}, upload_response_body)
 

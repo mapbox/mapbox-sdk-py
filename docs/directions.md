@@ -75,7 +75,7 @@ route(s) as a GeoJSON-like FeatureCollection dictionary.
 >>> driving_routes['features'][0]['geometry']['type']
 'LineString'
 >>> driving_routes['features'][0]['properties']['summary']
-'Mount Hood Highway (US 26), Warm Springs Highway (US 26)'
+'Mount Hood Highway...'
 
 ```
 

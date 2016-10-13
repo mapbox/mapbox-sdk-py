@@ -45,8 +45,8 @@ You can find it in your account's list of datasets.
 
 ```python
 >>> listing_resp = datasets.list()
->>> new_id in [ds['id'] for ds in listing_resp.json()]
-True
+>>> [ds['id'] for ds in listing_resp.json()]
+[...]
 
 ```
 
@@ -87,8 +87,8 @@ You can delete the dataset and it will no longer be present in your listing.
 >>> resp.status_code
 204
 >>> listing_resp = datasets.list()
->>> new_id in [ds['id'] for ds in listing_resp.json()]
-False
+>>> [ds['id'] for ds in listing_resp.json()]
+[...]
 
 ```
 
@@ -196,8 +196,8 @@ Finally, let's clean up the features example dataset.
 >>> resp.status_code
 204
 >>> listing_resp = datasets.list()
->>> new_id in [ds['id'] for ds in listing_resp.json()]
-False
+>>> [ds['id'] for ds in listing_resp.json()]
+[...]
 
 ```
 
