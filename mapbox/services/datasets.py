@@ -104,26 +104,6 @@ class Datasets(Service):
             params['limit'] = int(limit)
         return self.session.get(uri, params=params)
 
-    def batch_update_features(self, dataset, put=None, delete=None):
-        """Update features of a dataset.
-
-        Up to 100 features may be deleted or modified in one request.
-
-        :param dataset: the dataset identifier string.
-        :param put: an array of GeoJSON features to be created or
-            modified with the semantics of HTTP PUT.
-        :param delete: an array of feature ids to be deleted with
-            the semantics of HTTP DELETE.
-        """
-        uri = URITemplate(self.baseuri + '/{owner}/{id}/features').expand(
-            owner=self.username, id=dataset)
-        updates = {}
-        if put:
-            updates['put'] = put
-        if delete:
-            updates['delete'] = delete
-        return self.session.post(uri, json=updates)
-
     def read_feature(self, dataset, fid):
         """Read a dataset feature.
 
