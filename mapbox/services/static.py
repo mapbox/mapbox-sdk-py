@@ -4,6 +4,7 @@ from uritemplate import URITemplate
 
 from mapbox import errors
 from mapbox.services.base import Service
+from mapbox.utils import normalize_geojson_featurecollection
 
 
 class Static(Service):
@@ -59,10 +60,9 @@ class Static(Service):
             fmt=image_format)
 
         if features:
-            values['overlay'] = json.dumps({'type': 'FeatureCollection',
-                                            'features': features},
-                                           separators=(',', ':'),
-                                           sort_keys=sort_keys)
+            collection = normalize_geojson_featurecollection(features)
+            values['overlay'] = json.dumps(
+                collection, separators=(',', ':'), sort_keys=sort_keys)
 
             self._validate_overlay(values['overlay'])
 
@@ -78,7 +78,7 @@ class Static(Service):
 
             # No overlay
             pth = '/{mapid}/{lon},{lat},{z}/{width}x{height}.{fmt}'
-        
+
         uri = URITemplate(self.baseuri + pth).expand(**values)
         res = self.session.get(uri)
         self.handle_http_error(res)
