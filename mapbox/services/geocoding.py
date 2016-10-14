@@ -36,7 +36,8 @@ class Geocoder(Service):
                 raise InvalidPlaceTypeError(pt)
         return {'types': ",".join(types)}
 
-    def forward(self, address, types=None, lon=None, lat=None, country=None, bbox=None, limit=None):
+    def forward(self, address, types=None, lon=None, lat=None,
+                country=None, bbox=None, limit=None):
         """Returns a Requests response object that contains a GeoJSON
         collection of places matching the given address.
 
@@ -72,7 +73,7 @@ class Geocoder(Service):
 
         return resp
 
-    def reverse(self, lon=None, lat=None, types=None):
+    def reverse(self, lon, lat, types=None, limit=None):
         """Returns a Requests response object that contains a GeoJSON
         collection of places near the given longitude and latitude.
 
@@ -85,8 +86,17 @@ class Geocoder(Service):
             lon=str(round(float(lon), self.precision.get('reverse', 5))),
             lat=str(round(float(lat), self.precision.get('reverse', 5))))
         params = {}
+
         if types:
+            types = list(types)
             params.update(self._validate_place_types(types))
+
+        if limit is not None:
+            if not types or len(types) != 1:
+                raise InvalidPlaceTypeError(
+                    'Specify a single type when using limit with reverse geocoding')
+            params.update(limit='{0}'.format(limit))
+
         resp = self.session.get(uri, params=params)
         self.handle_http_error(resp)
 

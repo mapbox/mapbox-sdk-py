@@ -180,6 +180,23 @@ United States: country...
 
 ```
 
+## Reverse geocoding with limited results by location type
+
+The number of results may be limited by a single type
+
+```python
+
+>>> response = geocoder.reverse(lon=-73.989, lat=40.733, limit=1, types=['country'])
+>>> response.status_code
+200
+>>> features = response.geojson()['features']
+>>> len(features)
+1
+>>> print('{place_name}: {id}'.format(**features[0]))
+United States: country...
+
+```
+
 ## Filtering by country code
 
 `forward()` can be restricted to a list of country codes. No results in Canada

@@ -3,6 +3,7 @@
 import json
 import re
 import responses
+import pytest
 
 import mapbox
 
@@ -246,6 +247,43 @@ def test_geocoder_forward_limit():
     assert response.status_code == 200
     assert len(response.json()['features']) == 3
 
+
+@responses.activate
+def test_geocoder_reverse_limit():
+    """Limit parameter works"""
+
+    lon, lat = -77.4371, 37.5227
+    body = json.dumps({"query": [lon, lat],
+                       "features": [{'name': 'place'}]})
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/{0},{1}.json?access_token=pk.test&limit=1&types=place'.format(lon, lat),
+        match_querystring=True,
+        body=body,
+        status=200,
+        content_type='application/json')
+
+    service = mapbox.Geocoder(access_token='pk.test')
+    response = service.reverse(lon=lon, lat=lat, limit=1, types=['place'])
+    assert response.status_code == 200
+    assert len(response.json()['features']) == 1
+
+
+@responses.activate
+def test_geocoder_reverse_limit_requires_onetype():
+    """Limit requires a single type"""
+
+    lon, lat = -77.123456789, 37.987654321
+    service = mapbox.Geocoder(access_token='pk.test')
+
+    with pytest.raises(mapbox.InvalidPlaceTypeError):
+        service.reverse(lon=lon, lat=lat, limit=1)
+
+    with pytest.raises(mapbox.InvalidPlaceTypeError):
+        service.reverse(lon=lon, lat=lat, limit=1, types=['places', 'country'])
+
+
 @responses.activate
 def test_geocoder_reverse_rounding():
     """Reverse geocoding parameters are rounded to 5 decimal places"""
@@ -292,4 +330,20 @@ def test_geocoder_unicode():
         pass  # Python 3
 
     response = mapbox.Geocoder(access_token='pk.test').forward(query)
+    assert response.status_code == 200
+
+
+@responses.activate
+def test_geocoder_forward_country():
+    """Country parameter of forward geocoding works"""
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/1600%20pennsylvania%20ave%20nw.json?country=us&access_token=pk.test',
+        match_querystring=True,
+        body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
+        content_type='application/json')
+
+    response = mapbox.Geocoder(
+        access_token='pk.test').forward('1600 pennsylvania ave nw', country=['us'])
     assert response.status_code == 200
