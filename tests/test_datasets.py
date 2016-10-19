@@ -202,28 +202,6 @@ def test_dataset_list_features_pagination():
     assert response.json()['type'] == 'FeatureCollection'
 
 
-@responses.activate
-def test_batch_update_features():
-    """Features update works"""
-
-    def request_callback(request):
-        payload = json.loads(request.body.decode())
-        assert payload['put'] == [{'type': 'Feature'}]
-        assert payload['delete'] == ['1']
-        return (200, {}, "")
-
-    responses.add_callback(
-        responses.POST,
-        'https://api.mapbox.com/datasets/v1/{0}/{1}/features?access_token={2}'.format(
-            username, 'test', access_token),
-        match_querystring=True,
-        callback=request_callback)
-
-    response = Datasets(access_token=access_token).batch_update_features(
-            'test', put=[{'type': 'Feature'}], delete=['1'])
-    assert response.status_code == 200
-
-
 # Tests of feature-scoped methods.
 
 @responses.activate

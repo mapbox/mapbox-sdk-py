@@ -104,7 +104,7 @@ create a new dataset and then add a GeoJSON feature to it.
 >>> feature = {
 ...     'type': 'Feature', 'id': '1', 'properties': {'name': 'Insula Nulla'},
 ...     'geometry': {'type': 'Point', 'coordinates': [0, 0]}}
->>> resp = datasets.batch_update_features(new_id, put=[feature])
+>>> resp = datasets.update_feature(new_id, '1', feature)
 >>> resp.status_code
 200
 
@@ -124,23 +124,6 @@ In the feature collection of the dataset you will see this feature.
 
 ```
 
-Using the same `batch_update_features()` method, you can modify or delete
-up to 100 features.
-
-```python
->>> feature2 = {
-...     'type': 'Feature', 'id': '2', 'properties': {'name': 'Insula Nulla B'},
-...     'geometry': {'type': 'Point', 'coordinates': [0, 0]}}
->>> resp = datasets.batch_update_features(new_id, put=[feature2], delete=['1'])
->>> resp.status_code
-200
-
-```
-
-Replication of the updates across data centers takes a small but finite amount
-of time. Your next call to `datasets.list_features()` may not reflect the most
-recent updates.
-
 ## Individual feature access
 
 You can also read, update, and delete features individually.
@@ -150,14 +133,14 @@ You can also read, update, and delete features individually.
 The `read_feature()` method has the semantics of HTTP GET.
 
 ```python
->>> resp = datasets.read_feature(new_id, '2')
+>>> resp = datasets.read_feature(new_id, '1')
 >>> resp.status_code
 200
 >>> feature = resp.json()
 >>> feature['id']
-'2'
+'1'
 >>> feature['properties']['name']
-'Insula Nulla B'
+'Insula Nulla'
 
 ```
 
@@ -168,11 +151,11 @@ feature in the dataset with the given id, a new feature will be created.
 
 ```python
 >>> update = {
-...     'type': 'Feature', 'id': '2', 'properties': {'name': 'Insula Nulla C'},
+...     'type': 'Feature', 'id': '1', 'properties': {'name': 'Insula Nulla C'},
 ...     'geometry': {'type': 'Point', 'coordinates': [0, 0]}}
->>> update = datasets.update_feature(new_id, '2', update).json()
+>>> update = datasets.update_feature(new_id, '1', update).json()
 >>> update['id']
-'2'
+'1'
 >>> update['properties']['name']
 'Insula Nulla C'
 
@@ -183,7 +166,7 @@ feature in the dataset with the given id, a new feature will be created.
 The `delete_feature()` method has the semantics of HTTP DELETE.
 
 ```python
->>> resp = datasets.delete_feature(new_id, '2')
+>>> resp = datasets.delete_feature(new_id, '1')
 >>> resp.status_code
 204
 
