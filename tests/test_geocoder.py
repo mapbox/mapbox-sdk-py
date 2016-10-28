@@ -140,7 +140,7 @@ def test_geocoder_forward_types():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/geocoding/v5/mapbox.places/1600%20pennsylvania%20ave%20nw.json?types=address,country,place,poi,postcode,region&access_token=pk.test',
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/1600%20pennsylvania%20ave%20nw.json?types=address,country,place,poi.landmark,postcode,region&access_token=pk.test',
         match_querystring=True,
         body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
         content_type='application/json')
