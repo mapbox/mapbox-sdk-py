@@ -134,7 +134,7 @@ Place results may be limited to those falling within a given bounding box.
 ```python
 
 >>> response = geocoder.forward(
-...     "washington", bbox=[-78.338320,38.520792,-77.935454,38.864909])
+...     "washington", bbox=[-78.338320,38.520792,-77.935454,38.864909], types=('place',))
 >>> response.status_code
 200
 >>> first = response.geojson()['features'][0]
