@@ -104,7 +104,8 @@ def test_geocoder_place_types():
         ('country', "Sovereign states and other political entities. Examples: United States, France, China, Russia."),
         ('neighborhood', 'A smaller area within a place, often without formal boundaries. Examples: Montparnasse, Downtown, Haight-Ashbury.'),
         ('place', "City, town, village or other municipality relevant to a country's address or postal system. Examples: Cleveland, Saratoga Springs, Berlin, Paris."),
-        ('poi', "Places of interest including commercial venues, major landmarks, parks, and other features. Examples: Yosemite National Park, Lake Superior."),
+        ('poi', "Places of interest including commercial venues, major landmarks, parks, and other features. Examples: Subway Restaurant, Yosemite National Park, Statue of Liberty."),
+        ('poi.landmark', "Places of interest that are particularly notable or long-lived like parks, places of worship and museums. A strict subset of the poi place type. Examples: Yosemite National Park, Statue of Liberty."),
         ('postcode', "Postal code, varies by a country's postal system. Examples: 20009, CR0 3RL."),
         ('region', "First order administrative divisions within a country, usually provinces or states. Examples: California, Ontario, Essonne.")]
 
@@ -139,7 +140,7 @@ def test_geocoder_forward_types():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/geocoding/v5/mapbox.places/1600%20pennsylvania%20ave%20nw.json?types=address,country,place,poi,postcode,region&access_token=pk.test',
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/1600%20pennsylvania%20ave%20nw.json?types=address,country,place,poi.landmark,postcode,region&access_token=pk.test',
         match_querystring=True,
         body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
         content_type='application/json')
@@ -147,7 +148,7 @@ def test_geocoder_forward_types():
     response = mapbox.Geocoder(
         access_token='pk.test').forward(
             '1600 pennsylvania ave nw',
-            types=('address', 'country', 'place', 'poi', 'postcode', 'region'))
+            types=('address', 'country', 'place', 'poi.landmark', 'postcode', 'region'))
     assert response.status_code == 200
     assert response.json()['query'] == ["1600", "pennsylvania", "ave", "nw"]
 
@@ -161,7 +162,7 @@ def test_geocoder_reverse_types():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/geocoding/v5/mapbox.places/{0},{1}.json?types=address,country,place,poi,postcode,region&access_token=pk.test'.format(lon, lat),
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/{0},{1}.json?types=address,country,place,poi.landmark,postcode,region&access_token=pk.test'.format(lon, lat),
         match_querystring=True,
         body=body,
         status=200,
@@ -170,7 +171,7 @@ def test_geocoder_reverse_types():
     response = mapbox.Geocoder(
         access_token='pk.test').reverse(
             lon=lon, lat=lat,
-            types=('address', 'country', 'place', 'poi', 'postcode', 'region'))
+            types=('address', 'country', 'place', 'poi.landmark', 'postcode', 'region'))
     assert response.status_code == 200
     assert response.json()['query'] == [lon, lat]
 

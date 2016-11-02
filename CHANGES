@@ -1,3 +1,9 @@
+0.10.0 (?)
+----------
+- Breaking change: batch update of dataset features has been removed (#137).
+- Bug fix: improper boolean test of tile inputs prevented access to zoom
+  level 0 tile containing longitude, latitude (0, 0) (#130). Fixed in #131.
+
 0.9.0 (2016-06014)
 ------------------
 - bbox support for forward geocoding (#124)
