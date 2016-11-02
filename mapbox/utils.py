@@ -14,9 +14,9 @@ def normalize_geojson_featurecollection(obj):
             raise ValueError(
                 "Expecting a geojson-like mapping or sequence of them")
 
-        if x['type'] == 'FeatureCollection':
+        if 'features' in x:
             features.extend(x['features'])
-        elif x['type'] == 'Feature':
+        elif 'geometry' in x:
             features.append(x)
         elif 'coordinates' in x:
             feat = {'type': 'Feature',
