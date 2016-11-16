@@ -123,4 +123,5 @@ class Geocoder(Service):
             'poi': "Places of interest including commercial venues, major landmarks, parks, and other features. Examples: Subway Restaurant, Yosemite National Park, Statue of Liberty.",
             'poi.landmark': "Places of interest that are particularly notable or long-lived like parks, places of worship and museums. A strict subset of the poi place type. Examples: Yosemite National Park, Statue of Liberty.",
             'postcode': "Postal code, varies by a country's postal system. Examples: 20009, CR0 3RL.",
+            'district': "Second order administrative division. Only used when necessary. Examples: Tianjin, Beijing",
             'region': "First order administrative divisions within a country, usually provinces or states. Examples: California, Ontario, Essonne."}
