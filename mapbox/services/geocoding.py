@@ -119,8 +119,10 @@ class Geocoder(Service):
             'address': "A street address with house number. Examples: 1600 Pennsylvania Ave NW, 1051 Market St, Oberbaumstrasse 7.",
             'country': "Sovereign states and other political entities. Examples: United States, France, China, Russia.",
             'place': "City, town, village or other municipality relevant to a country's address or postal system. Examples: Cleveland, Saratoga Springs, Berlin, Paris.",
+            'locality': "A smaller area within a place that possesses official status and boundaries. Examples: Oakleigh (Melbourne)", 
             'neighborhood': "A smaller area within a place, often without formal boundaries. Examples: Montparnasse, Downtown, Haight-Ashbury.",
             'poi': "Places of interest including commercial venues, major landmarks, parks, and other features. Examples: Subway Restaurant, Yosemite National Park, Statue of Liberty.",
             'poi.landmark': "Places of interest that are particularly notable or long-lived like parks, places of worship and museums. A strict subset of the poi place type. Examples: Yosemite National Park, Statue of Liberty.",
             'postcode': "Postal code, varies by a country's postal system. Examples: 20009, CR0 3RL.",
+            'district': "Second order administrative division. Only used when necessary. Examples: Tianjin, Beijing",
             'region': "First order administrative divisions within a country, usually provinces or states. Examples: California, Ontario, Essonne."}
