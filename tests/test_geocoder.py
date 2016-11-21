@@ -102,6 +102,8 @@ def test_geocoder_place_types():
     assert sorted(mapbox.Geocoder().place_types.items()) == [
         ('address', "A street address with house number. Examples: 1600 Pennsylvania Ave NW, 1051 Market St, Oberbaumstrasse 7."),
         ('country', "Sovereign states and other political entities. Examples: United States, France, China, Russia."),
+        ('district', "Second order administrative division. Only used when necessary. Examples: Tianjin, Beijing"),
+        ('locality', "A smaller area within a place that possesses official status and boundaries. Examples: Oakleigh (Melbourne)"),
         ('neighborhood', 'A smaller area within a place, often without formal boundaries. Examples: Montparnasse, Downtown, Haight-Ashbury.'),
         ('place', "City, town, village or other municipality relevant to a country's address or postal system. Examples: Cleveland, Saratoga Springs, Berlin, Paris."),
         ('poi', "Places of interest including commercial venues, major landmarks, parks, and other features. Examples: Subway Restaurant, Yosemite National Park, Statue of Liberty."),
