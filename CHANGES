@@ -1,10 +1,14 @@
-0.10.0 (?)
-----------
-- Breaking change: batch update of dataset features has been removed (#137).
+0.10.0 (2016-11-22)
+-------------------
+- BREAKING CHANGE: batch update of dataset features has been removed (#137).
+- Support limits in forward and reverse geocoder (#133, #135)
+- GeoJSON inputs to static API are normalized to a feature collections (#136)
+- Add support for upload patch mode
+- Additional place types for geocoder (landmark, district, locatity) (#139, #140)
 - Bug fix: improper boolean test of tile inputs prevented access to zoom
   level 0 tile containing longitude, latitude (0, 0) (#130). Fixed in #131.
 
-0.9.0 (2016-06014)
+0.9.0 (2016-06-14)
 ------------------
 - bbox support for forward geocoding (#124)
 - Added dependency for external polyline module (#126)
