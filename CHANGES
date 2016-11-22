@@ -1,3 +1,7 @@
+0.10.1 (2016-11-22)
+-------------------
+- depend on uritemplate package
+
 0.10.0 (2016-11-22)
 -------------------
 - BREAKING CHANGE: batch update of dataset features has been removed (#137).
