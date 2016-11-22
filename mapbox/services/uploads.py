@@ -1,6 +1,4 @@
-# mapbox
 import os.path
-import uuid
 
 from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
@@ -74,7 +72,7 @@ class Uploader(Service):
 
         return creds['url']
 
-    def create(self, stage_url, tileset, name=None):
+    def create(self, stage_url, tileset, name=None, patch=False):
         """Initiates the creation process from the
         staging S3 bucket into the user's tileset.
 
@@ -95,6 +93,9 @@ class Uploader(Service):
 
         msg = {'tileset': tileset,
                'url': stage_url}
+
+        if patch:
+            msg['patch'] = patch
 
         if name is not None:
             msg['name'] = name
@@ -149,10 +150,10 @@ class Uploader(Service):
         self.handle_http_error(resp)
         return resp
 
-    def upload(self, fileobj, tileset, name=None):
+    def upload(self, fileobj, tileset, name=None, patch=False):
         """High level function to upload a file object to mapbox tileset
         Effectively replicates the upload functionality using the HTML form
         Returns a response object where the json() is a dict with upload metadata
         """
         url = self.stage(fileobj)
-        return self.create(url, tileset, name=name)
+        return self.create(url, tileset, name=name, patch=patch)
