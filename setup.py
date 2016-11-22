@@ -38,7 +38,7 @@ setup(name='mapbox',
           'iso3166',
           'requests',
           'polyline>=1.3.1',
-          'uritemplate.py',
+          'uritemplate>=2.0',
       ],
       extras_require={
           'test': [
