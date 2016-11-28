@@ -1,6 +1,6 @@
 0.10.1 (2016-11-22)
 -------------------
-- depend on uritemplate package
+- New requirement: depend on uritemplate>=2.0.
 
 0.10.0 (2016-11-22)
 -------------------
