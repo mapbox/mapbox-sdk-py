@@ -52,7 +52,6 @@ Services
 
   - Manage editable collections of GeoJSON features
   - Persistent storage for custom geographic data
-  - **Note: The Mapbox Datasets API is in private beta. Currently, all end user requests to this API from outside of Mapbox will 404.**
 
 Other services coming soon.
 
