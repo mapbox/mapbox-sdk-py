@@ -282,7 +282,7 @@ def test_upload(monkeypatch):
         content_type='application/json')
 
     def print_cb(num_bytes):
-        print("{} bytes uploaded".format(num_bytes))
+        print("{0} bytes uploaded".format(num_bytes))
 
     with open('tests/moors.json', 'r') as src:
         res = mapbox.Uploader(access_token=access_token).upload(src, 'test1', callback=print_cb)
