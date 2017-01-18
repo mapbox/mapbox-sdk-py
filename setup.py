@@ -30,7 +30,7 @@ setup(name='mapbox',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'boto3',
+          'boto3>=1.4',
           'cachecontrol',
           'click',
           'click-plugins',
@@ -38,8 +38,7 @@ setup(name='mapbox',
           'iso3166',
           'requests',
           'polyline>=1.3.1',
-          'uritemplate>=2.0',
-      ],
+          'uritemplate>=2.0'],
       extras_require={
           'test': [
               'coveralls', 'pytest>=2.8.3', 'pytest-cov', 'responses', 'tox']})

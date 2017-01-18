@@ -182,11 +182,18 @@ class MockSession(object):
         self.bucket = bucket
         return self
 
-    def upload_file(self, filename, key):
-        assert self.bucket
-        self.filename = filename
+    def upload_fileobj(self, data, key, Callback=None):
+        self.data = data
         self.key = key
-        return True
+        self.Callback = Callback
+
+        bytes_read = data.read(8192)
+        if bytes_read and self.Callback:
+            self.Callback(len(bytes_read))
+        while bytes_read:
+            bytes_read = data.read(8192)
+            if bytes_read and self.Callback:
+                self.Callback(len(bytes_read))
 
 
 @responses.activate
@@ -274,8 +281,11 @@ def test_upload(monkeypatch):
         body=upload_response_body, status=201,
         content_type='application/json')
 
+    def print_cb(num_bytes):
+        print("{} bytes uploaded".format(num_bytes))
+
     with open('tests/moors.json', 'r') as src:
-        res = mapbox.Uploader(access_token=access_token).upload(src, 'test1')
+        res = mapbox.Uploader(access_token=access_token).upload(src, 'test1', callback=print_cb)
 
     assert res.status_code == 201
     job = res.json()
