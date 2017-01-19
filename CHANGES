@@ -1,3 +1,8 @@
+Next
+----
+- Require boto3>=1.4 to get `upload_fileobj()`.
+- Add a callback function for AWS SDK uploads to `uploads.stage()` (#147).
+
 0.10.1 (2016-11-22)
 -------------------
 - New requirement: depend on uritemplate>=2.0.

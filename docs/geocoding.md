@@ -88,7 +88,7 @@ collection, sorted by relevance to the query.
 >>> first['type'] == 'Feature'
 True
 >>> sorted(first.keys())
-['bbox', 'center', 'context', 'geometry', 'id', 'place_name', 'properties', 'relevance', 'text', 'type']
+[u'bbox', u'center', u'context', u'geometry', u'id', u'place_name', u'place_type', u'properties', u'relevance', u'text', u'type']
 
 ```
 

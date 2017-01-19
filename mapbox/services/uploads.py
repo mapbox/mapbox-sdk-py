@@ -42,7 +42,7 @@ class Uploader(Service):
                 404: "Token does not have upload scope"})
         return resp
 
-    def stage(self, fileobj, creds=None):
+    def stage(self, fileobj, creds=None, callback=None):
         """Stages the user's file on S3
         If creds are not provided, temporary credientials will be generated
         Returns the URL to the staged resource.
@@ -63,12 +63,9 @@ class Uploader(Service):
             region_name="us-east-1")
 
         s3 = session.resource('s3')
-        # We'll use Bucket.upload_file() for actual files.
-        # Progress reporting for the CLI is a TODO.
-        if hasattr(fileobj, 'name') and os.path.exists(fileobj.name):
-            s3.Bucket(creds['bucket']).upload_file(fileobj.name, creds['key'])
-        else:
-            res = s3.Object(creds['bucket'], creds['key']).put(Body=fileobj)
+
+        bucket = s3.Bucket(creds['bucket'])
+        bucket.upload_fileobj(fileobj, creds['key'], Callback=callback)
 
         return creds['url']
 
@@ -150,10 +147,10 @@ class Uploader(Service):
         self.handle_http_error(resp)
         return resp
 
-    def upload(self, fileobj, tileset, name=None, patch=False):
+    def upload(self, fileobj, tileset, name=None, patch=False, callback=None):
         """High level function to upload a file object to mapbox tileset
         Effectively replicates the upload functionality using the HTML form
         Returns a response object where the json() is a dict with upload metadata
         """
-        url = self.stage(fileobj)
+        url = self.stage(fileobj, callback=callback)
         return self.create(url, tileset, name=name, patch=patch)
