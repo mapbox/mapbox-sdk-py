@@ -64,10 +64,6 @@ class Uploader(Service):
 
         s3 = session.resource('s3')
 
-        # We'll use Bucket.upload_file() for actual files.
-        # Progress reporting for the CLI is a TODO.
-        #  if hasattr(fileobj, 'name') and os.path.exists(fileobj.name):
-
         bucket = s3.Bucket(creds['bucket'])
         bucket.upload_fileobj(fileobj, creds['key'], Callback=callback)
 
