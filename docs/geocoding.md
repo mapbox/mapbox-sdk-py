@@ -89,6 +89,7 @@ collection, sorted by relevance to the query.
 True
 >>> sorted(first.keys())
 [u'bbox', u'center', u'context', u'geometry', u'id', u'place_name', u'place_type', u'properties', u'relevance', u'text', u'type']
+
 ```
 
 ## Forward geocoding
