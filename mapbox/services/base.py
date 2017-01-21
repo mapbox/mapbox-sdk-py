@@ -32,13 +32,16 @@ def Session(access_token=None, env=os.environ):
 class Service(object):
     """Service base class."""
 
-    def __init__(self, access_token=None, cache=None):
+    default_host = 'api.mapbox.com'
+
+    def __init__(self, access_token=None, host=None, cache=None):
         """Constructs a Service object.
 
         :param access_token: Mapbox access token string.
         :param cache: CacheControl cache instance (Dict or FileCache).
         """
         self.session = Session(access_token)
+        self.host = host or os.environ.get('MAPBOX_HOST', self.default_host)
         if cache:
             self.session = CacheControl(self.session, cache=cache)
 

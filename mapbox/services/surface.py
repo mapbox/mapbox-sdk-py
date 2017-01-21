@@ -7,7 +7,9 @@ from mapbox.services.base import Service
 class Surface(Service):
     """Access to the Surface API."""
 
-    baseuri = 'https://api.mapbox.com/v4/surface'
+    @property
+    def baseuri(self):
+        return 'https://{0}/v4/surface'.format(self.host)
 
     def surface(self,
                 features,

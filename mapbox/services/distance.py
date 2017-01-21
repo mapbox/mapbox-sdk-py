@@ -8,8 +8,11 @@ from mapbox.services.base import Service
 class Distance(Service):
     """Access to the Distance API."""
 
-    baseuri = 'https://api.mapbox.com/distances/v1/mapbox'
     valid_profiles = ['driving', 'cycling', 'walking']
+
+    @property
+    def baseuri(self):
+        return 'https://{0}/distances/v1/mapbox'.format(self.host)
 
     def _validate_profile(self, profile):
         if profile not in self.valid_profiles:
