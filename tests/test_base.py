@@ -85,6 +85,17 @@ def test_username(monkeypatch):
     assert service.username == 'testuser'
 
 
+def test_default_host():
+    service = base.Service()
+    assert service.host == 'api.mapbox.com'
+
+
+def test_configured_host(monkeypatch):
+    monkeypatch.setenv('MAPBOX_HOST', 'example.com')
+    service = base.Service()
+    assert service.host == 'example.com'
+
+
 def test_username_failures(monkeypatch):
     monkeypatch.delenv('MAPBOX_ACCESS_TOKEN', raising=False)
     monkeypatch.delenv('MapboxAccessToken', raising=False)

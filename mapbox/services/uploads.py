@@ -27,7 +27,9 @@ class Uploader(Service):
         assert job not in u.list().json()
     """
 
-    baseuri = 'https://api.mapbox.com/uploads/v1'
+    @property
+    def baseuri(self):
+        return 'https://{}/uploads/v1'.format(self.host)
 
     def _get_credentials(self):
         """Gets temporary S3 credentials to stage user-uploaded files

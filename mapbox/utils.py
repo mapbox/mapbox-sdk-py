@@ -1,5 +1,6 @@
 from collections import Mapping, Sequence
 
+
 def normalize_geojson_featurecollection(obj):
     """Takes a geojson-like mapping representing
     geometry, Feature or FeatureCollection (or a sequence of such objects)

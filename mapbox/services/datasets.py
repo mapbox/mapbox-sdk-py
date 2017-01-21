@@ -7,14 +7,12 @@ from uritemplate import URITemplate
 from mapbox.services.base import Service
 
 
-# Constants
-BASE_URI = 'https://api.mapbox.com/datasets/v1'
-
-
 class Datasets(Service):
     """Access to the Datasets API."""
 
-    baseuri = 'https://api.mapbox.com/datasets/v1'
+    @property
+    def baseuri(self):
+        return 'https://{}/datasets/v1'.format(self.host)
 
     def _attribs(self, name=None, description=None):
         """Form an attributes dictionary from keyword args."""
@@ -94,7 +92,8 @@ class Datasets(Service):
         :param dataset: the dataset identifier string.
         """
         uri = URITemplate(self.baseuri + '/{owner}/{id}/features').expand(
-                owner=self.username, id=dataset)
+            owner=self.username, id=dataset)
+
         params = {}
         if reverse:
             params['reverse'] = 'true'

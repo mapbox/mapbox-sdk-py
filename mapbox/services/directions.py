@@ -8,12 +8,15 @@ from mapbox import errors
 class Directions(Service):
     """Access to the Directions API."""
 
-    baseuri = 'https://api.mapbox.com/v4/directions'
     valid_profiles = ['mapbox.driving',
                       'mapbox.cycling',
                       'mapbox.walking']
     valid_instruction_formats = ['text', 'html']
     valid_geom_encoding = ['geojson', 'polyline', 'false']
+
+    @property
+    def baseuri(self):
+        return 'https://{}/v4/directions'.format(self.host)
 
     def _validate_profile(self, profile):
         if profile not in self.valid_profiles:
