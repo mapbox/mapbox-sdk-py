@@ -16,7 +16,7 @@ class Directions(Service):
 
     @property
     def baseuri(self):
-        return 'https://{}/v4/directions'.format(self.host)
+        return 'https://{0}/v4/directions'.format(self.host)
 
     def _validate_profile(self, profile):
         if profile not in self.valid_profiles:

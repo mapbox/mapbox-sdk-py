@@ -12,7 +12,7 @@ class Static(Service):
 
     @property
     def baseuri(self):
-        return 'https://{}/v4'.format(self.host)
+        return 'https://{0}/v4'.format(self.host)
 
     def _validate_lat(self, val):
         if val < -85.0511 or val > 85.0511:

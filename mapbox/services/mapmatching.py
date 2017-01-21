@@ -13,7 +13,7 @@ class MapMatcher(Service):
 
     @property
     def baseuri(self):
-        return 'https://{}/matching/v4'.format(self.host)
+        return 'https://{0}/matching/v4'.format(self.host)
 
     def _validate_profile(self, profile):
         if profile not in self.valid_profiles:

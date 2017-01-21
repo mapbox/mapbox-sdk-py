@@ -9,7 +9,7 @@ class Surface(Service):
 
     @property
     def baseuri(self):
-        return 'https://{}/v4/surface'.format(self.host)
+        return 'https://{0}/v4/surface'.format(self.host)
 
     def surface(self,
                 features,

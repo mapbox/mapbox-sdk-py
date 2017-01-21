@@ -13,7 +13,7 @@ class Geocoder(Service):
 
     @property
     def baseuri(self):
-        return 'https://{}/geocoding/v5'.format(self.host)
+        return 'https://{0}/geocoding/v5'.format(self.host)
 
     def __init__(self, name='mapbox.places', access_token=None, cache=None):
         """Constructs a Geocoding Service object.

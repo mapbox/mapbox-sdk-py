@@ -29,7 +29,7 @@ class Uploader(Service):
 
     @property
     def baseuri(self):
-        return 'https://{}/uploads/v1'.format(self.host)
+        return 'https://{0}/uploads/v1'.format(self.host)
 
     def _get_credentials(self):
         """Gets temporary S3 credentials to stage user-uploaded files

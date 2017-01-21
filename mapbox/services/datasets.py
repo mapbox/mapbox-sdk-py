@@ -12,7 +12,7 @@ class Datasets(Service):
 
     @property
     def baseuri(self):
-        return 'https://{}/datasets/v1'.format(self.host)
+        return 'https://{0}/datasets/v1'.format(self.host)
 
     def _attribs(self, name=None, description=None):
         """Form an attributes dictionary from keyword args."""

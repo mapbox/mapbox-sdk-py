@@ -12,7 +12,7 @@ class Distance(Service):
 
     @property
     def baseuri(self):
-        return 'https://{}/distances/v1/mapbox'.format(self.host)
+        return 'https://{0}/distances/v1/mapbox'.format(self.host)
 
     def _validate_profile(self, profile):
         if profile not in self.valid_profiles:
