@@ -1,5 +1,5 @@
-0.11.0 (Soon)
--------------
+0.11.0 (2017-01-23)
+-------------------
 - Require boto3>=1.4 to get `upload_fileobj()`.
 - Add a callback function for AWS SDK uploads to `uploads.stage()` (#147).
 - Allow configuration of API host using MAPBOX_HOST environment variable or
