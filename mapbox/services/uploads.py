@@ -41,7 +41,8 @@ class Uploader(Service):
             resp,
             custom_messages={
                 401: "Token is not authorized",
-                404: "Token does not have upload scope"})
+                404: "Token does not have upload scope",
+                429: "Too many requests"})
         return resp
 
     def stage(self, fileobj, creds=None, callback=None):
