@@ -182,6 +182,11 @@ class MockSession(object):
         self.bucket = bucket
         return self
 
+    def upload_file(self, filename, key, Callback=None):
+        self.filename = filename
+        self.key = key
+        self.Callback = Callback
+
     def upload_fileobj(self, data, key, Callback=None):
         self.data = data
         self.key = key
@@ -194,6 +199,12 @@ class MockSession(object):
             bytes_read = data.read(8192)
             if bytes_read and self.Callback:
                 self.Callback(len(bytes_read))
+
+    def copy(self, source, key, ExtraArgs=None, Callback=None,
+             SourceClient=None, Config=None):
+        self.source = source
+        self.key = key
+        self.Callback = Callback
 
 
 @responses.activate
@@ -216,8 +227,33 @@ def test_stage(monkeypatch):
         body=query_body, status=200,
         content_type='application/json')
 
-    with open('tests/moors.json', 'r') as src:
+    with open('tests/moors.json', 'rb') as src:
         stage_url = mapbox.Uploader(access_token=access_token).stage(src)
+    assert stage_url.startswith("https://tilestream-tilesets-production.s3.amazonaws.com/_pending")
+
+
+@responses.activate
+def test_stage_filename(monkeypatch):
+    """A filename works too"""
+
+    monkeypatch.setattr(mapbox.services.uploads, 'boto3_session', MockSession)
+
+    # Credentials
+    query_body = """
+       {{"key": "_pending/{username}/key.test",
+         "accessKeyId": "ak.test",
+         "bucket": "tilestream-tilesets-production",
+         "url": "https://tilestream-tilesets-production.s3.amazonaws.com/_pending/{username}/key.test",
+         "secretAccessKey": "sak.test",
+         "sessionToken": "st.test"}}""".format(username=username)
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        match_querystring=True,
+        body=query_body, status=200,
+        content_type='application/json')
+
+    stage_url = mapbox.Uploader(access_token=access_token).stage('tests/moors.json')
     assert stage_url.startswith("https://tilestream-tilesets-production.s3.amazonaws.com/_pending")
 
 
@@ -249,6 +285,31 @@ def test_big_stage(tmpdir, monkeypatch):
 
     with bigfile.open() as src:
         stage_url = mapbox.Uploader(access_token=access_token).stage(src)
+    assert stage_url.startswith("https://tilestream-tilesets-production.s3.amazonaws.com/_pending")
+
+
+@responses.activate
+def test_copy_stage(tmpdir, monkeypatch):
+    """Objects can be staged from another bucket."""
+
+    monkeypatch.setattr(mapbox.services.uploads, 'boto3_session', MockSession)
+
+    # Credentials
+    query_body = """
+       {{"key": "_pending/{username}/key.test",
+         "accessKeyId": "ak.test",
+         "bucket": "tilestream-tilesets-production",
+         "url": "https://tilestream-tilesets-production.s3.amazonaws.com/_pending/{username}/key.test",
+         "secretAccessKey": "sak.test",
+         "sessionToken": "st.test"}}""".format(username=username)
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        match_querystring=True,
+        body=query_body, status=200,
+        content_type='application/json')
+
+    stage_url = mapbox.Uploader(access_token=access_token).stage('s3://bucket-name/foobar')
     assert stage_url.startswith("https://tilestream-tilesets-production.s3.amazonaws.com/_pending")
 
 
@@ -325,13 +386,6 @@ def test_upload_error(monkeypatch):
         res = mapbox.Uploader(access_token=access_token).upload(src, 'test1')
 
     assert res.status_code == 409
-
-
-def test_invalid_fileobj():
-    """Must be file object, not path"""
-    with pytest.raises(mapbox.errors.InvalidFileError):
-        mapbox.Uploader(access_token=access_token).upload(
-            'tests/moors.json', 'test1')
 
 
 @responses.activate
