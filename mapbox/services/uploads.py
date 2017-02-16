@@ -47,7 +47,7 @@ class Uploader(Service):
                 429: "Too many requests"})
         return resp
 
-    def stage(self, fileobj_or_url, creds=None, callback=None, region=None):
+    def stage(self, fileobj_or_url, creds=None, callback=None, region='us-east-1'):
         """Stages data in a Mapbox-owned S3 bucket
 
         If creds are not provided, temporary credentials will be
@@ -105,12 +105,7 @@ class Uploader(Service):
                 source_key = parse_results.path.lstrip('/')
 
                 copy_source = {'Bucket': source_bucket, 'Key': source_key}
-
-                if region:
-                    source_client = boto3.client('s3', region)
-                else:
-                    source_client = None
-
+                source_client = boto3.client('s3', region)
                 bucket.copy(copy_source, key, SourceClient=source_client,
                             Callback=callback)
 
