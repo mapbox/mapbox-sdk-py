@@ -47,7 +47,7 @@ class Uploader(Service):
                 429: "Too many requests"})
         return resp
 
-    def stage(self, fileobj_or_url, creds=None, callback=None, region='us-east-1'):
+    def stage(self, fileobj_or_url, creds=None, callback=None):
         """Stages data in a Mapbox-owned S3 bucket
 
         If creds are not provided, temporary credentials will be
@@ -68,9 +68,6 @@ class Uploader(Service):
         callback : func
             A function that takes a number of bytes processed as its
             sole argument.
-        region : str
-            Upload data is staged to a bucket in 'us-east-1'. If source
-            data is in a different region it must be specified by name.
 
         Returns
         -------
@@ -90,7 +87,7 @@ class Uploader(Service):
             aws_access_key_id=creds['accessKeyId'],
             aws_secret_access_key=creds['secretAccessKey'],
             aws_session_token=creds['sessionToken'],
-            region_name="us-east-1")
+            region_name='us-east-1')
         s3 = session.resource('s3')
         bucket = s3.Bucket(creds['bucket'])
         key = creds['key']
@@ -105,7 +102,11 @@ class Uploader(Service):
                 source_key = parse_results.path.lstrip('/')
 
                 copy_source = {'Bucket': source_bucket, 'Key': source_key}
-                source_client = boto3.client('s3', region)
+
+                # The source client credentials and region must be
+                # configured by the caller.
+                source_session = boto3_session()
+                source_client = source_session.client('s3')
                 bucket.copy(copy_source, key, SourceClient=source_client,
                             Callback=callback)
 
