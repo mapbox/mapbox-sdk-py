@@ -1,4 +1,7 @@
 from mapbox.services.base import Service
+import dateutil.parser
+from dateutil.relativedelta import *
+from uritemplate import URITemplate
 
 class Analytics(Service):
     """Access to Analytics API"""
@@ -15,11 +18,37 @@ class Analytics(Service):
         return resource_type
 
     def _validate_period(self, period):
-        if period[0] > period[1]:
+        try:
+            start_date = dateutil.parser.parse(period[0])
+            end_date = dateutil.parser.parse(period[1])
+        except:
+            raise ValueError("Dates are not in ISO formatted string")
+        if start_date > end_date:
             raise ValueError("The first date must be earlier than the second")
+        if relativedelta(end_date, start_date).years >= 1 and relativedelta(end_date, start_date).days >= 0:
+            raise ValueError("The maximum period can be 1 year")
+        return period
 
-    # def analytics(self, resource_type, username, id, period):
-    #     resource_type = self._validate_resource_type(resource_type)
-    #     username = self._validate_username(username)
-    #     id = self._validate_id(id)
-    #     period = self._validate_period(period)
+
+
+    def analytics(self, resource_type, username, id, period, access_token):
+        resource_type = self._validate_resource_type(resource_type)
+        period = self._validate_period(period)
+
+        params = {}
+        if resource_type is not None:
+            params['resource_type'] = resource_type
+        if period is not None:
+            params['period'] = period
+        if id is None:
+            params['id'] = False
+
+
+        uri = URITemplate(self.baseuri + '/{resourceType}/{username}/{id}?period={period}&access_token={access_token}').expand(
+            resourceType=resource_type, username=username, id=id, period=period, access_token=access_token)
+
+        resp = self.session.get(uri)
+        resp.geojson = resp.json()
+        self.handle_http_error(resp)
+
+        return resp
