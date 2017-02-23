@@ -36,12 +36,11 @@ The input to `analytics` method are resource_type, username, id, period, access_
 >>> username = 'sanjayb'
 >>> id = ''
 >>> period = ('2016-03-22T00:00:00.000Z', '2016-03-24T00:00:00.000Z')
->>> access_token = 'abc'
 
 ```
 
 ``` python
->>> response = analytics.analytics(resource_type, username, id, period, access_token)
+>>> response = analytics.analytics(resource_type, username, id, period)
 >>> response.status_code
 401
 
