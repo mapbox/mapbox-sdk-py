@@ -31,7 +31,7 @@ class Analytics(Service):
 
 
 
-    def analytics(self, resource_type, username, id, period, access_token):
+    def analytics(self, resource_type, username, id, period):
         resource_type = self._validate_resource_type(resource_type)
         period = self._validate_period(period)
 
@@ -44,8 +44,8 @@ class Analytics(Service):
             params['id'] = False
 
 
-        uri = URITemplate(self.baseuri + '/{resourceType}/{username}/{id}?period={period}&access_token={access_token}').expand(
-            resourceType=resource_type, username=username, id=id, period=period, access_token=access_token)
+        uri = URITemplate(self.baseuri + '/{resourceType}/{username}/{id}?period={period}').expand(
+            resourceType=resource_type, username=username, id=id, period=period)
 
         resp = self.session.get(uri)
         resp.geojson = resp.json()
