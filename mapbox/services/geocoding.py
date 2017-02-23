@@ -15,7 +15,8 @@ class Geocoder(Service):
     def baseuri(self):
         return 'https://{0}/geocoding/v5'.format(self.host)
 
-    def __init__(self, name='mapbox.places', access_token=None, cache=None):
+    def __init__(self, name='mapbox.places', access_token=None, cache=None,
+                 host=None):
         """Constructs a Geocoding Service object.
 
         :param name: name of a geocoding dataset.
@@ -23,7 +24,8 @@ class Geocoder(Service):
         :param cache: CacheControl cache instance (Dict or FileCache).
         """
         self.name = name
-        super(Geocoder, self).__init__(access_token, cache)
+        super(Geocoder, self).__init__(access_token=access_token, cache=cache,
+                                       host=host)
 
     def _validate_country_codes(self, ccs):
         """Validate country code filters for use in requests."""
