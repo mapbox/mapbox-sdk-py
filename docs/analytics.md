@@ -1,28 +1,47 @@
-```python
+# Analytics
 
+The `Analytics` class from the `mapbox.services.analytics` module provides
+access to the Mapbox Analytics API. You can also import it directly from the
+`mapbox` module.
+
+```python
 >>> from mapbox import Analytics
+
+```
+
+
+See https://www.mapbox.com/api-documentation/#analytics for general documentation of the API.
+
+Your Mapbox access token should be set in your environment; see the [access
+tokens](access_tokens.md) documentation for more information.
+
+## Analytics methods
+
+The methods of `Analytics` class that provide access to the Analytics API return an instance of 
+[`requests.Response`](http://docs.python-requests.org/en/latest/api/#requests.Response). `Analytics` response also include the `json()` method which returns Python data parsed from API.
+
+## Usage
+
+The Mapbox Analytics API is used to get API usage for services by resource. It returns counts per day for given resource and period.
+
+```python
 >>> analytics = Analytics()
->>> analytics._validate_resource_type('abc')
-Traceback (most recent call last):
-       	bla bla bla
-ValueError: abc is not a valid profile
->>> analytics._validate_resource_type('accounts')
-'accounts'
->>> analytics._validate_period(('a', 'b'))
-Traceback (most recent call last):
-       	bla bla bla
-ValueError: Dates are not in ISO formatted string
->>> analytics._validate_period(('2016-03-22T00:00:00.000Z', '2016-03-19T00:00:00.000Z'))
-Traceback (most recent call last):
-       	bla bla bla
-ValueError: The first date must be earlier than the second
->>> analytics._validate_period(('2015-03-22T00:00:00.000Z', '2016-03-22T00:00:00.000Z'))
-Traceback (most recent call last):
-       	bla bla bla
-ValueError: The maximum period can be 1 year
->>> analytics._validate_period(('2015-03-20T00:00:00.000Z', '2015-03-29T00:00:00.000Z'))
-('2015-03-20T00:00:00.000Z', '2015-03-29T00:00:00.000Z')
->>> response = analytics.analytics('accounts', 'amishas157', '', ('2016-03-22T00:00:00.000Z', '2016-03-24T00:00:00.000Z'), 'abc')
+
+```
+
+The input to `analytics` method are resource_type, username, id, period, access_token.
+
+```python
+>>> resource_type = 'accounts'
+>>> username = 'sanjayb'
+>>> id = ''
+>>> period = ('2016-03-22T00:00:00.000Z', '2016-03-24T00:00:00.000Z')
+>>> access_token = 'abc'
+
+```
+
+``` python
+>>> response = analytics.analytics(resource_type, username, id, period, access_token)
 >>> response.status_code
 401
 
