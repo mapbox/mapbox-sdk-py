@@ -1,4 +1,5 @@
-# Mapbox SDK
+# mapbox
+__version__ = "0.11.1"
 
 from .about import __version__
 from .services.datasets import Datasets

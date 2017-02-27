@@ -4,6 +4,12 @@
   S3 (#). This uses boto3's `Bucket.copy()` feature. The caller must
   ensure that AWS SDK credentials are properly configured.
 
+0.11.1 (2017-02-23)
+-------------------
+- 429 responses from the credentials endpoint are now caught (#155).
+- Call Geocoding's super() class constructor using keyword arguments to fix
+  #160.
+
 0.11.0 (2017-01-23)
 -------------------
 - Require boto3>=1.4 to get `upload_fileobj()`.
