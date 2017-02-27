@@ -47,7 +47,8 @@ class Uploader(Service):
                 429: "Too many requests"})
         return resp
 
-    def stage(self, fileobj_or_url, creds=None, callback=None):
+    def stage(self, fileobj_or_url, creds=None, callback=None,
+              region_name=None):
         """Stages data in a Mapbox-owned S3 bucket
 
         If creds are not provided, temporary credentials will be
@@ -93,8 +94,9 @@ class Uploader(Service):
         key = creds['key']
 
         if isinstance(fileobj_or_url, text_types):
-            # s3:// URLs are a special case. We can copy these directly
-            # between AWS buckets.
+            # s3:// URLs are a special case. We copy these directly
+            # between AWS buckets if we can. This requires s3:GetObject
+            # to be granted to our federated user.
             if fileobj_or_url.startswith('s3://'):
                 parse_results = urlparse(fileobj_or_url)
                 assert parse_results.scheme == 's3'
@@ -105,8 +107,7 @@ class Uploader(Service):
 
                 # The source client credentials and region must be
                 # configured by the caller.
-                source_session = boto3_session()
-                source_client = source_session.client('s3')
+                source_client = boto3.client('s3', region_name)
                 bucket.copy(copy_source, key, SourceClient=source_client,
                             Callback=callback)
 
