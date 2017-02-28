@@ -39,6 +39,7 @@ class Service(object):
 
         :param access_token: Mapbox access token string.
         :param cache: CacheControl cache instance (Dict or FileCache).
+        :param host: Mapbox API host (advanced usage only).
         """
         self.session = Session(access_token)
         self.host = host or os.environ.get('MAPBOX_HOST', self.default_host)
