@@ -45,3 +45,12 @@ class InvalidParameterError(ValidationError):
 
 class InvalidFileError(ValidationError):
     pass
+
+class InvalidResourceTypeError(ValidationError):
+    pass
+        
+class InvalidPeriodError(ValidationError):
+    pass
+
+class InvalidUsernameError(ValidationError):
+    pass
