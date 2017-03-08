@@ -15,14 +15,23 @@ def test_profile_valid(resource_type):
         access_token='pk.test')._validate_resource_type(resource_type)
 
 def test_period_invalid():
-	"""Providing only one timestamp is invalid."""
 	with pytest.raises(errors.InvalidPeriodError):
 		mapbox.Analytics(access_token='pk.test')._validate_period('2016-03-22T00:00:00.000Z', None)
 
+	with pytest.raises(errors.InvalidPeriodError):
+		mapbox.Analytics(access_token='pk.test')._validate_period('2016-03-22T00:00:00.000Z', '2016-03-20T00:00:00.000Z')
+
+	with pytest.raises(errors.InvalidPeriodError):
+		mapbox.Analytics(access_token='pk.test')._validate_period('2016-03-22T00:00:00.000Z', '2017-04-20T00:00:00.000Z')
+
 def test_period_valid():
-	"""Providing two valid timestamps."""
 	start = '2016-03-22T00:00:00.000Z'
 	end = '2016-03-24T00:00:00.000Z'
+	period = start, end
+	assert period == mapbox.Analytics(access_token='pk.test')._validate_period(start, end)
+
+	start = None
+	end = None
 	period = start, end
 	assert period == mapbox.Analytics(access_token='pk.test')._validate_period(start, end)
 
