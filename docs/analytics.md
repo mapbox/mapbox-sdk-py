@@ -2,7 +2,9 @@
 
 The `Analytics` class from the `mapbox.services.analytics` module provides
 access to the Mapbox Analytics API. You can also import it directly from the
-`mapbox` module.
+`mapbox` module. 
+
+`This API is available for premium and enterprise plans`
 
 ```python
 >>> from mapbox import Analytics
@@ -33,15 +35,19 @@ The input to `analytics` method are resource_type, username, id, period, access_
 
 ```python
 >>> resource_type = 'accounts'
->>> username = 'sanjayb'
->>> id = ''
->>> period = ('2016-03-22T00:00:00.000Z', '2016-03-24T00:00:00.000Z')
+>>> username = 'sanjay'
+>>> id = None
+>>> start = '2016-03-22T00:00:00.000Z'
+>>> end = '2016-03-24T00:00:00.000Z'
 
 ```
 
 ``` python
->>> response = analytics.analytics(resource_type, username, id, period)
->>> response.status_code
-401
+>>> response = analytics.analytics(resource_type, username, id, start, end)
+>>> if response.status_code == 401:
+...    print "Please export valid MAPBOX_ACCESS_TOKEN"
+... else:
+...    print response.status_code
+200
 
 ```

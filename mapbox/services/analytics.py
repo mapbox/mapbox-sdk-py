@@ -1,7 +1,9 @@
-from mapbox.services.base import Service
 import dateutil.parser
-from dateutil.relativedelta import *
+from dateutil.relativedelta import relativedelta
 from uritemplate import URITemplate
+
+from mapbox.services.base import Service
+from mapbox import errors
 
 class Analytics(Service):
     """Access to Analytics API"""
@@ -14,40 +16,45 @@ class Analytics(Service):
 
     def _validate_resource_type(self, resource_type):
         if resource_type not in self.valid_resource_types:
-            raise ValueError("{0} is not a valid profile".format(resource_type))
+            raise errors.InvalidResourceTypeError(
+                "{0} is not a valid profile".format(resource_type))
         return resource_type
 
-    def _validate_period(self, period):
+    def _validate_period(self, start, end):
+        if start is None and end is None:
+            return start, end
         try:
-            start_date = dateutil.parser.parse(period[0])
-            end_date = dateutil.parser.parse(period[1])
+            start_date = dateutil.parser.parse(start)
+            end_date = dateutil.parser.parse(end)
         except:
-            raise ValueError("Dates are not in ISO formatted string")
+            raise errors.InvalidPeriodError("Dates are not in ISO formatted string")
         if start_date > end_date:
-            raise ValueError("The first date must be earlier than the second")
+            raise errors.InvalidPeriodError("The first date must be earlier than the second")
         if relativedelta(end_date, start_date).years >= 1 and relativedelta(end_date, start_date).days >= 0:
-            raise ValueError("The maximum period can be 1 year")
-        return period
+            raise errors.InvalidPeriodError("The maximum period can be 1 year")
+        return start, end
 
+    def _validate_username(self, username):
+        if username is None:
+            raise errors.InvalidUsernameError("Username is required")
+        return username
 
-
-    def analytics(self, resource_type, username, id, period):
+    def analytics(self, resource_type, username, id=None, start=None, end=None):
         resource_type = self._validate_resource_type(resource_type)
-        period = self._validate_period(period)
+        username = self._validate_username(username)
+        start, end = self._validate_period(start, end)
 
         params = {}
-        if resource_type is not None:
-            params['resource_type'] = resource_type
-        if period is not None:
-            params['period'] = period
-        if id is None:
-            params['id'] = False
+        if id is not None:
+            params.update({'id': id})
 
+        if start is not None and end is not None:
+            params.update({'period': start + ',' + end})
 
-        uri = URITemplate(self.baseuri + '/{resourceType}/{username}/{id}?period={period}').expand(
-            resourceType=resource_type, username=username, id=id, period=period)
-
-        resp = self.session.get(uri)
+        uri = URITemplate(self.baseuri + '/{resourceType}/{username}').expand(
+            resourceType=resource_type, username=username)
+        
+        resp = self.session.get(uri, params=params)
         resp.geojson = resp.json()
         self.handle_http_error(resp)
 
