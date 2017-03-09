@@ -44,10 +44,7 @@ The input to `analytics` method are resource_type, username, id, period, access_
 
 ``` python
 >>> response = analytics.analytics(resource_type, username, id, start, end)
->>> if response.status_code == 401:
-...    print "Please export valid MAPBOX_ACCESS_TOKEN"
-... else:
-...    print response.status_code
+>>> response.status_code
 200
 
 ```
