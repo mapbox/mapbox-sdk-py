@@ -54,3 +54,6 @@ class InvalidPeriodError(ValidationError):
 
 class InvalidUsernameError(ValidationError):
     pass
+
+class InvalidId(ValidationError):
+    pass

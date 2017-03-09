@@ -39,10 +39,16 @@ class Analytics(Service):
             raise errors.InvalidUsernameError("Username is required")
         return username
 
+    def _validate_id(self, resource_type, id):
+        if resource_type != 'accounts' and id is None:
+            raise errors.InvalidId("Id is required")
+        return id
+
     def analytics(self, resource_type, username, id=None, start=None, end=None):
         resource_type = self._validate_resource_type(resource_type)
         username = self._validate_username(username)
         start, end = self._validate_period(start, end)
+        id = self._validate_id(resource_type, id)
 
         params = {}
         if id is not None:
@@ -53,7 +59,7 @@ class Analytics(Service):
 
         uri = URITemplate(self.baseuri + '/{resourceType}/{username}').expand(
             resourceType=resource_type, username=username)
-        
+
         resp = self.session.get(uri, params=params)
         resp.geojson = resp.json()
         self.handle_http_error(resp)
