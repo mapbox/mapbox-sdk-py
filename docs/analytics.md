@@ -35,7 +35,7 @@ The input to `analytics` method are resource_type, username, id, period, access_
 
 ```python
 >>> resource_type = 'accounts'
->>> username = 'sanjayb'
+>>> username = 'mapbox-sdk-py-user'
 >>> id = None
 >>> start = '2016-03-22T00:00:00.000Z'
 >>> end = '2016-03-24T00:00:00.000Z'
