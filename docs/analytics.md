@@ -34,16 +34,7 @@ The Mapbox Analytics API is used to get API usage for services by resource. It r
 The input to `analytics` method are resource_type, username, id, period, access_token.
 
 ```python
->>> resource_type = 'accounts'
->>> username = 'mapbox-sdk-py-user'
->>> id = None
->>> start = '2016-03-22T00:00:00.000Z'
->>> end = '2016-03-24T00:00:00.000Z'
-
-```
-
-``` python
->>> response = analytics.analytics(resource_type, username, id, start, end)
+>>> response = analytics.analytics('accounts', 'mapbox-sdk-py-user')
 >>> response.status_code
 200
 
