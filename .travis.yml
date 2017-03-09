@@ -10,9 +10,6 @@ python:
 cache:
   directories:
     - $HOME/.pip-cache/
-env:
-  global:
-    - secure: "Y0TmwcQeUFm++0akAroEj+MYeTWOT/mtR97n4uHs3J//BhZHLtFNhUF9wINPaIioGfYhM3C7xZt3QStyF7APlC/ioPb+Jb/4CXIb1YwOPgN7BDSy8qsCGcjU6ieWGcjxjP+3qHIyepKhC8LFx2qJsnAGg9gJF+52z/7wiDBZGxgA6bGzIz8gQhu5aUcEHzICRwPyJSqH26QRg8ff+MGW9JYOat96WJiZWYsVoH3mBC21rpPvOEJsyYGuJzW0rYrjBPPKgS7HiPlCySWtslFpy5mqgM+puExjcGAR2QRBp42IB/8Sm9xRxSqSLx63vyni3vjic53/QGSylKn5c1JzOrss3+AJVb4YimjSvCS+POxtNxbgTS1R8ax0ZsSqzi3n9SiBWS0mfNkhxL72Aecm+g37ubJ9XRVndd+O8YAaQPCIqKVxcV/SHBtXehAX+PnUd2T4uTu1QC/upi6czh6R9ClPVwHpvFSv7VTUOzD1F3r/scWA3Y39Q1Y6oJcbVKIXMx7H5S4M978ha/49DbumohnnY7UAn6o62kfVqnNQmNw9fJWxrXCMoL0qlHJ/0AJk3pABz3HYuv/xU1zElzH2dOcrAj2JuCz+YEfb1ccAND3Nvq07Xt5ks5FCVKRipA+lDTX40EK4E3x3qgy8TYsGk2yH/np7bsaBselNICjanU0="
 install:
   - pip install -U pip --cache-dir $HOME/.pip-cache
   - pip install -e .[test] --cache-dir $HOME/.pip-cache
