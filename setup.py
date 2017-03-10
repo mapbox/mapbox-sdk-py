@@ -36,6 +36,7 @@ setup(name='mapbox',
           'click-plugins',
           'cligj',
           'iso3166',
+          'python-dateutil>=2.5.0'
           'requests',
           'polyline>=1.3.1',
           'uritemplate>=2.0'],
