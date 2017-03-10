@@ -1,3 +1,7 @@
+Next
+----
+- Initial support for Analytics API (Premium and Enterprise accounts only).
+
 0.11.1 (2017-02-23)
 -------------------
 - 429 responses from the credentials endpoint are now caught (#155).
