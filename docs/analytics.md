@@ -4,7 +4,7 @@ The `Analytics` class from the `mapbox.services.analytics` module provides
 access to the Mapbox Analytics API. You can also import it directly from the
 `mapbox` module. 
 
-`This API is available for premium and enterprise plans`
+**Note**: This API is available only for premium and enterprise plans.
 
 ```python
 >>> from mapbox import Analytics
