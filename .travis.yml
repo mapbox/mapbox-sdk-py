@@ -17,6 +17,7 @@ install:
   - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]]; then pip install ordereddict; fi
 before_script:
   - pip install flake8
+  - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]]; then pip install ordereddict; fi
   - flake8 . --count --max-line-length=127 --statistics --exit-zero  # 127 == GitHub editor width
 script:
   - py.test --cov mapbox --cov-report term-missing tests/*.py
