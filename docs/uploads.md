@@ -35,12 +35,13 @@ In the example below, we use a string defined in a test fixture.
 >>> from time import sleep
 >>> from random import randint
 >>> mapid = getfixture('uploads_dest_id') # 'uploads-test'
->>> with open('tests/twopoints.geojson', 'r') as src:
+>>> with open('tests/twopoints.geojson', 'rb') as src:
 ...     upload_resp = service.upload(src, mapid)
+...
 >>> if upload_resp.status_code == 422:
 ...     for i in range(5):
 ...         sleep(5)
-...         with open('tests/twopoints.geojson', 'r') as src:
+...         with open('tests/twopoints.geojson', 'rb') as src:
 ...             upload_resp = service.upload(src, mapid)
 ...         if upload_resp.status_code != 422:
 ...             break
@@ -64,22 +65,6 @@ response.
 ...
 >>> mapid in status_resp['tileset']
 True
-
-```
-
-You can list all of the uploads associated with your account
-
-```
->>> service.list().json()
-[...]
-
-```
-
-Finally you can delete the upload. Note that this does *not* delete the tileset you just created.
-To delete the tileset itself, got to Mapbox Studio and delete it from the Data page.
-
-```
->>> service.delete(upload_id)
 
 ```
 
