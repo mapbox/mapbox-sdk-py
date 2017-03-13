@@ -6,6 +6,7 @@ python:
   - '3.3'
   - '3.4'
   - '3.5'
+  - '3.6'
   - pypy
 cache:
   directories:
@@ -14,6 +15,9 @@ install:
   - pip install -U pip --cache-dir $HOME/.pip-cache
   - pip install -e .[test] --cache-dir $HOME/.pip-cache
   - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]]; then pip install ordereddict; fi
+before_script:
+  - pip install flake8  # 127 == GitHub editor width
+  - if [[ $TRAVIS_PYTHON_VERSION != 2.6 ]]; then flake8 . --count --max-line-length=127 --statistics --exit-zero; fi
 script:
   - py.test --cov mapbox --cov-report term-missing tests/*.py
   - if [[ $TRAVIS_PYTHON_VERSION == 2.7 && ! -z "$MAPBOX_ACCESS_TOKEN" ]]; then py.test --doctest-glob='*.md' docs/*.md; fi
