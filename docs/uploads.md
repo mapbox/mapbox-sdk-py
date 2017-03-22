@@ -32,7 +32,8 @@ your application or generate one using, e.g., `uuid.uuid4().hex`.
 ```python
 >>> service = Uploader()
 >>> with open('tests/twopoints.geojson', 'rb') as fileobj:
-...     resp = service.upload(fileobj, 'test-tileset')
+...     resp = service.upload(fileobj, 'test-tileset',
+...                           name='Example from uploads.md')
 ...
 >>> resp.status_code
 201
@@ -43,19 +44,23 @@ The "201 Created" response indicates that your data file has been received and
 is being processed. Processing may take several seconds or minutes depending on
 the size of your data file. You may poll the Upload API to determine if the
 processing has finished using the upload identifier from the the body of the
-response.
+response. The example below demonstrates polling with exponential back-off and
+a maximum number of 8 requests.
 
 ```python
 >>> from time import sleep
 >>> info = resp.json()
 >>> upload_id = info['id']
->>> for i in range(1, 5):
+>>> for i in range(3, 11):
 ...     resp = service.status(upload_id)
 ...     info = resp.json()
-...     if info['complete']:
+...     if resp.status_code == 200 and info['complete']:
 ...         print("Tileset completed")
 ...         break
-...     sleep((5**i - 1)/2)
+...     elif resp.status_code >= 400:
+...         print("Error: {}".format(resp.status_code))
+...         print(resp.text)
+...     sleep((2**i - 1)/2)
 ... else:
 ...     print("Maximum polling requests exceeded")
 ...
