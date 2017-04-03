@@ -25,8 +25,10 @@ return an instance of
 
 ## Usage
 
-Upload any supported file to your account using the ``Uploader``. The
-name of the destination dataset can be any string of <= 32 chars. Choose one
+Upload any supported file to your account using the ``Uploader``. The file
+object must be opened in binary mode (`rb`) and produce bytes when read, not unicode strings.
+
+The name of the destination dataset can be any string of <= 32 chars. Choose one
 suited to your application or generate one using, e.g., `uuid.uuid4().hex`.
 In the example below, we use a string defined in a test fixture.
 
