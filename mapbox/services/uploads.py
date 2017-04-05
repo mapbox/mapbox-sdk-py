@@ -1,12 +1,12 @@
 import os.path
 
-# from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
 
 from mapbox.errors import InvalidFileError
 from mapbox.services.base import Service
 
 
+# A placeholder for boto3.session.Session, which we load lazily.
 boto3_session = None
 
 

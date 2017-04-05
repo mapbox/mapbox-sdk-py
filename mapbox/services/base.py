@@ -7,6 +7,9 @@ import os
 from .. import __version__
 from mapbox import errors
 
+# cachecontrol is imported lazily below.
+# requests is imported lazily below.
+
 
 def Session(access_token=None, env=os.environ):
     """Returns an HTTP session.
