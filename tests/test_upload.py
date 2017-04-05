@@ -198,7 +198,10 @@ class MockSession(object):
 
 @responses.activate
 def test_stage(monkeypatch):
-
+    # Cause `from boto3.session import Session as boto3_session` in
+    # mapbox.services.uploads.
+    mapbox.services.uploads._import_boto3_session()
+    # After, monkey patch it.
     monkeypatch.setattr(mapbox.services.uploads, 'boto3_session', MockSession)
 
     # Credentials
@@ -224,7 +227,7 @@ def test_stage(monkeypatch):
 @responses.activate
 def test_big_stage(tmpdir, monkeypatch):
     """Files larger than 1M are multipart uploaded."""
-
+    mapbox.services.uploads._import_boto3_session()
     monkeypatch.setattr(mapbox.services.uploads, 'boto3_session', MockSession)
 
     # Credentials
@@ -255,7 +258,7 @@ def test_big_stage(tmpdir, monkeypatch):
 @responses.activate
 def test_upload(monkeypatch):
     """Upload a file and create a tileset"""
-
+    mapbox.services.uploads._import_boto3_session()
     monkeypatch.setattr(mapbox.services.uploads, 'boto3_session', MockSession)
 
     # Credentials
@@ -295,7 +298,7 @@ def test_upload(monkeypatch):
 @responses.activate
 def test_upload_error(monkeypatch):
     """Upload a file and create a tileset, fails with 409"""
-
+    mapbox.services.uploads._import_boto3_session()
     monkeypatch.setattr(mapbox.services.uploads, 'boto3_session', MockSession)
 
     # Credentials
@@ -337,7 +340,7 @@ def test_invalid_fileobj():
 @responses.activate
 def test_upload_patch(monkeypatch):
     """Upload a file and create a tileset in patch mode"""
-
+    mapbox.services.uploads._import_boto3_session()
     monkeypatch.setattr(mapbox.services.uploads, 'boto3_session', MockSession)
 
     def ensure_patch(request):

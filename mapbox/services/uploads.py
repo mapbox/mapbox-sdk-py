@@ -1,10 +1,17 @@
 import os.path
 
-from boto3.session import Session as boto3_session
+# from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
 
 from mapbox.errors import InvalidFileError
 from mapbox.services.base import Service
+
+
+boto3_session = None
+
+
+def _import_boto3_session():
+    from boto3.session import Session as boto3_session
 
 
 class Uploader(Service):
@@ -59,6 +66,7 @@ class Uploader(Service):
             res = self._get_credentials()
             creds = res.json()
 
+        _import_boto3_session()
         session = boto3_session(
             aws_access_key_id=creds['accessKeyId'],
             aws_secret_access_key=creds['secretAccessKey'],
