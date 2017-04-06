@@ -216,7 +216,7 @@ def test_stage(monkeypatch):
         body=query_body, status=200,
         content_type='application/json')
 
-    with open('tests/moors.json', 'r') as src:
+    with open('tests/moors.json', 'rb') as src:
         stage_url = mapbox.Uploader(access_token=access_token).stage(src)
     assert stage_url.startswith("https://tilestream-tilesets-production.s3.amazonaws.com/_pending")
 
@@ -247,7 +247,7 @@ def test_big_stage(tmpdir, monkeypatch):
     bigfile.write(','.join(('num' for num in range(1000000))))
     assert bigfile.size() > 1000000
 
-    with bigfile.open() as src:
+    with bigfile.open(mode='rb') as src:
         stage_url = mapbox.Uploader(access_token=access_token).stage(src)
     assert stage_url.startswith("https://tilestream-tilesets-production.s3.amazonaws.com/_pending")
 
@@ -284,7 +284,7 @@ def test_upload(monkeypatch):
     def print_cb(num_bytes):
         print("{0} bytes uploaded".format(num_bytes))
 
-    with open('tests/moors.json', 'r') as src:
+    with open('tests/moors.json', 'rb') as src:
         res = mapbox.Uploader(access_token=access_token).upload(src, 'test1', callback=print_cb)
 
     assert res.status_code == 201
@@ -321,7 +321,7 @@ def test_upload_error(monkeypatch):
         body="", status=409,
         content_type='application/json')
 
-    with open('tests/moors.json', 'r') as src:
+    with open('tests/moors.json', 'rb') as src:
         res = mapbox.Uploader(access_token=access_token).upload(src, 'test1')
 
     assert res.status_code == 409
@@ -369,7 +369,7 @@ def test_upload_patch(monkeypatch):
         match_querystring=True,
         content_type='application/json')
 
-    with open('tests/moors.json', 'r') as src:
+    with open('tests/moors.json', 'rb') as src:
         res = mapbox.Uploader(access_token=access_token).upload(
             src, 'testuser.test1', name='test1', patch=True)
 
