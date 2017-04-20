@@ -78,8 +78,8 @@ specify pitch, bearing, and decimal zoom levels.
 >>> response = service.image(
 ...     username='mapbox',
 ...     style_id='streets-v9',
-...     lon=-61.7, lat=12.1, zoom=13.66,
-...     pitch=45.0, bearing=107.5)
+...     lon=-122.7282, lat=45.5801, zoom=12,
+...     pitch=45.0, bearing=277.5)
 >>> with open('/tmp/static_pitch.png', 'wb') as output:
 ...     _ = output.write(response.content)
 

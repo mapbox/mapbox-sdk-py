@@ -41,9 +41,6 @@ class StaticStyle(Service):
 
     @property
     def baseuri(self):
-        """
-        /styles/v1/{username}/{style_id}/static/{overlay}/{lon},{lat},{zoom},{bearing},{pitch}{auto}/{width}x{height}{@2x}
-        """
         return 'https://{0}/styles/v1'.format(self.host)
 
     def image(self, username, style_id, lon=None, lat=None, zoom=None, features=None,
@@ -73,7 +70,7 @@ class StaticStyle(Service):
             lon=str(lon),
             lat=str(lat),
             zoom=str(zoom),
-            auto="auto" if auto else '',
+            auto=auto,
             twox='@2x' if twox else '',
             width=str(width),
             height=str(height))
@@ -85,9 +82,10 @@ class StaticStyle(Service):
 
             validate_overlay(values['overlay'])
 
-            pth = '{username}/{style_id}/static/{overlay}/'
+            pth = '/{username}/{style_id}/static/geojson({overlay})/'
             if auto:
-                pth += '{bearing},{pitch}{auto}/{width}x{height}{twox}'
+                # TODO what about {bearing} and {pitch}
+                pth += 'auto/{width}x{height}{twox}'
             else:
                 pth += '{lon},{lat},{zoom},{bearing},{pitch}/{width}x{height}{twox}'
         else:
