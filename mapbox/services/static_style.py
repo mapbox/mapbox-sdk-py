@@ -36,6 +36,18 @@ def validate_overlay(val):
     return val
 
 
+def validate_pitch(val):
+    if val < 0 or val > 60:
+        raise errors.InvalidCoordError("Pitch must be between 0 and 60")
+    return val
+
+
+def validate_bearing(val):
+    if val < 0 or val > 365:
+        raise errors.InvalidCoordError("Bearing must be between 0 and 365")
+    return val
+
+
 class StaticStyle(Service):
     """Access to the Static Map API."""
 
@@ -53,12 +65,8 @@ class StaticStyle(Service):
         else:
             auto = True
 
-        if pitch < 0 or pitch > 60:
-            raise ValueError("bad pitch")  # TODO raise proper error here
-
-        if bearing < 0 or bearing > 360:
-            raise ValueError("bad bearing")  # TODO raise proper error here
-
+        pitch = validate_pitch(pitch)
+        bearing = validate_bearing(bearing)
         width = validate_image_size(width)
         height = validate_image_size(height)
 
