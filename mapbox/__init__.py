@@ -8,5 +8,6 @@ from .services.geocoding import Geocoder, InvalidCountryCodeError, InvalidPlaceT
 from .services.mapmatching import MapMatcher
 from .services.surface import Surface
 from .services.static import Static
+from .services.static_style import StaticStyle
 from .services.uploads import Uploader
 from .services.analytics import Analytics
