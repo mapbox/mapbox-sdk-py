@@ -14,7 +14,7 @@ username = 'testuser'
 access_token = 'pk.{0}.test'.format(
     base64.b64encode(b'{"u":"testuser"}').decode('utf-8'))
 
-UUID1 = 4  # chosen by fair dice roll, guaranteed to be random
+UUID1 = 'f0000000-0000-0000-0000-000000000000'
 
 
 def mock_uuid():
