@@ -1,6 +1,8 @@
 import base64
 import json
+import re
 
+import mock
 import responses
 import pytest
 
@@ -11,6 +13,13 @@ import mapbox.services.uploads
 username = 'testuser'
 access_token = 'pk.{0}.test'.format(
     base64.b64encode(b'{"u":"testuser"}').decode('utf-8'))
+
+UUID1 = 4  # chosen by fair dice roll, guaranteed to be random
+
+class mock_uuid(object):
+    def uuid1():
+        return UUID1
+
 
 upload_response_body = """
     {{"progress": 0,
@@ -36,12 +45,15 @@ def test_get_credentials():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&rqp={2}'.format(
+            username, access_token, UUID1),
         match_querystring=True,
         body=query_body, status=200,
         content_type='application/json')
 
-    res = mapbox.Uploader(access_token=access_token)._get_credentials()
+    with mock.patch('mapbox.services.uploads.uuid', new=mock_uuid):
+        res = mapbox.Uploader(access_token=access_token)._get_credentials()
+
     assert res.status_code == 200
     creds = res.json()
     assert username in creds['url']
@@ -211,13 +223,15 @@ def test_stage(monkeypatch):
          "sessionToken": "st.test"}}""".format(username=username)
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&rqp={2}'.format(
+            username, access_token, UUID1),
         match_querystring=True,
         body=query_body, status=200,
         content_type='application/json')
 
     with open('tests/moors.json', 'rb') as src:
-        stage_url = mapbox.Uploader(access_token=access_token).stage(src)
+        with mock.patch('mapbox.services.uploads.uuid', new=mock_uuid):
+            stage_url = mapbox.Uploader(access_token=access_token).stage(src)
     assert stage_url.startswith("https://tilestream-tilesets-production.s3.amazonaws.com/_pending")
 
 
@@ -237,7 +251,8 @@ def test_big_stage(tmpdir, monkeypatch):
          "sessionToken": "st.test"}}""".format(username=username)
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&rqp={2}'.format(
+            username, access_token, UUID1),
         match_querystring=True,
         body=query_body, status=200,
         content_type='application/json')
@@ -248,7 +263,8 @@ def test_big_stage(tmpdir, monkeypatch):
     assert bigfile.size() > 1000000
 
     with bigfile.open(mode='rb') as src:
-        stage_url = mapbox.Uploader(access_token=access_token).stage(src)
+        with mock.patch('mapbox.services.uploads.uuid', new=mock_uuid):
+            stage_url = mapbox.Uploader(access_token=access_token).stage(src)
     assert stage_url.startswith("https://tilestream-tilesets-production.s3.amazonaws.com/_pending")
 
 
@@ -269,7 +285,8 @@ def test_upload(monkeypatch):
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&rqp={2}'.format(
+            username, access_token, UUID1),
         match_querystring=True,
         body=query_body, status=200,
         content_type='application/json')
@@ -285,7 +302,8 @@ def test_upload(monkeypatch):
         print("{0} bytes uploaded".format(num_bytes))
 
     with open('tests/moors.json', 'rb') as src:
-        res = mapbox.Uploader(access_token=access_token).upload(src, 'test1', callback=print_cb)
+        with mock.patch('mapbox.services.uploads.uuid', new=mock_uuid):
+            res = mapbox.Uploader(access_token=access_token).upload(src, 'test1', callback=print_cb)
 
     assert res.status_code == 201
     job = res.json()
@@ -309,7 +327,8 @@ def test_upload_error(monkeypatch):
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&rqp={2}'.format(
+            username, access_token, UUID1),
         match_querystring=True,
         body=query_body, status=200,
         content_type='application/json')
@@ -322,7 +341,8 @@ def test_upload_error(monkeypatch):
         content_type='application/json')
 
     with open('tests/moors.json', 'rb') as src:
-        res = mapbox.Uploader(access_token=access_token).upload(src, 'test1')
+        with mock.patch('mapbox.services.uploads.uuid', new=mock_uuid):
+            res = mapbox.Uploader(access_token=access_token).upload(src, 'test1')
 
     assert res.status_code == 409
 
@@ -357,7 +377,8 @@ def test_upload_patch(monkeypatch):
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&rqp={2}'.format(
+            username, access_token, UUID1),
         match_querystring=True,
         body=query_body, status=200,
         content_type='application/json')
@@ -370,8 +391,9 @@ def test_upload_patch(monkeypatch):
         content_type='application/json')
 
     with open('tests/moors.json', 'rb') as src:
-        res = mapbox.Uploader(access_token=access_token).upload(
-            src, 'testuser.test1', name='test1', patch=True)
+        with mock.patch('mapbox.services.uploads.uuid', new=mock_uuid):
+            res = mapbox.Uploader(access_token=access_token).upload(
+                src, 'testuser.test1', name='test1', patch=True)
 
     assert res.status_code == 201
     job = res.json()
