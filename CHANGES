@@ -1,3 +1,7 @@
+0.12.1 (2017-05-04)
+-------------------
+- Add random query parameter to credentials request (#176)
+
 0.12.0 (2017-04-27)
 -------------
 - Fix tileset logic and allow account names for Upload endpoints.
