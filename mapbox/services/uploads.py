@@ -1,10 +1,22 @@
 import os.path
+import uuid
+from contextlib import contextmanager
 
 from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
 
 from mapbox.errors import InvalidFileError
 from mapbox.services.base import Service
+
+
+@contextmanager
+def CacheBuster(session):
+    """Wraps a session with a randomized query parameter
+    to discourage cached results.
+    """
+    session.params.update(randomqueryparam=str(uuid.uuid1()))
+    yield
+    session.params.pop('randomqueryparam')
 
 
 class Uploader(Service):
@@ -36,7 +48,10 @@ class Uploader(Service):
         """
         uri = URITemplate(self.baseuri + '/{username}/credentials').expand(
             username=self.username)
-        resp = self.session.get(uri)
+
+        with CacheBuster(self.session):
+            resp = self.session.get(uri)
+
         self.handle_http_error(
             resp,
             custom_messages={
