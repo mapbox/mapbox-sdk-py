@@ -11,12 +11,12 @@ from mapbox.services.base import Service
 
 @contextmanager
 def CacheBuster(session):
-    """Wraps a session with a randomized query parameter `rqp`
+    """Wraps a session with a randomized query parameter `_`
     to discourage cached results.
     """
-    session.params.update(rqp=str(uuid.uuid1()))
+    session.params.update(_=str(uuid.uuid1()))
     yield
-    session.params.pop('rqp')
+    session.params.pop('_')
 
 
 class Uploader(Service):

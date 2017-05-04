@@ -45,7 +45,7 @@ def test_get_credentials():
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&rqp={2}'.format(
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&_={2}'.format(
             username, access_token, UUID1),
         match_querystring=True,
         body=query_body, status=200,
@@ -223,7 +223,7 @@ def test_stage(monkeypatch):
          "sessionToken": "st.test"}}""".format(username=username)
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&rqp={2}'.format(
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&_={2}'.format(
             username, access_token, UUID1),
         match_querystring=True,
         body=query_body, status=200,
@@ -251,7 +251,7 @@ def test_big_stage(tmpdir, monkeypatch):
          "sessionToken": "st.test"}}""".format(username=username)
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&rqp={2}'.format(
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&_={2}'.format(
             username, access_token, UUID1),
         match_querystring=True,
         body=query_body, status=200,
@@ -285,7 +285,7 @@ def test_upload(monkeypatch):
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&rqp={2}'.format(
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&_={2}'.format(
             username, access_token, UUID1),
         match_querystring=True,
         body=query_body, status=200,
@@ -327,7 +327,7 @@ def test_upload_error(monkeypatch):
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&rqp={2}'.format(
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&_={2}'.format(
             username, access_token, UUID1),
         match_querystring=True,
         body=query_body, status=200,
@@ -377,7 +377,7 @@ def test_upload_patch(monkeypatch):
 
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&rqp={2}'.format(
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}&_={2}'.format(
             username, access_token, UUID1),
         match_querystring=True,
         body=query_body, status=200,
