@@ -51,13 +51,11 @@ are accessible through response headers.
 ```python
 
 >>> response = geocoder.forward('Chester, NJ')
->>> response.headers['x-rate-limit-interval']
+>>> response.headers['X-Rate-Limit-Interval']
 '60'
->>> response.headers['x-rate-limit-limit'] # doctest: +SKIP
+>>> response.headers['X-Rate-Limit-Limit'] # doctest: +SKIP
 '600'
->>> response.headers['x-rate-limit-remaining'] # doctest: +SKIP
-'599'
->>> response.headers['x-rate-limit-reset'] # doctest: +SKIP
+>>> response.headers['X-Rate-Limit-Reset'] # doctest: +SKIP
 '1447701074'
 
 ```
