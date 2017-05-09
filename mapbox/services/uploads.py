@@ -1,7 +1,3 @@
-import os.path
-import uuid
-from contextlib import contextmanager
-
 from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
 
