@@ -9,16 +9,6 @@ from mapbox.errors import InvalidFileError
 from mapbox.services.base import Service
 
 
-@contextmanager
-def CacheBuster(session):
-    """Wraps a session with a randomized query parameter `_`
-    to discourage cached results.
-    """
-    session.params.update(_=str(uuid.uuid1()))
-    yield
-    session.params.pop('_')
-
-
 class Uploader(Service):
     """Access to the Upload API.
 
@@ -49,8 +39,7 @@ class Uploader(Service):
         uri = URITemplate(self.baseuri + '/{username}/credentials').expand(
             username=self.username)
 
-        with CacheBuster(self.session):
-            resp = self.session.get(uri)
+        resp = self.session.post(uri)
 
         self.handle_http_error(
             resp,
