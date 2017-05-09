@@ -1,3 +1,7 @@
+0.12.2 (2017-05-09)
+-------------------
+- POST to credentials endpoint (#180)
+
 0.12.1 (2017-05-04)
 -------------------
 - Add random query parameter to credentials request (#176)
