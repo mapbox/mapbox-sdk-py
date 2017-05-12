@@ -55,6 +55,30 @@ class StaticStyle(Service):
     def baseuri(self):
         return 'https://{0}/styles/v1'.format(self.host)
 
+    def tile(self, username, style_id, z, x, y, tile_size=512, retina=False):
+        "/styles/v1/{username}/{style_id}/tiles/{tileSize}/{z}/{x}/{y}{@2x}"
+        if tile_size not in (256, 512):
+            raise errors.ImageSizeError('tile_size must be 256 or 512 pixels')
+
+        pth = '/{username}/{style_id}/tiles/{tile_size}/{z}/{x}/{y}'
+        if retina:
+            pth += '@2x'
+
+        values = dict(username=username, style_id=style_id,
+                      tile_size=tile_size, z=z, x=x, y=y)
+
+        uri = URITemplate(self.baseuri + pth).expand(**values)
+        res = self.session.get(uri)
+        self.handle_http_error(res)
+        return res
+
+    def wmts(self, username, style_id):
+        pth = '/{}/{}/wmts'.format(username, style_id)
+        uri = URITemplate(self.baseuri + pth)
+        res = self.session.get(uri)
+        self.handle_http_error(res)
+        return res
+
     def image(self, username, style_id, lon=None, lat=None, zoom=None, features=None,
               pitch=0, bearing=0, width=600, height=600, twox=False, sort_keys=False,
               attribution=None, logo=None, before_layer=None):

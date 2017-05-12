@@ -145,7 +145,7 @@ def test_lon_invalid():
 
 
 @responses.activate
-def test_staticmap_options(points):
+def test_staticmap_options():
 
     responses.add(
         responses.GET,
@@ -158,4 +158,57 @@ def test_staticmap_options(points):
     res = mapbox.StaticStyle(access_token='pk.test').image(
         'mapbox', 'streets-v9', -61.7, 12.1, 12.5,
         attribution=True, logo=False, before_layer='a')
+    assert res.status_code == 200
+
+
+@responses.activate
+def test_staticmap_tile():
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/512/10/163/395?access_token=pk.test',
+        match_querystring=True,
+        body='png123',
+        status=200,
+        content_type='image/png')
+
+    res = mapbox.StaticStyle(access_token='pk.test').tile(
+        'mapbox', 'streets-v9', 10, 163, 395)
+    assert res.status_code == 200
+
+
+def test_bad_tilesize():
+    with pytest.raises(mapbox.errors.ValidationError):
+        mapbox.StaticStyle(access_token='pk.test').tile(
+            'mapbox', 'streets-v9', 10, 163, 395, tile_size=333)
+
+
+@responses.activate
+def test_staticmap_tile():
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/10/163/395@2x?access_token=pk.test',
+        match_querystring=True,
+        body='png123',
+        status=200,
+        content_type='image/png')
+
+    res = mapbox.StaticStyle(access_token='pk.test').tile(
+        'mapbox', 'streets-v9', 10, 163, 395, tile_size=256, retina=True)
+    assert res.status_code == 200
+
+
+@responses.activate
+def test_staticmap_wmts():
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/styles/v1/mapbox/streets-v9/wmts?access_token=pk.test',
+        match_querystring=True,
+        body='<Capabilities xmlns=...',
+        status=200,
+        content_type='application/xml')
+
+    res = mapbox.StaticStyle(access_token='pk.test').wmts('mapbox', 'streets-v9')
     assert res.status_code == 200
