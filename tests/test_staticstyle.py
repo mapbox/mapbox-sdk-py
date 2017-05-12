@@ -142,3 +142,20 @@ def test_lon_invalid():
         validate_lat(-86.0)
     with pytest.raises(mapbox.errors.ValidationError):
         validate_lon(-181.0)
+
+
+@responses.activate
+def test_staticmap_options(points):
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/styles/v1/mapbox/streets-v9/static/-61.7,12.1,12.5,0,0/600x600?access_token=pk.test&attribution=true&logo=false&before_layer=a',
+        match_querystring=True,
+        body='png123',
+        status=200,
+        content_type='image/png')
+
+    res = mapbox.StaticStyle(access_token='pk.test').image(
+        'mapbox', 'streets-v9', -61.7, 12.1, 12.5,
+        attribution=True, logo=False, before_layer='a')
+    assert res.status_code == 200

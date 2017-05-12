@@ -56,7 +56,16 @@ class StaticStyle(Service):
         return 'https://{0}/styles/v1'.format(self.host)
 
     def image(self, username, style_id, lon=None, lat=None, zoom=None, features=None,
-              pitch=0, bearing=0, width=600, height=600, twox=False, sort_keys=False):
+              pitch=0, bearing=0, width=600, height=600, twox=False, sort_keys=False,
+              attribution=None, logo=None, before_layer=None):
+
+        params = {}
+        if attribution is not None:
+            params['attribution'] = 'true' if attribution else 'false'
+        if logo is not None:
+            params['logo'] = 'true' if logo else 'false'
+        if before_layer is not None:
+            params['before_layer'] = before_layer
 
         if lon is not None and lat is not None and zoom is not None:
             auto = False
@@ -106,6 +115,6 @@ class StaticStyle(Service):
                    '{lon},{lat},{zoom},{bearing},{pitch}/{width}x{height}{twox}')
 
         uri = URITemplate(self.baseuri + pth).expand(**values)
-        res = self.session.get(uri)
+        res = self.session.get(uri, params=params)
         self.handle_http_error(res)
         return res
