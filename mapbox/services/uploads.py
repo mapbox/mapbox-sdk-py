@@ -1,5 +1,3 @@
-import os.path
-
 from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
 
@@ -36,7 +34,9 @@ class Uploader(Service):
         """
         uri = URITemplate(self.baseuri + '/{username}/credentials').expand(
             username=self.username)
-        resp = self.session.get(uri)
+
+        resp = self.session.post(uri)
+
         self.handle_http_error(
             resp,
             custom_messages={
@@ -88,8 +88,10 @@ class Uploader(Service):
         Returns a response object where the json() contents are
         an upload dict
         """
-        if not tileset.startswith(self.username + "."):
+        if '.' not in tileset:
             tileset = "{0}.{1}".format(self.username, tileset)
+
+        account, _name = tileset.split(".")
 
         msg = {'tileset': tileset,
                'url': stage_url}
@@ -97,55 +99,64 @@ class Uploader(Service):
         if patch:
             msg['patch'] = patch
 
-        if name is not None:
-            msg['name'] = name
+        msg['name'] = name if name else _name
 
-        uri = URITemplate(self.baseuri + '/{username}').expand(
-            username=self.username)
+        uri = URITemplate(self.baseuri + '/{account}').expand(
+            account=account)
 
         resp = self.session.post(uri, json=msg)
         self.handle_http_error(resp)
         return resp
 
-    def list(self):
+    def list(self, account=None):
         """List of all uploads
 
         Returns a response object where the json() contents are
         a list of uploads
+
+        Account defaults to username
         """
-        uri = URITemplate(self.baseuri + '/{username}').expand(
-            username=self.username)
+        if account is None:
+            account = self.username
+        uri = URITemplate(self.baseuri + '/{account}').expand(
+            account=account)
         resp = self.session.get(uri)
         self.handle_http_error(resp)
         return resp
 
-    def delete(self, upload):
+    def delete(self, upload, account=None):
         """Delete the specified upload
         """
+        if account is None:
+            account = self.username
+
         if isinstance(upload, dict):
             upload_id = upload['id']
         else:
             upload_id = upload
 
-        uri = URITemplate(self.baseuri + '/{username}/{upload_id}').expand(
-            username=self.username, upload_id=upload_id)
+        uri = URITemplate(self.baseuri + '/{account}/{upload_id}').expand(
+            account=account, upload_id=upload_id)
         resp = self.session.delete(uri)
         self.handle_http_error(resp)
         return resp
 
-    def status(self, upload):
+    def status(self, upload, account=None):
         """Check status of upload
 
         Returns a response object where the json() contents are
         another (updated) upload dict
         """
+        if account is None:
+            account = self.username
+
         if isinstance(upload, dict):
             upload_id = upload['id']
         else:
             upload_id = upload
 
-        uri = URITemplate(self.baseuri + '/{username}/{upload_id}').expand(
-            username=self.username, upload_id=upload_id)
+        uri = URITemplate(self.baseuri + '/{account}/{upload_id}').expand(
+            account=account, upload_id=upload_id)
         resp = self.session.get(uri)
         self.handle_http_error(resp)
         return resp
