@@ -1,6 +1,8 @@
 import base64
 import json
+import re
 
+import mock
 import responses
 import pytest
 
@@ -11,6 +13,7 @@ import mapbox.services.uploads
 username = 'testuser'
 access_token = 'pk.{0}.test'.format(
     base64.b64encode(b'{"u":"testuser"}').decode('utf-8'))
+
 
 upload_response_body = """
     {{"progress": 0,
@@ -35,13 +38,15 @@ def test_get_credentials():
          "sessionToken": "st.test"}}""".format(username=username)
 
     responses.add(
-        responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        responses.POST,
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(
+            username, access_token),
         match_querystring=True,
         body=query_body, status=200,
         content_type='application/json')
 
     res = mapbox.Uploader(access_token=access_token)._get_credentials()
+
     assert res.status_code == 200
     creds = res.json()
     assert username in creds['url']
@@ -221,8 +226,9 @@ def test_stage(monkeypatch):
          "secretAccessKey": "sak.test",
          "sessionToken": "st.test"}}""".format(username=username)
     responses.add(
-        responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        responses.POST,
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(
+            username, access_token),
         match_querystring=True,
         body=query_body, status=200,
         content_type='application/json')
@@ -247,7 +253,7 @@ def test_stage_filename(monkeypatch):
          "secretAccessKey": "sak.test",
          "sessionToken": "st.test"}}""".format(username=username)
     responses.add(
-        responses.GET,
+        responses.POST,
         'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
         match_querystring=True,
         body=query_body, status=200,
@@ -271,9 +277,11 @@ def test_big_stage(tmpdir, monkeypatch):
          "url": "https://tilestream-tilesets-production.s3.amazonaws.com/_pending/{username}/key.test",
          "secretAccessKey": "sak.test",
          "sessionToken": "st.test"}}""".format(username=username)
+
     responses.add(
-        responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        responses.POST,
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(
+            username, access_token),
         match_querystring=True,
         body=query_body, status=200,
         content_type='application/json')
@@ -283,33 +291,8 @@ def test_big_stage(tmpdir, monkeypatch):
     bigfile.write(','.join(('num' for num in range(1000000))))
     assert bigfile.size() > 1000000
 
-    with bigfile.open() as src:
+    with bigfile.open(mode='rb') as src:
         stage_url = mapbox.Uploader(access_token=access_token).stage(src)
-    assert stage_url.startswith("https://tilestream-tilesets-production.s3.amazonaws.com/_pending")
-
-
-@responses.activate
-def test_copy_stage(tmpdir, monkeypatch):
-    """Objects can be staged from another bucket."""
-
-    monkeypatch.setattr(mapbox.services.uploads, 'boto3_session', MockSession)
-
-    # Credentials
-    query_body = """
-       {{"key": "_pending/{username}/key.test",
-         "accessKeyId": "ak.test",
-         "bucket": "tilestream-tilesets-production",
-         "url": "https://tilestream-tilesets-production.s3.amazonaws.com/_pending/{username}/key.test",
-         "secretAccessKey": "sak.test",
-         "sessionToken": "st.test"}}""".format(username=username)
-    responses.add(
-        responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
-        match_querystring=True,
-        body=query_body, status=200,
-        content_type='application/json')
-
-    stage_url = mapbox.Uploader(access_token=access_token).stage('s3://bucket-name/foobar')
     assert stage_url.startswith("https://tilestream-tilesets-production.s3.amazonaws.com/_pending")
 
 
@@ -329,8 +312,9 @@ def test_upload(monkeypatch):
          "sessionToken": "st.test"}}""".format(username=username)
 
     responses.add(
-        responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        responses.POST,
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(
+            username, access_token),
         match_querystring=True,
         body=query_body, status=200,
         content_type='application/json')
@@ -345,7 +329,7 @@ def test_upload(monkeypatch):
     def print_cb(num_bytes):
         print("{0} bytes uploaded".format(num_bytes))
 
-    with open('tests/moors.json', 'r') as src:
+    with open('tests/moors.json', 'rb') as src:
         res = mapbox.Uploader(access_token=access_token).upload(src, 'test1', callback=print_cb)
 
     assert res.status_code == 201
@@ -369,8 +353,9 @@ def test_upload_error(monkeypatch):
          "sessionToken": "st.test"}}""".format(username=username)
 
     responses.add(
-        responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        responses.POST,
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(
+            username, access_token),
         match_querystring=True,
         body=query_body, status=200,
         content_type='application/json')
@@ -382,7 +367,7 @@ def test_upload_error(monkeypatch):
         body="", status=409,
         content_type='application/json')
 
-    with open('tests/moors.json', 'r') as src:
+    with open('tests/moors.json', 'rb') as src:
         res = mapbox.Uploader(access_token=access_token).upload(src, 'test1')
 
     assert res.status_code == 409
@@ -410,8 +395,9 @@ def test_upload_patch(monkeypatch):
          "sessionToken": "st.test"}}""".format(username=username)
 
     responses.add(
-        responses.GET,
-        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(username, access_token),
+        responses.POST,
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(
+            username, access_token),
         match_querystring=True,
         body=query_body, status=200,
         content_type='application/json')
@@ -423,7 +409,7 @@ def test_upload_patch(monkeypatch):
         match_querystring=True,
         content_type='application/json')
 
-    with open('tests/moors.json', 'r') as src:
+    with open('tests/moors.json', 'rb') as src:
         res = mapbox.Uploader(access_token=access_token).upload(
             src, 'testuser.test1', name='test1', patch=True)
 

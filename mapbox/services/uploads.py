@@ -38,7 +38,9 @@ class Uploader(Service):
         """
         uri = URITemplate(self.baseuri + '/{username}/credentials').expand(
             username=self.username)
-        resp = self.session.get(uri)
+
+        resp = self.session.post(uri)
+
         self.handle_http_error(
             resp,
             custom_messages={
@@ -47,8 +49,7 @@ class Uploader(Service):
                 429: "Too many requests"})
         return resp
 
-    def stage(self, fileobj_or_url, creds=None, callback=None,
-              region_name=None):
+    def stage(self, fileobj, creds=None, callback=None, region_name=None):
         """Stages data in a Mapbox-owned S3 bucket
 
         If creds are not provided, temporary credentials will be
@@ -61,9 +62,8 @@ class Uploader(Service):
 
         Parameters
         ----------
-        fileobj_or_url : file object or str
-            A filename, s3:// URL, or a Python file object opened in
-            binary mode.
+        fileobj : file object or filename
+            A Python file object opened in binary mode or a filename.
         creds : dict
             AWS credentials allowing uploads to the destination bucket.
         callback : func
@@ -75,10 +75,12 @@ class Uploader(Service):
         str
             The URL of the staged data
         """
-        if (not isinstance(fileobj_or_url, text_types) and
-                not hasattr(fileobj_or_url, 'read')):
-            raise InvalidFileError(
-                "a filename, URL, or file-like object is required")
+
+        if not hasattr(fileobj, 'read'):
+            fileobj = open(fileobj, 'rb')
+
+        if not hasattr(fileobj, 'read'):
+            raise InvalidFileError("A file-like object is required")
 
         if not creds:
             res = self._get_credentials()
@@ -89,32 +91,11 @@ class Uploader(Service):
             aws_secret_access_key=creds['secretAccessKey'],
             aws_session_token=creds['sessionToken'],
             region_name='us-east-1')
+
         s3 = session.resource('s3')
         bucket = s3.Bucket(creds['bucket'])
         key = creds['key']
-
-        if isinstance(fileobj_or_url, text_types):
-            # s3:// URLs are a special case. We copy these directly
-            # between AWS buckets if we can. This requires s3:GetObject
-            # to be granted to our federated user.
-            if fileobj_or_url.startswith('s3://'):
-                parse_results = urlparse(fileobj_or_url)
-                assert parse_results.scheme == 's3'
-                source_bucket = parse_results.netloc
-                source_key = parse_results.path.lstrip('/')
-
-                copy_source = {'Bucket': source_bucket, 'Key': source_key}
-
-                # The source client credentials and region must be
-                # configured by the caller.
-                source_client = boto3.client('s3', region_name)
-                bucket.copy(copy_source, key, SourceClient=source_client,
-                            Callback=callback)
-
-            else:
-                bucket.upload_file(fileobj_or_url, key, Callback=callback)
-        else:
-            bucket.upload_fileobj(fileobj_or_url, key, Callback=callback)
+        bucket.upload_fileobj(fileobj, key, Callback=callback)
 
         return creds['url']
 
@@ -152,8 +133,10 @@ class Uploader(Service):
         -------
         requests.Response
         """
-        if not tileset.startswith(self.username + "."):
+        if '.' not in tileset:
             tileset = "{0}.{1}".format(self.username, tileset)
+
+        account, _name = tileset.split(".")
 
         msg = {'tileset': tileset,
                'url': stage_url}
@@ -161,83 +144,96 @@ class Uploader(Service):
         if patch:
             msg['patch'] = patch
 
-        if name is not None:
-            msg['name'] = name
+        msg['name'] = name if name else _name
 
-        uri = URITemplate(self.baseuri + '/{username}').expand(
-            username=self.username)
+        uri = URITemplate(self.baseuri + '/{account}').expand(
+            account=account)
 
         resp = self.session.post(uri, json=msg)
         self.handle_http_error(resp)
 
         return resp
 
-    def list(self):
-        """List uploads
+    def list(self, account=None):
+        """List of all uploads
 
         Returns a Response object, the json() method of which returns
         a list of uploads
+
+        Parameters
+        ----------
+        account : str
+            Account name, defaults to the service's username.
 
         Returns
         -------
         requests.Response
         """
-        uri = URITemplate(self.baseuri + '/{username}').expand(
-            username=self.username)
+
+        if account is None:
+            account = self.username
+        uri = URITemplate(self.baseuri + '/{account}').expand(
+            account=account)
         resp = self.session.get(uri)
         self.handle_http_error(resp)
 
         return resp
 
-    def delete(self, upload):
-        """Delete an upload
-
-        Returns a Response object. A response status code of 200
-        indicates success.
+    def delete(self, upload, account=None):
+        """Delete the specified upload
 
         Parameters
         ----------
         upload : str
             The id of the upload or a dict with key 'id'.
+        account : str
+            Account name, defaults to the service's username.
 
         Returns
         -------
         requests.Response
         """
+
+        if account is None:
+            account = self.username
+
         if isinstance(upload, dict):
             upload_id = upload['id']
         else:
             upload_id = upload
 
-        uri = URITemplate(self.baseuri + '/{username}/{upload_id}').expand(
-            username=self.username, upload_id=upload_id)
+        uri = URITemplate(self.baseuri + '/{account}/{upload_id}').expand(
+            account=account, upload_id=upload_id)
         resp = self.session.delete(uri)
         self.handle_http_error(resp)
 
         return resp
 
-    def status(self, upload):
-        """Status of an upload
-
-        Returns a Response object, the json() method of which returns
-        and updated upload dict.
+    def status(self, upload, account=None):
+        """Check status of upload
 
         Parameters
         ----------
         upload : str
             The id of the upload or a dict with key 'id'.
+        account : str
+            Account name, defaults to the service's username.
 
         Returns
         -------
         requests.Response
         """
+
+        if account is None:
+            account = self.username
+
         if isinstance(upload, dict):
             upload_id = upload['id']
         else:
             upload_id = upload
 
-        uri = URITemplate(self.baseuri + '/{username}/{upload_id}').expand(
-            username=self.username, upload_id=upload_id)
+        uri = URITemplate(self.baseuri + '/{account}/{upload_id}').expand(
+            account=account, upload_id=upload_id)
         resp = self.session.get(uri)
         self.handle_http_error(resp)
 

@@ -25,8 +25,10 @@ return an instance of
 
 ## Usage
 
-Upload any supported file to your account using the ``Uploader``. The
-name of the destination dataset can be any string of <= 32 chars. Choose one
+Upload any supported file to your account using the ``Uploader``. The file
+object must be opened in binary mode (`rb`) and produce bytes when read, not unicode strings.
+
+The name of the destination dataset can be any string of <= 32 chars. Choose one
 suited to your application or generate one using, e.g., `uuid.uuid4().hex`.
 In the example below, we use a string defined in a test fixture.
 
@@ -35,14 +37,15 @@ In the example below, we use a string defined in a test fixture.
 >>> from time import sleep
 >>> from random import randint
 >>> mapid = getfixture('uploads_dest_id') # 'uploads-test'
->>> with open('tests/twopoints.geojson', 'r') as src:
+>>> with open('tests/twopoints.geojson', 'rb') as src:
 ...     upload_resp = service.upload(src, mapid)
->>> if upload_resp.status_code == 409:
+...
+>>> if upload_resp.status_code == 422:
 ...     for i in range(5):
 ...         sleep(5)
-...         with open('tests/twopoints.geojson', 'r') as src:
+...         with open('tests/twopoints.geojson', 'rb') as src:
 ...             upload_resp = service.upload(src, mapid)
-...         if upload_resp.status_code != 409:
+...         if upload_resp.status_code != 422:
 ...             break
 
 ```
@@ -64,30 +67,6 @@ response.
 ...
 >>> mapid in status_resp['tileset']
 True
-
-```
-
-You can list all of the uploads associated with your account
-
-```
->>> service.list().json()
-[...]
-
-```
-
-Finally you can delete the upload. Note that this does *not* delete the tileset you just created.
-To delete the tileset itself, got to Mapbox Studio and delete it from the Data page.
-
-```
->>> response = service.delete(upload_id)
->>> for i in range(5):
-...     if response.status_code == 204:
-...         break
-...     else:
-...         sleep(5)
-...         response = service.delete(upload_id)
->>> response
-<Response [204]>
 
 ```
 

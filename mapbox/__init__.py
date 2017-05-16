@@ -1,5 +1,5 @@
 # mapbox
-__version__ = "0.11.1"
+__version__ = "0.12.2"
 
 from .about import __version__
 from .services.datasets import Datasets
@@ -11,3 +11,4 @@ from .services.mapmatching import MapMatcher
 from .services.surface import Surface
 from .services.static import Static
 from .services.uploads import Uploader
+from .services.analytics import Analytics

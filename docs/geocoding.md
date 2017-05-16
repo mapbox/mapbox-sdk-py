@@ -51,13 +51,11 @@ are accessible through response headers.
 ```python
 
 >>> response = geocoder.forward('Chester, NJ')
->>> response.headers['x-rate-limit-interval']
+>>> response.headers['X-Rate-Limit-Interval']
 '60'
->>> response.headers['x-rate-limit-limit'] # doctest: +SKIP
+>>> response.headers['X-Rate-Limit-Limit'] # doctest: +SKIP
 '600'
->>> response.headers['x-rate-limit-remaining'] # doctest: +SKIP
-'599'
->>> response.headers['x-rate-limit-reset'] # doctest: +SKIP
+>>> response.headers['X-Rate-Limit-Reset'] # doctest: +SKIP
 '1447701074'
 
 ```
@@ -87,8 +85,6 @@ collection, sorted by relevance to the query.
 >>> first = collection['features'][0]
 >>> first['type'] == 'Feature'
 True
->>> sorted(first.keys())
-[u'bbox', u'center', u'context', u'geometry', u'id', u'place_name', u'place_type', u'properties', u'relevance', u'text', u'type']
 
 ```
 
