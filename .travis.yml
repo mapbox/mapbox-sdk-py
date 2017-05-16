@@ -25,4 +25,5 @@ deploy:
   on:
     tags: true
   provider: pypi
+  user: mapboxci
   distributions: "sdist bdist_wheel"
