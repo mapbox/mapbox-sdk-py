@@ -24,5 +24,6 @@ after_success:
 deploy:
   on:
     tags: true
+    condition: "$TRAVIS_PYTHON_VERSION = 3.6"
   provider: pypi
   distributions: "sdist bdist_wheel"
