@@ -24,6 +24,7 @@ after_success:
 deploy:
   on:
     tags: true
+    condition: "$TRAVIS_PYTHON_VERSION = 3.6"
   provider: pypi
   user: mapboxci
   distributions: "sdist bdist_wheel"
