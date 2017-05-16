@@ -1,3 +1,7 @@
+0.13.0 (2017-05-16)
+-------------------
+- Static Styles API for rendering mapbox styles with server-side GL (#174)
+
 0.12.2 (2017-05-09)
 -------------------
 - POST to credentials endpoint (#180)
