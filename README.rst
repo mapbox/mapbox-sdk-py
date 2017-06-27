@@ -15,6 +15,11 @@ The Mapbox Python SDK is a low-level client API, not a Resource API such as the 
 Services
 ========
 
+- **Analytics** `examples <./docs/analytics.md>`__, `website <https://www.mapbox.com/api-documentation/#analytics>`__
+
+  - API usage for services by resource. 
+  - available for premium and enterprise plans.
+
 - **Directions** `examples <./docs/directions.md#directions>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#directions>`__
 
   - Profiles for driving, walking, and cycling
@@ -37,9 +42,15 @@ Services
 
 - **Static Maps** `examples <./docs/static.md#static-maps>`__, `website <https://www.mapbox.com/api-documentation/pages/static_classic.html>`__
 
-  - Generate standalone images from existing Mapbox mapids
+  - Generate standalone images from existing Mapbox *mapids* (tilesets)
   - Render with GeoJSON overlays
+  
+- **Static Styles** `examples <./docs/static.md#static-maps>`__, `website <https://www.mapbox.com/api-documentation/#static>`__
 
+  - Generate standalone images from existing Mapbox *styles*
+  - Render with GeoJSON overlays
+  - Adjust pitch and bearing, decimal zoom levels
+  
 - **Surface** `examples <./docs/surface.md#surface>`__, `website <https://www.mapbox.com/developers/api/surface/>`__
 
   - Interpolates values along lines. Useful for elevation traces.
