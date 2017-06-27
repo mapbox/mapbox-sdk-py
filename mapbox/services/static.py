@@ -40,7 +40,8 @@ class Static(Service):
         return val
 
     def image(self, mapid, lon=None, lat=None, z=None, features=None,
-              width=600, height=600, image_format='png256', sort_keys=False):
+              width=600, height=600, image_format='png256', sort_keys=False,
+              retina=False):
 
         if lon is not None and lat is not None and z is not None:
             auto = False
@@ -58,8 +59,7 @@ class Static(Service):
             lat=str(lat),
             z=str(z),
             width=str(width),
-            height=str(height),
-            fmt=image_format)
+            height=str(height))
 
         if features:
             collection = normalize_geojson_featurecollection(features)
@@ -69,19 +69,25 @@ class Static(Service):
             self._validate_overlay(values['overlay'])
 
             if auto:
-                pth = '/{mapid}/geojson({overlay})/auto/{width}x{height}.{fmt}'
+                pth = '/{mapid}/geojson({overlay})/auto/{width}x{height}'
             else:
                 pth = ('/{mapid}/geojson({overlay})/{lon},{lat},{z}'
-                       '/{width}x{height}.{fmt}')
+                       '/{width}x{height}')
         else:
             if auto:
                 raise errors.InvalidCoordError(
                     "Must provide features if lat, lon, z are None")
 
             # No overlay
-            pth = '/{mapid}/{lon},{lat},{z}/{width}x{height}.{fmt}'
+            pth = '/{mapid}/{lon},{lat},{z}/{width}x{height}'
 
         uri = URITemplate(self.baseuri + pth).expand(**values)
+
+        # @2x.format handled separately to avoid HTML escaping the ampersand
+        twox = '@2x' if retina else ''
+        full_fmt = '{0}.{1}'.format(twox, image_format)
+        uri += full_fmt
+
         res = self.session.get(uri)
         self.handle_http_error(res)
         return res
