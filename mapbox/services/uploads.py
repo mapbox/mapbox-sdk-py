@@ -1,7 +1,7 @@
 from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
 
-from mapbox.errors import InvalidFileError
+from mapbox.errors import InvalidFileError, ValidationError
 from mapbox.services.base import Service
 
 
@@ -44,6 +44,16 @@ class Uploader(Service):
                 404: "Token does not have upload scope",
                 429: "Too many requests"})
         return resp
+
+    def _validate_tileset(self, tileset):
+        """Validate the tileset name and
+        ensure that it includes the username
+        """
+        if '.' not in tileset:
+            tileset = "{0}.{1}".format(self.username, tileset)
+        if len(tileset) > 64:
+            raise ValidationError('tileset including username must be < 64 char')
+        return tileset
 
     def stage(self, fileobj, creds=None, callback=None):
         """Stages the user's file on S3
@@ -88,9 +98,7 @@ class Uploader(Service):
         Returns a response object where the json() contents are
         an upload dict
         """
-        if '.' not in tileset:
-            tileset = "{0}.{1}".format(self.username, tileset)
-
+        tileset = self._validate_tileset(tileset)
         account, _name = tileset.split(".")
 
         msg = {'tileset': tileset,
@@ -166,5 +174,6 @@ class Uploader(Service):
         Effectively replicates the upload functionality using the HTML form
         Returns a response object where the json() is a dict with upload metadata
         """
+        tileset = self._validate_tileset(tileset)
         url = self.stage(fileobj, callback=callback)
         return self.create(url, tileset, name=name, patch=patch)

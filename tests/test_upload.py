@@ -385,3 +385,26 @@ def test_upload_patch(monkeypatch):
     assert res.status_code == 201
     job = res.json()
     assert job['tileset'] == "{0}.test1".format(username)
+
+
+def test_upload_tileset_validation():
+    with pytest.raises(mapbox.errors.ValidationError):
+        with open('tests/moors.json', 'rb') as src:
+            mapbox.Uploader(access_token=access_token).upload(
+                src, 'a' * 65, name='test1', patch=True)
+
+
+def test_upload_tileset_validation_username():
+    # even with 60 chars, the addition of the
+    # testuser username puts it over 64 chars
+    with pytest.raises(mapbox.errors.ValidationError):
+        with open('tests/moors.json', 'rb') as src:
+            mapbox.Uploader(access_token=access_token).upload(
+                src, 'a' * 60, name='test1', patch=True)
+
+
+def test_create_tileset_validation():
+    # even with 60 chars, the addition of the username puts it over 64 chars
+    with pytest.raises(mapbox.errors.ValidationError):
+        mapbox.Uploader(access_token=access_token).create(
+            'http://example.com/test.json', 'a' * 60)
