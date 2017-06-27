@@ -1,4 +1,5 @@
 import json
+import warnings
 
 from uritemplate import URITemplate
 
@@ -61,13 +62,13 @@ class StaticStyle(Service):
             raise errors.ImageSizeError('tile_size must be 256 or 512 pixels')
 
         pth = '/{username}/{style_id}/tiles/{tile_size}/{z}/{x}/{y}'
-        if retina:
-            pth += '@2x'
 
         values = dict(username=username, style_id=style_id,
                       tile_size=tile_size, z=z, x=x, y=y)
 
         uri = URITemplate(self.baseuri + pth).expand(**values)
+        if retina:
+            uri += '@2x'
         res = self.session.get(uri)
         self.handle_http_error(res)
         return res
@@ -80,8 +81,8 @@ class StaticStyle(Service):
         return res
 
     def image(self, username, style_id, lon=None, lat=None, zoom=None, features=None,
-              pitch=0, bearing=0, width=600, height=600, twox=False, sort_keys=False,
-              attribution=None, logo=None, before_layer=None):
+              pitch=0, bearing=0, width=600, height=600, retina=None, sort_keys=False,
+              attribution=None, logo=None, before_layer=None, twox=None):
 
         params = {}
         if attribution is not None:
@@ -90,6 +91,15 @@ class StaticStyle(Service):
             params['logo'] = 'true' if logo else 'false'
         if before_layer is not None:
             params['before_layer'] = before_layer
+
+        # twox as a deprecated alias for retina
+        if retina is None:
+            if twox is not None:
+                warnings.warn('twox is a deprecated alias for retina', DeprecationWarning)
+                retina = twox
+        else:
+            if twox is not None:
+                raise errors.ValidationError('Conflicting args; Remove twox and use retina')
 
         if lon is not None and lat is not None and zoom is not None:
             auto = False
@@ -112,7 +122,6 @@ class StaticStyle(Service):
             lat=str(lat),
             zoom=str(zoom),
             auto=auto,
-            twox='@2x' if twox else '',
             width=str(width),
             height=str(height))
 
@@ -126,9 +135,9 @@ class StaticStyle(Service):
             pth = '/{username}/{style_id}/static/geojson({overlay})/'
             if auto:
                 # TODO what about {bearing} and {pitch}
-                pth += 'auto/{width}x{height}{twox}'
+                pth += 'auto/{width}x{height}'
             else:
-                pth += '{lon},{lat},{zoom},{bearing},{pitch}/{width}x{height}{twox}'
+                pth += '{lon},{lat},{zoom},{bearing},{pitch}/{width}x{height}'
         else:
             if auto:
                 raise errors.InvalidCoordError(
@@ -136,9 +145,13 @@ class StaticStyle(Service):
 
             # No overlay
             pth = ('/{username}/{style_id}/static/'
-                   '{lon},{lat},{zoom},{bearing},{pitch}/{width}x{height}{twox}')
+                   '{lon},{lat},{zoom},{bearing},{pitch}/{width}x{height}')
 
         uri = URITemplate(self.baseuri + pth).expand(**values)
+
+        # @2x handled separately to avoid HTML escaping the ampersand
+        uri += '@2x' if retina else ''
+
         res = self.session.get(uri, params=params)
         self.handle_http_error(res)
         return res
