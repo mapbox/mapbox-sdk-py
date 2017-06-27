@@ -1,8 +1,6 @@
 import base64
 import json
-import re
 
-import mock
 import responses
 import pytest
 
