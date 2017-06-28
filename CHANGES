@@ -1,10 +1,13 @@
-<<<<<<< HEAD
-0.12.0 (2017-02-17)
+Current master
 -------------------
 - Allow staging and upload of data from a user's own buckets on Amazon
   S3 (#). This uses boto3's `Bucket.copy()` feature. The caller must
   ensure that AWS SDK credentials are properly configured.
-=======
+
+0.13.0 (2017-05-16)
+-------------------
+- Static Styles API for rendering mapbox styles with server-side GL (#174)
+
 0.12.2 (2017-05-09)
 -------------------
 - POST to credentials endpoint (#180)
