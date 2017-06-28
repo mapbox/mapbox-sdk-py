@@ -150,7 +150,8 @@ class StaticStyle(Service):
         uri = URITemplate(self.baseuri + pth).expand(**values)
 
         # @2x handled separately to avoid HTML escaping the ampersand
-        uri += '@2x' if retina else ''
+        if retina:
+            uri += '@2x'
 
         res = self.session.get(uri, params=params)
         self.handle_http_error(res)
