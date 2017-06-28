@@ -184,7 +184,7 @@ def test_bad_tilesize():
 
 
 @responses.activate
-def test_staticmap_tile():
+def test_staticmap_tile_retina():
 
     responses.add(
         responses.GET,
