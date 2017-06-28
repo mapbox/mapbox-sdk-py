@@ -17,7 +17,7 @@ before_script:
   - pip install flake8  # 127 == GitHub editor width
   - flake8 . --count --max-line-length=127 --statistics --exit-zero
 script:
-  - py.test --cov mapbox --cov-report term-missing tests/*.py
+  - py.test --cov mapbox --cov-report term-missing --cov-branch tests/*.py
   - if [[ $TRAVIS_PYTHON_VERSION == 2.7 && ! -z "$MAPBOX_ACCESS_TOKEN" ]]; then py.test --doctest-glob='*.md' docs/*.md; fi
 after_success:
   - coveralls
