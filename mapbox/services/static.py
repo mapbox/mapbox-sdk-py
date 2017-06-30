@@ -27,7 +27,7 @@ class Static(Service):
         return val
 
     def _validate_image_size(self, val):
-        if not (1 < val < 1280):
+        if not (1 <= val <= 1280):
             raise errors.ImageSizeError(
                 "Image height and width must be between 1 and 1280")
         return val
