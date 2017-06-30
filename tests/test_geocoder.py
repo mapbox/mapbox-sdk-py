@@ -350,3 +350,17 @@ def test_geocoder_forward_country():
     response = mapbox.Geocoder(
         access_token='pk.test').forward('1600 pennsylvania ave nw', country=['us'])
     assert response.status_code == 200
+
+
+@responses.activate
+def test_geocoder_language():
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/geocoding/v5/mapbox.places/1600%20pennsylvania%20ave%20nw.json?language=en,de&access_token=pk.test',
+        match_querystring=True,
+        body='{"query": ["1600", "pennsylvania", "ave", "nw"]}', status=200,
+        content_type='application/json')
+
+    response = mapbox.Geocoder(access_token='pk.test').forward(
+        '1600 pennsylvania ave nw', languages=['en', 'de'])
+    assert response.status_code == 200
