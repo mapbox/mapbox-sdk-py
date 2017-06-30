@@ -5,7 +5,6 @@ Mapbox Uploads API
 from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
 
-from mapbox.errors import InvalidFileError
 from mapbox.services.base import Service
 
 
