@@ -4,7 +4,6 @@ import boto3
 from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
 
-from mapbox.compat import text_types, urlparse
 from mapbox.errors import InvalidFileError
 from mapbox.services.base import Service
 
@@ -49,24 +48,19 @@ class Uploader(Service):
                 429: "Too many requests"})
         return resp
 
-    def stage(self, fileobj, creds=None, callback=None, region_name=None):
+    def stage(self, fileobj, creds=None, callback=None):
         """Stages data in a Mapbox-owned S3 bucket
 
         If creds are not provided, temporary credentials will be
         generated using the Mapbox API.
 
-        Note that when a s3:// URL is passed, identifying an object
-        in a bucket owned by the caller, the caller must ensure that
-        AWS credentials for access to that object are properly
-        configured.
-
         Parameters
         ----------
-        fileobj : file object or filename
+        fileobj: file object or filename
             A Python file object opened in binary mode or a filename.
-        creds : dict
+        creds: dict
             AWS credentials allowing uploads to the destination bucket.
-        callback : func
+        callback: func
             A function that takes a number of bytes processed as its
             sole argument.
 
@@ -78,9 +72,6 @@ class Uploader(Service):
 
         if not hasattr(fileobj, 'read'):
             fileobj = open(fileobj, 'rb')
-
-        if not hasattr(fileobj, 'read'):
-            raise InvalidFileError("A file-like object is required")
 
         if not creds:
             res = self._get_credentials()
@@ -114,18 +105,17 @@ class Uploader(Service):
 
         Parameters
         ----------
-        stage_url : str
+        stage_url: str
             URL to resource on S3, typically provided in the response
-            of this class's stage() method. Does not work on arbitrary
-            URLs (TODO).
-        tileset : str
+            of this class's stage() method.
+        tileset: str
             The id of the tileset set to be created. Username will be
             prefixed if not present. For example, 'my-tileset' becomes
             '{username}.my-tileset'.
-        name : str
+        name: str
             A short name for the tileset that will appear in Mapbox
             studio.
-        patch : bool
+        patch: bool
             Optional patch mode which requires a flag on the owner's
             account.
 
@@ -162,7 +152,7 @@ class Uploader(Service):
 
         Parameters
         ----------
-        account : str
+        account: str
             Account name, defaults to the service's username.
 
         Returns
@@ -184,9 +174,9 @@ class Uploader(Service):
 
         Parameters
         ----------
-        upload : str
+        upload: str
             The id of the upload or a dict with key 'id'.
-        account : str
+        account: str
             Account name, defaults to the service's username.
 
         Returns
@@ -214,9 +204,9 @@ class Uploader(Service):
 
         Parameters
         ----------
-        upload : str
+        upload: str
             The id of the upload or a dict with key 'id'.
-        account : str
+        account: str
             Account name, defaults to the service's username.
 
         Returns
@@ -239,42 +229,32 @@ class Uploader(Service):
 
         return resp
 
-    def upload(self, fileobj_or_url, tileset, name=None, patch=False,
-               callback=None, region=None):
+    def upload(self, fileobj, tileset, name=None, patch=False, callback=None):
         """Upload data and create a Mapbox tileset
 
         Effectively replicates the Studio upload feature. Returns a
         Response object, the json() of which returns a dict with upload
         metadata.
 
-        Note that when a s3:// URL is passed, identifying an object
-        in a bucket owned by the caller, the caller must ensure that
-        AWS credentials for access to that object are properly
-        configured.
-
         Parameters
         ----------
-        fileobj_or_url : file object or str
-            A filename, s3:// URL, or a Python file object opened in
-            binary mode.
-        tileset : str
+        fileobj: file object or str
+            A filename or a Python file object opened in binary mode.
+        tileset: str
             A tileset identifier such as '{owner}.my-tileset'.
-        name : str
+        name: str
             A short name for the tileset that will appear in Mapbox
             studio.
-        patch : bool
+        patch: bool
             Optional patch mode which requires a flag on the owner's
             account.
-        callback : func
+        callback: func
             A function that takes a number of bytes processed as its
-            sole argument.
-        region : str
-            Upload data is staged to a bucket in 'us-east-1'. If source
-            data is in a different region it must be specified by name.
+            sole argument. May be used with a progress bar.
 
         Returns
         -------
         requests.Response
         """
-        url = self.stage(fileobj_or_url, callback=callback)
+        url = self.stage(fileobj, callback=callback)
         return self.create(url, tileset, name=name, patch=patch)

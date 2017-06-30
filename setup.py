@@ -8,7 +8,7 @@ with codecs_open('README.rst', encoding='utf-8') as f:
     long_description = f.read()
 
 # Parse the version from the mapbox module.
-with open('mapbox/about.py') as f:
+with open('mapbox/__init__.py') as f:
     for line in f:
         if "__version__" in line:
             version = line.split("=")[1].strip().strip('"').strip("'")
