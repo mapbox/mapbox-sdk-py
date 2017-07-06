@@ -104,6 +104,7 @@ def test_staticmap_featurestoolarge(points):
     with pytest.raises(mapbox.errors.ValidationError):
         service._validate_overlay(json.dumps(points * 100))
 
+
 def test_staticmap_imagesize():
     service = mapbox.Static(access_token='pk.test')
     with pytest.raises(mapbox.errors.ValidationError):
@@ -111,10 +112,12 @@ def test_staticmap_imagesize():
     with pytest.raises(mapbox.errors.ValidationError):
         service._validate_image_size(2000)
 
+
 def test_latlon():
     service = mapbox.Static(access_token='pk.test')
     assert -179.0 == service._validate_lon(-179.0)
     assert -85.0 == service._validate_lat(-85.0)
+
 
 def test_lon_invalid():
     service = mapbox.Static(access_token='pk.test')
@@ -122,3 +125,19 @@ def test_lon_invalid():
         service._validate_lat(-86.0)
     with pytest.raises(mapbox.errors.ValidationError):
         service._validate_lon(-181.0)
+
+
+@responses.activate
+def test_staticmap_retina():
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/v4/mapbox.satellite/-61.7,12.1,12/600x600@2x.png256?access_token=pk.test',
+        match_querystring=True,
+        body='png123',
+        status=200,
+        content_type='image/png')
+
+    res = mapbox.Static(access_token='pk.test').image(
+        'mapbox.satellite', -61.7, 12.1, 12, retina=True)
+    assert res.status_code == 200
