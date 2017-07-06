@@ -184,7 +184,7 @@ def test_bad_tilesize():
 
 
 @responses.activate
-def test_staticmap_tile():
+def test_staticmap_tile_retina():
 
     responses.add(
         responses.GET,
@@ -212,3 +212,44 @@ def test_staticmap_wmts():
 
     res = mapbox.StaticStyle(access_token='pk.test').wmts('mapbox', 'streets-v9')
     assert res.status_code == 200
+
+
+@responses.activate
+def test_staticmap_retina():
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/styles/v1/mapbox/streets-v9/static/-61.7,12.1,12.5,75,25/600x600@2x?access_token=pk.test',
+        match_querystring=True,
+        body='png123',
+        status=200,
+        content_type='image/png')
+
+    res = mapbox.StaticStyle(access_token='pk.test').image(
+        'mapbox', 'streets-v9', -61.7, 12.1, 12.5, pitch=25,
+        bearing=75, retina=True)
+    assert res.status_code == 200
+
+
+@responses.activate
+def test_staticmap_twox_deprecated():
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/styles/v1/mapbox/streets-v9/static/-61.7,12.1,12.5,75,25/600x600@2x?access_token=pk.test',
+        match_querystring=True,
+        body='png123',
+        status=200,
+        content_type='image/png')
+
+    with pytest.warns(mapbox.errors.MapboxDeprecationWarning):
+        res = mapbox.StaticStyle(access_token='pk.test').image(
+            'mapbox', 'streets-v9', -61.7, 12.1, 12.5, pitch=25,
+            bearing=75, twox=True)
+    assert res.status_code == 200
+
+
+def test_staticmap_twox_deprecated_error():
+    with pytest.raises(mapbox.errors.ValidationError):
+        mapbox.StaticStyle(access_token='pk.test').image(
+            'mapbox', 'streets-v9', -61.7, 12.1, 12.5, pitch=25,
+            bearing=75, retina=True, twox=True)
