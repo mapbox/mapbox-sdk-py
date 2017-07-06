@@ -241,7 +241,7 @@ def test_staticmap_twox_deprecated():
         status=200,
         content_type='image/png')
 
-    with pytest.warns(DeprecationWarning):
+    with pytest.warns(mapbox.errors.MapboxDeprecationWarning):
         res = mapbox.StaticStyle(access_token='pk.test').image(
             'mapbox', 'streets-v9', -61.7, 12.1, 12.5, pitch=25,
             bearing=75, twox=True)

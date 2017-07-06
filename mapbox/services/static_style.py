@@ -95,7 +95,8 @@ class StaticStyle(Service):
         # twox as a deprecated alias for retina
         if retina is None:
             if twox is not None:
-                warnings.warn('twox is a deprecated alias for retina', DeprecationWarning)
+                warnings.warn('twox is a deprecated alias for retina',
+                              errors.MapboxDeprecationWarning)
                 retina = twox
         else:
             if twox is not None:
