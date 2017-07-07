@@ -11,12 +11,21 @@ from .. import __version__
 from mapbox import errors
 
 
-def Session(access_token=None, env=os.environ):
-    """Returns an HTTP session.
+def Session(access_token=None, env=None):
+    """Create an HTTP session.
 
-    :param access_token: Mapbox access token string (optional).
-    :param env: a dict.
+    Parameters
+    ----------
+    access_token: string
+        Mapbox access token string (optional).
+    env: dict or None
+
+    Returns
+    -------
+    requests.Session
     """
+    if env is None:
+        env = os.environ.copy()
     access_token = (
         access_token or
         env.get('MapboxAccessToken') or
