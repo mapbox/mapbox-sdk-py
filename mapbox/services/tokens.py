@@ -28,3 +28,14 @@ class Tokens(Service):
         res = self.session.post(uri, json=payload)
         self.handle_http_error(res)
         return res
+
+    def list_tokens(self, username, limit=None):
+        uri = URITemplate(self.baseuri + '/{username}').expand(username=username)
+
+        params = {}
+        if limit:
+            params['limit'] = int(limit)
+
+        res = self.session.get(uri, params=params)
+        self.handle_http_error(res)
+        return res
