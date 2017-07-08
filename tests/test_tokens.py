@@ -30,3 +30,18 @@ def test_token_list():
 
     response = Tokens(access_token='pk.test').list_tokens('testuser')
     assert response.status_code == 200
+
+
+@responses.activate
+def test_temp_token_create():
+    """Temporary token creation works"""
+    responses.add(
+        responses.POST,
+        'https://api.mapbox.com/tokens/v2/testuser?access_token=sk.test',
+        match_querystring=True,
+        body='{"scopes": ["styles:read", "fonts:read"]}',
+        status=200,
+        content_type='application/json')
+
+    response = Tokens(access_token='sk.test').create_temp_token('testuser', ["styles:read", "fonts:read"], 3600)
+    assert response.status_code == 200
