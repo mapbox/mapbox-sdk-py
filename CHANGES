@@ -1,6 +1,10 @@
-Next
-----
-- Permit images of size 1 and 1280 (#179).
+0.14.0 (2017-07-10)
+-------------------
+- Permit images of size 1 and 1280 (#196)
+- Retina output for static map services (#191)
+- Add languages option to forward geocoder (#192)
+- Validate tileset name length (#193)
+- Copy env when Session is called.
 
 0.13.0 (2017-05-16)
 -------------------
