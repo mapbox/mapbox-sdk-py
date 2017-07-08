@@ -39,3 +39,20 @@ class Tokens(Service):
         res = self.session.get(uri, params=params)
         self.handle_http_error(res)
         return res
+
+    def create_temp_token(self, username, scopes=None, expires=0):
+        if not scopes:
+            raise ValueError("One or more token scopes are required")
+
+        uri = URITemplate(self.baseuri + '/{username}').expand(username=username)
+
+        payload = {'scopes': scopes}
+
+        if 0 < expires <= 3600:
+            payload['expires'] = arrow.now().replace(seconds=+expires).isoformat()
+        else:
+            raise ValueError("Expiry should be within 1 hour from now")
+
+        res = self.session.post(uri, json=payload)
+        self.handle_http_error(res)
+        return res
