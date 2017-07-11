@@ -86,3 +86,10 @@ class Tokens(Service):
         res = self.session.get(uri)
         self.handle_http_error(res)
         return res
+
+    def list_scopes(self, username):
+        uri = URITemplate('https://{host}/scopes/v1' + '/{username}').expand(host=self.host, username=username)
+
+        res = self.session.get(uri)
+        self.handle_http_error(res)
+        return res
