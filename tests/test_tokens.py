@@ -73,3 +73,17 @@ def test_delete_auth():
 
     response = Tokens(access_token='pk.test').delete_auth('testuser', 'auth_id')
     assert response.status_code == 204
+
+
+@responses.activate
+def test_check_validity():
+    """Token checking validation works"""
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/tokens/v2?access_token=pk.test',
+        match_querystring=True,
+        status=200,
+        content_type='application/json')
+
+    response = Tokens(access_token='pk.test').check_validity()
+    assert response.status_code == 200
