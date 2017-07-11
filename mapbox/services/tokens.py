@@ -79,3 +79,10 @@ class Tokens(Service):
         res = self.session.delete(uri)
         self.handle_http_error(res)
         return res
+
+    def check_validity(self):
+        uri = URITemplate(self.baseuri)
+
+        res = self.session.get(uri)
+        self.handle_http_error(res)
+        return res
