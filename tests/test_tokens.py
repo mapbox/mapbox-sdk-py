@@ -87,3 +87,17 @@ def test_check_validity():
 
     response = Tokens(access_token='pk.test').check_validity()
     assert response.status_code == 200
+
+
+@responses.activate
+def test_list_scopes():
+    """Listing of scopes for a token works"""
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/scopes/v1/testuser?access_token=pk.test',
+        match_querystring=True,
+        status=200,
+        content_type='application/json')
+
+    response = Tokens(access_token='pk.test').list_scopes('testuser')
+    assert response.status_code == 200
