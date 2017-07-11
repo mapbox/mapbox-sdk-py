@@ -72,3 +72,10 @@ class Tokens(Service):
         res = self.session.patch(uri, json=payload)
         self.handle_http_error(res)
         return res
+
+    def delete_auth(self, username, authorization_id):
+        uri = URITemplate(self.baseuri + '/{username}/{authorization_id}').expand(username=username, authorization_id=authorization_id)
+
+        res = self.session.delete(uri)
+        self.handle_http_error(res)
+        return res
