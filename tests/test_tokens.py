@@ -60,3 +60,16 @@ def test_update_token():
 
     response = Tokens(access_token='pk.test').update_auth('testuser', 'auth_id', ["styles:read", "fonts:read"])
     assert response.status_code == 200
+
+
+@responses.activate
+def test_delete_auth():
+    """Token authorization deletion works"""
+    responses.add(
+        responses.DELETE,
+        'https://api.mapbox.com/tokens/v2/testuser/auth_id?access_token=pk.test',
+        match_querystring=True,
+        status=204)
+
+    response = Tokens(access_token='pk.test').delete_auth('testuser', 'auth_id')
+    assert response.status_code == 204
