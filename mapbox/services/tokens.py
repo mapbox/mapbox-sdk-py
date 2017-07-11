@@ -1,4 +1,4 @@
-import arrow
+from datetime import datetime, timedelta
 
 from uritemplate import URITemplate
 
@@ -23,7 +23,7 @@ class Tokens(Service):
         payload = {'scopes': scopes, 'note': note}
 
         if expires > 0:
-            payload['expires'] = arrow.now().replace(seconds=+expires).isoformat()
+            payload['expires'] = (datetime.now() + timedelta(seconds=expires)).isoformat()
 
         res = self.session.post(uri, json=payload)
         self.handle_http_error(res)
@@ -49,7 +49,7 @@ class Tokens(Service):
         payload = {'scopes': scopes}
 
         if 0 < expires <= 3600:
-            payload['expires'] = arrow.now().replace(seconds=+expires).isoformat()
+            payload['expires'] = (datetime.now() + timedelta(seconds=expires)).isoformat()
         else:
             raise ValueError("Expiry should be within 1 hour from now")
 
