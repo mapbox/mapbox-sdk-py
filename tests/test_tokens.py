@@ -45,3 +45,18 @@ def test_temp_token_create():
 
     response = Tokens(access_token='sk.test').create_temp_token('testuser', ["styles:read", "fonts:read"], 3600)
     assert response.status_code == 200
+
+
+@responses.activate
+def test_update_token():
+    """Token updation works"""
+    responses.add(
+        responses.PATCH,
+        'https://api.mapbox.com/tokens/v2/testuser/auth_id?access_token=pk.test',
+        match_querystring=True,
+        body='{"scopes": ["styles:read", "fonts:read"]}',
+        status=200,
+        content_type='application/json')
+
+    response = Tokens(access_token='pk.test').update_auth('testuser', 'auth_id', ["styles:read", "fonts:read"])
+    assert response.status_code == 200
