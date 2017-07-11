@@ -56,3 +56,19 @@ class Tokens(Service):
         res = self.session.post(uri, json=payload)
         self.handle_http_error(res)
         return res
+
+    def update_auth(self, username, authorization_id, scopes=None, note=None):
+        if not scopes and not note:
+            raise ValueError("Provide either scopes or a note to update token")
+
+        uri = URITemplate(self.baseuri + '/{username}/{authorization_id}').expand(username=username, authorization_id=authorization_id)
+
+        payload = {}
+        if scopes:
+            payload['scopes'] = scopes
+        if note:
+            payload['note'] = note
+
+        res = self.session.patch(uri, json=payload)
+        self.handle_http_error(res)
+        return res
