@@ -45,11 +45,9 @@ class Tokens(Service):
         self.handle_http_error(res)
         return res
 
-    def create_temp_token(self, username=None, scopes=None, expires=3600):
+    def create_temp_token(self, scopes, username=None, expires=3600):
         if username is None:
             username = self.username
-        if not scopes:
-            raise ValueError("One or more token scopes are required")
 
         uri = URITemplate(
             self.baseuri + '/{username}').expand(username=username)
