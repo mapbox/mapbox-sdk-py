@@ -15,7 +15,8 @@ class Geocoder(Service):
     def baseuri(self):
         return 'https://{0}/geocoding/v5'.format(self.host)
 
-    def __init__(self, name='mapbox.places', access_token=None, cache=None):
+    def __init__(self, name='mapbox.places', access_token=None, cache=None,
+                 host=None):
         """Constructs a Geocoding Service object.
 
         :param name: name of a geocoding dataset.
@@ -23,7 +24,8 @@ class Geocoder(Service):
         :param cache: CacheControl cache instance (Dict or FileCache).
         """
         self.name = name
-        super(Geocoder, self).__init__(access_token, cache)
+        super(Geocoder, self).__init__(access_token=access_token, cache=cache,
+                                       host=host)
 
     def _validate_country_codes(self, ccs):
         """Validate country code filters for use in requests."""
@@ -40,7 +42,7 @@ class Geocoder(Service):
         return {'types': ",".join(types)}
 
     def forward(self, address, types=None, lon=None, lat=None,
-                country=None, bbox=None, limit=None):
+                country=None, bbox=None, limit=None, languages=None):
         """Returns a Requests response object that contains a GeoJSON
         collection of places matching the given address.
 
@@ -62,6 +64,8 @@ class Geocoder(Service):
             params.update(proximity='{0},{1}'.format(
                 round(float(lon), self.precision.get('proximity', 3)),
                 round(float(lat), self.precision.get('proximity', 3))))
+        if languages:
+            params.update(language=','.join(languages))
         if bbox is not None:
             params.update(bbox='{0},{1},{2},{3}'.format(*bbox))
         if limit is not None:
@@ -122,7 +126,7 @@ class Geocoder(Service):
             'address': "A street address with house number. Examples: 1600 Pennsylvania Ave NW, 1051 Market St, Oberbaumstrasse 7.",
             'country': "Sovereign states and other political entities. Examples: United States, France, China, Russia.",
             'place': "City, town, village or other municipality relevant to a country's address or postal system. Examples: Cleveland, Saratoga Springs, Berlin, Paris.",
-            'locality': "A smaller area within a place that possesses official status and boundaries. Examples: Oakleigh (Melbourne)", 
+            'locality': "A smaller area within a place that possesses official status and boundaries. Examples: Oakleigh (Melbourne)",
             'neighborhood': "A smaller area within a place, often without formal boundaries. Examples: Montparnasse, Downtown, Haight-Ashbury.",
             'poi': "Places of interest including commercial venues, major landmarks, parks, and other features. Examples: Subway Restaurant, Yosemite National Park, Statue of Liberty.",
             'poi.landmark': "Places of interest that are particularly notable or long-lived like parks, places of worship and museums. A strict subset of the poi place type. Examples: Yosemite National Park, Statue of Liberty.",

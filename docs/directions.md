@@ -74,8 +74,6 @@ route(s) as a GeoJSON-like FeatureCollection dictionary.
 >>> driving_routes = response.geojson()
 >>> driving_routes['features'][0]['geometry']['type']
 'LineString'
->>> driving_routes['features'][0]['properties']['summary']
-'Mount Hood Highway...'
 
 ```
 

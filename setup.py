@@ -10,17 +10,25 @@ with codecs_open('README.rst', encoding='utf-8') as f:
 # Parse the version from the mapbox module.
 with open('mapbox/__init__.py') as f:
     for line in f:
-        if line.find("__version__") >= 0:
-            version = line.split("=")[1].strip()
-            version = version.strip('"')
-            version = version.strip("'")
+        if "__version__" in line:
+            version = line.split("=")[1].strip().strip('"').strip("'")
             continue
 
 setup(name='mapbox',
       version=version,
       description="A Python client for Mapbox services",
       long_description=long_description,
-      classifiers=[],
+      classifiers=['Development Status :: 5 - Production/Stable',
+                   'Environment :: Console',
+                   'Intended Audience :: Developers',
+                   'License :: OSI Approved :: MIT License',
+                   'Programming Language :: Python',
+                   'Programming Language :: Python :: 2.7',
+                   'Programming Language :: Python :: 3',
+                   'Programming Language :: Python :: 3.3',
+                   'Programming Language :: Python :: 3.4',
+                   'Programming Language :: Python :: 3.5',
+                   'Programming Language :: Python :: 3.6'],
       keywords='',
       author="Sean Gillies",
       author_email='sean@mapbox.com',
@@ -36,6 +44,7 @@ setup(name='mapbox',
           'click-plugins',
           'cligj',
           'iso3166',
+          'python-dateutil>=2.5.0'
           'requests',
           'polyline>=1.3.1',
           'uritemplate>=2.0'],

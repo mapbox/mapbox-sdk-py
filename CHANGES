@@ -1,3 +1,36 @@
+0.14.0 (2017-07-10)
+-------------------
+- Permit images of size 1 and 1280 (#196)
+- Retina output for static map services (#191)
+- Add languages option to forward geocoder (#192)
+- Validate tileset name length (#193)
+- Copy env when Session is called.
+
+0.13.0 (2017-05-16)
+-------------------
+- Static Styles API for rendering mapbox styles with server-side GL (#174)
+
+0.12.2 (2017-05-09)
+-------------------
+- POST to credentials endpoint (#180)
+
+0.12.1 (2017-05-04)
+-------------------
+- Add random query parameter to credentials request (#176)
+
+0.12.0 (2017-04-27)
+-------------
+- Fix tileset logic and allow account names for Upload endpoints.
+- Initial support for Analytics API (Premium and Enterprise accounts only).
+- Addition of Python 3.6 to the testing matrix and removal of Python 2.6,
+  which is no longer supported.
+
+0.11.1 (2017-02-23)
+-------------------
+- 429 responses from the credentials endpoint are now caught (#155).
+- Call Geocoding's super() class constructor using keyword arguments to fix
+  #160.
+
 0.11.0 (2017-01-23)
 -------------------
 - Require boto3>=1.4 to get `upload_fileobj()`.

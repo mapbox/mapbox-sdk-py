@@ -1,32 +1,30 @@
 sudo: false
 language: python
 python:
-  - '2.6'
   - '2.7'
   - '3.3'
   - '3.4'
   - '3.5'
+  - '3.6'
   - pypy
 cache:
   directories:
     - $HOME/.pip-cache/
-env:
-  global:
-    - secure: "Y0TmwcQeUFm++0akAroEj+MYeTWOT/mtR97n4uHs3J//BhZHLtFNhUF9wINPaIioGfYhM3C7xZt3QStyF7APlC/ioPb+Jb/4CXIb1YwOPgN7BDSy8qsCGcjU6ieWGcjxjP+3qHIyepKhC8LFx2qJsnAGg9gJF+52z/7wiDBZGxgA6bGzIz8gQhu5aUcEHzICRwPyJSqH26QRg8ff+MGW9JYOat96WJiZWYsVoH3mBC21rpPvOEJsyYGuJzW0rYrjBPPKgS7HiPlCySWtslFpy5mqgM+puExjcGAR2QRBp42IB/8Sm9xRxSqSLx63vyni3vjic53/QGSylKn5c1JzOrss3+AJVb4YimjSvCS+POxtNxbgTS1R8ax0ZsSqzi3n9SiBWS0mfNkhxL72Aecm+g37ubJ9XRVndd+O8YAaQPCIqKVxcV/SHBtXehAX+PnUd2T4uTu1QC/upi6czh6R9ClPVwHpvFSv7VTUOzD1F3r/scWA3Y39Q1Y6oJcbVKIXMx7H5S4M978ha/49DbumohnnY7UAn6o62kfVqnNQmNw9fJWxrXCMoL0qlHJ/0AJk3pABz3HYuv/xU1zElzH2dOcrAj2JuCz+YEfb1ccAND3Nvq07Xt5ks5FCVKRipA+lDTX40EK4E3x3qgy8TYsGk2yH/np7bsaBselNICjanU0="
 install:
   - pip install -U pip --cache-dir $HOME/.pip-cache
   - pip install -e .[test] --cache-dir $HOME/.pip-cache
-  - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]]; then pip install ordereddict; fi
+before_script:
+  - pip install flake8  # 127 == GitHub editor width
+  - flake8 . --count --max-line-length=127 --statistics --exit-zero
 script:
-  - py.test --cov mapbox --cov-report term-missing tests/*.py
+  - py.test --cov mapbox --cov-report term-missing --cov-branch tests/*.py
   - if [[ $TRAVIS_PYTHON_VERSION == 2.7 && ! -z "$MAPBOX_ACCESS_TOKEN" ]]; then py.test --doctest-glob='*.md' docs/*.md; fi
 after_success:
   - coveralls
 deploy:
   on:
     tags: true
+    condition: "$TRAVIS_PYTHON_VERSION = 3.6"
   provider: pypi
+  user: mapboxci
   distributions: "sdist bdist_wheel"
-  user: seang
-  password:
-    secure: "FpuNoam0Ul8o/Kqtg5YTrTdvuRoE/9oTOsUml0OsapPX1/+qxpaZ7DwbktAQc2Zx1rAAeUkA2MC6rvUW+9xjJAkwS6bUi0NaeZhF2bqP81nprUunnQSTVdXKxHEjcKvLRWfJKB1Oadb1o8zVyoCfLHkbPjrfueJxpjhqfl/If2cHYfrw250Kfg82s9r6mH9iIMtoGOrCrmDITiJQ4juNMRHajHJGsZuQipYICaIUEybiGgpcEsUHsLZrqLPwwUFfCO8ukUHivNlF5HhSpgeAVvgLgXoWFTn6niPpBdr9pCL4ojTvD4O2exEHnfDXTQknvkfYMve9mbhjTxRa1lnri9YqiwpQ/wTaOQTEH5xmxYMH0ZwYUABDDXKPjJa72soYJGHW2uQSnTD079RUYyzOF4xinRKeeA1Dlh8vySvcVZRHrE5/K0WGdEYcAzBLlSgxrHoBMtthBbJFqEGPuHiUucOF1VMGSlcbEJUrHl+AbQNH5bnTXIwgf63Nl7Vuojzu7hKPj/GLRAllqbhFt5MTqiFUesXv96SE3Q1w1wz64MhGAaAGXIk9x67DocYdcufFwBvlMnu5gApanmdJJe2K3ozyGQye0nleOC+qTh9yMZD/Kgvk8Q8myAKwLAVbtAD+hJH5DWWU7wYK6Bw7/5j/JFwbjBBdmTjDtj0KNxqXLCg="

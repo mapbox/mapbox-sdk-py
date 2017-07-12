@@ -51,13 +51,11 @@ are accessible through response headers.
 ```python
 
 >>> response = geocoder.forward('Chester, NJ')
->>> response.headers['x-rate-limit-interval']
+>>> response.headers['X-Rate-Limit-Interval']
 '60'
->>> response.headers['x-rate-limit-limit'] # doctest: +SKIP
+>>> response.headers['X-Rate-Limit-Limit'] # doctest: +SKIP
 '600'
->>> response.headers['x-rate-limit-remaining'] # doctest: +SKIP
-'599'
->>> response.headers['x-rate-limit-reset'] # doctest: +SKIP
+>>> response.headers['X-Rate-Limit-Reset'] # doctest: +SKIP
 '1447701074'
 
 ```
@@ -87,8 +85,6 @@ collection, sorted by relevance to the query.
 >>> first = collection['features'][0]
 >>> first['type'] == 'Feature'
 True
->>> sorted(first.keys())
-[u'bbox', u'center', u'context', u'geometry', u'id', u'place_name', u'place_type', u'properties', u'relevance', u'text', u'type']
 
 ```
 
@@ -168,13 +164,14 @@ Places at a longitude, latitude point may be found using `Geocoder.reverse()`.
 >>> response = geocoder.reverse(lon=-73.989, lat=40.733)
 >>> response.status_code
 200
->>> for f in response.geojson()['features']:
+>>> features = sorted(response.geojson()['features'], key=lambda x: x['place_name'])
+>>> for f in features:
 ...     print('{place_name}: {id}'.format(**f))
-Atlas Installation... poi...
-Gramercy-Flatiron... neighborhood...
-Manhattan... locality...
-New York... place...
 10003... postcode...
+114 E 13th St, Manhattan, New York, New York 10003... address...
+Greenwich Village... neighborhood...
+Manhattan... locality...
+New York, New York... place...
 New York... region...
 United States: country...
 
