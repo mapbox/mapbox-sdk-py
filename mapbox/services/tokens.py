@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 from uritemplate import URITemplate
 
+from mapbox.errors import ValidationError
 from mapbox.services.base import Service
 
 
@@ -45,10 +46,9 @@ class Tokens(Service):
 
         payload = {'scopes': scopes}
 
-        if 0 < expires <= 3600:
-            payload['expires'] = (datetime.utcnow() + timedelta(seconds=expires)).isoformat()
-        else:
-            raise ValueError("Expiry should be within 1 hour from now")
+        if expires <= 0 or expires > 3600:
+            raise ValidationError("Expiry should be within 1 hour from now")
+        payload['expires'] = (datetime.utcnow() + timedelta(seconds=expires)).isoformat()
 
         res = self.session.post(uri, json=payload)
         self.handle_http_error(res)
