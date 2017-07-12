@@ -116,7 +116,7 @@ def test_temp_token_create_username():
 
 def test_temp_token_expire():
     with pytest.raises(ValidationError):
-        response = Tokens(access_token=token).create_temp_token(
+        Tokens(access_token=token).create_temp_token(
             ["styles:read"], expires=3601)
 
 

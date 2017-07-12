@@ -14,6 +14,18 @@ class Tokens(Service):
         return 'https://{0}/tokens/v2'.format(self.host)
 
     def create(self, scopes, note=None, username=None):
+        """Create a permanent token
+
+        Parameters
+        ----------
+        scopes: list
+        note: string
+        username: string, defaults to username in access token
+
+        Returns
+        -------
+        requests.Response
+        """
         if username is None:
             username = self.username
         if not note:
@@ -29,6 +41,17 @@ class Tokens(Service):
         return res
 
     def list_tokens(self, limit=None, username=None):
+        """List all permanent tokens
+
+        Parameters
+        ----------
+        limit: int
+        username: string, defaults to username in access token
+
+        Returns
+        -------
+        requests.Response
+        """
         if username is None:
             username = self.username
 
@@ -44,6 +67,21 @@ class Tokens(Service):
         return res
 
     def create_temp_token(self, scopes, expires=3600, username=None):
+        """Create a temporary token
+
+        Parameters
+        ----------
+        scopes: list
+            List of valid mapbox token scope strings
+        expires: int
+            seconds, defaults to 3600 (1 hr)
+        username: string
+            defaults to username in access token
+
+        Returns
+        -------
+        requests.Response
+        """
         if username is None:
             username = self.username
 
@@ -61,6 +99,22 @@ class Tokens(Service):
         return res
 
     def update(self, authorization_id, scopes=None, note=None, username=None):
+        """Update a token's scopes or note
+
+        Parameters
+        ----------
+        authorization_id: string
+            id of the token to update (not the token itself)
+        scopes: list
+            List of valid mapbox token scope strings
+        note: string
+        username: string
+            defaults to username in access token
+
+        Returns
+        -------
+        requests.Response
+        """
         if username is None:
             username = self.username
         if not scopes and not note:
@@ -81,6 +135,19 @@ class Tokens(Service):
         return res
 
     def delete(self, authorization_id, username=None):
+        """Delete a token
+
+        Parameters
+        ----------
+        authorization_id: string
+            id of the token to update (not the token itself)
+        username: string
+            defaults to username in access token
+
+        Returns
+        -------
+        requests.Response
+        """
         if username is None:
             username = self.username
 
@@ -93,6 +160,12 @@ class Tokens(Service):
         return res
 
     def check_validity(self):
+        """Check validity of the token
+
+        Returns
+        -------
+        requests.Response
+        """
         uri = URITemplate(self.baseuri)
 
         res = self.session.get(uri)
@@ -100,6 +173,17 @@ class Tokens(Service):
         return res
 
     def list_scopes(self, username=None):
+        """Delete a token
+
+        Parameters
+        ----------
+        username: string
+            defaults to username in access token
+
+        Returns
+        -------
+        requests.Response
+        """
         if username is None:
             username = self.username
 
