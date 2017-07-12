@@ -46,7 +46,7 @@ Generate a token for temporary access to mapbox APIs using the
 ```
 
 
-## Create a permanet token
+## Create a permanent token
 
 
 ```python
