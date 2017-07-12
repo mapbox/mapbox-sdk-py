@@ -12,7 +12,7 @@ class Tokens(Service):
     def baseuri(self):
         return 'https://{0}/tokens/v2'.format(self.host)
 
-    def create(self, username, scopes=None, note=None, expires=0):
+    def create(self, username, scopes=None, note=None):
         if not scopes:
             raise ValueError("One or more token scopes are required")
         if not note:
@@ -21,9 +21,6 @@ class Tokens(Service):
         uri = URITemplate(self.baseuri + '/{username}').expand(username=username)
 
         payload = {'scopes': scopes, 'note': note}
-
-        if expires > 0:
-            payload['expires'] = (datetime.now() + timedelta(seconds=expires)).isoformat()
 
         res = self.session.post(uri, json=payload)
         self.handle_http_error(res)
