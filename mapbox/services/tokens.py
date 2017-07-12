@@ -37,7 +37,7 @@ class Tokens(Service):
         self.handle_http_error(res)
         return res
 
-    def create_temp_token(self, username, scopes=None, expires=0):
+    def create_temp_token(self, username, scopes=None, expires=3600):
         if not scopes:
             raise ValueError("One or more token scopes are required")
 
