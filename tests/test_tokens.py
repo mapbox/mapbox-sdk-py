@@ -14,7 +14,8 @@ def test_token_create():
         status=200,
         content_type='application/json')
 
-    response = Tokens(access_token='pk.test').create('testuser', ["styles:read", "fonts:read"])
+    response = Tokens(access_token='pk.test').create(
+        'testuser', ["styles:read", "fonts:read"])
     assert response.status_code == 200
 
 
@@ -43,7 +44,8 @@ def test_temp_token_create():
         status=200,
         content_type='application/json')
 
-    response = Tokens(access_token='sk.test').create_temp_token('testuser', ["styles:read", "fonts:read"])
+    response = Tokens(access_token='sk.test').create_temp_token(
+        'testuser', ["styles:read", "fonts:read"])
     assert response.status_code == 200
 
 
@@ -58,12 +60,13 @@ def test_update_token():
         status=200,
         content_type='application/json')
 
-    response = Tokens(access_token='pk.test').update_auth('auth_id', 'testuser', ["styles:read", "fonts:read"])
+    response = Tokens(access_token='pk.test').update(
+         'auth_id', 'testuser', ["styles:read", "fonts:read"])
     assert response.status_code == 200
 
 
 @responses.activate
-def test_delete_auth():
+def test_delete():
     """Token authorization deletion works"""
     responses.add(
         responses.DELETE,
@@ -71,7 +74,7 @@ def test_delete_auth():
         match_querystring=True,
         status=204)
 
-    response = Tokens(access_token='pk.test').delete_auth('auth_id', 'testuser')
+    response = Tokens(access_token='pk.test').delete('auth_id', 'testuser')
     assert response.status_code == 204
 
 
