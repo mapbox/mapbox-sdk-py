@@ -46,7 +46,7 @@ class Tokens(Service):
         payload = {'scopes': scopes}
 
         if 0 < expires <= 3600:
-            payload['expires'] = (datetime.now() + timedelta(seconds=expires)).isoformat()
+            payload['expires'] = (datetime.utcnow() + timedelta(seconds=expires)).isoformat()
         else:
             raise ValueError("Expiry should be within 1 hour from now")
 
