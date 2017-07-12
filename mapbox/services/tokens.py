@@ -13,7 +13,9 @@ class Tokens(Service):
     def baseuri(self):
         return 'https://{0}/tokens/v2'.format(self.host)
 
-    def create(self, username, scopes=None, note=None):
+    def create(self, username=None, scopes=None, note=None):
+        if username is None:
+            username = self.username
         if not scopes:
             raise ValueError("One or more token scopes are required")
         if not note:
@@ -27,7 +29,9 @@ class Tokens(Service):
         self.handle_http_error(res)
         return res
 
-    def list_tokens(self, username, limit=None):
+    def list_tokens(self, username=None, limit=None):
+        if username is None:
+            username = self.username
         uri = URITemplate(self.baseuri + '/{username}').expand(username=username)
 
         params = {}
@@ -38,7 +42,9 @@ class Tokens(Service):
         self.handle_http_error(res)
         return res
 
-    def create_temp_token(self, username, scopes=None, expires=3600):
+    def create_temp_token(self, username=None, scopes=None, expires=3600):
+        if username is None:
+            username = self.username
         if not scopes:
             raise ValueError("One or more token scopes are required")
 
@@ -54,7 +60,9 @@ class Tokens(Service):
         self.handle_http_error(res)
         return res
 
-    def update_auth(self, username, authorization_id, scopes=None, note=None):
+    def update_auth(self, authorization_id, username=None, scopes=None, note=None):
+        if username is None:
+            username = self.username
         if not scopes and not note:
             raise ValueError("Provide either scopes or a note to update token")
 
@@ -70,7 +78,9 @@ class Tokens(Service):
         self.handle_http_error(res)
         return res
 
-    def delete_auth(self, username, authorization_id):
+    def delete_auth(self, authorization_id, username=None):
+        if username is None:
+            username = self.username
         uri = URITemplate(self.baseuri + '/{username}/{authorization_id}').expand(username=username, authorization_id=authorization_id)
 
         res = self.session.delete(uri)
@@ -84,7 +94,9 @@ class Tokens(Service):
         self.handle_http_error(res)
         return res
 
-    def list_scopes(self, username):
+    def list_scopes(self, username=None):
+        if username is None:
+            username = self.username
         uri = URITemplate('https://{host}/scopes/v1' + '/{username}').expand(host=self.host, username=username)
 
         res = self.session.get(uri)
