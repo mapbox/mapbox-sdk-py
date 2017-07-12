@@ -64,7 +64,7 @@ class Tokens(Service):
         self.handle_http_error(res)
         return res
 
-    def update_auth(self, authorization_id, username=None, scopes=None, note=None):
+    def update(self, authorization_id, username=None, scopes=None, note=None):
         if username is None:
             username = self.username
         if not scopes and not note:
@@ -84,7 +84,7 @@ class Tokens(Service):
         self.handle_http_error(res)
         return res
 
-    def delete_auth(self, authorization_id, username=None):
+    def delete(self, authorization_id, username=None):
         if username is None:
             username = self.username
 
@@ -106,8 +106,9 @@ class Tokens(Service):
     def list_scopes(self, username=None):
         if username is None:
             username = self.username
+
         uri = URITemplate(
-            'https://{host}/scopes/v1' + '/{username}').expand(
+            'https://{host}/scopes/v1/{username}').expand(
                 host=self.host, username=username)
 
         res = self.session.get(uri)
