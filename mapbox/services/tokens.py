@@ -13,11 +13,9 @@ class Tokens(Service):
     def baseuri(self):
         return 'https://{0}/tokens/v2'.format(self.host)
 
-    def create(self, username=None, scopes=None, note=None):
+    def create(self, scopes, note=None, username=None):
         if username is None:
             username = self.username
-        if not scopes:
-            raise ValueError("One or more token scopes are required")
         if not note:
             note = "SDK generated note"
 
@@ -30,7 +28,7 @@ class Tokens(Service):
         self.handle_http_error(res)
         return res
 
-    def list_tokens(self, username=None, limit=None):
+    def list_tokens(self, limit=None, username=None):
         if username is None:
             username = self.username
 
@@ -45,7 +43,7 @@ class Tokens(Service):
         self.handle_http_error(res)
         return res
 
-    def create_temp_token(self, scopes, username=None, expires=3600):
+    def create_temp_token(self, scopes, expires=3600, username=None):
         if username is None:
             username = self.username
 
@@ -62,11 +60,11 @@ class Tokens(Service):
         self.handle_http_error(res)
         return res
 
-    def update(self, authorization_id, username=None, scopes=None, note=None):
+    def update(self, authorization_id, scopes=None, note=None, username=None):
         if username is None:
             username = self.username
         if not scopes and not note:
-            raise ValueError("Provide either scopes or a note to update token")
+            raise ValidationError("Provide either scopes or a note to update token")
 
         uri = URITemplate(
             self.baseuri + '/{username}/{authorization_id}').expand(
