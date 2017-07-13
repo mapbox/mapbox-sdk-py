@@ -15,7 +15,6 @@ class Directions(Service):
         'mapbox/driving-traffic',
         'mapbox/walking',
         'mapbox/cycling']
-    valid_instruction_formats = ['text', 'html']
     valid_geom_encoding = ['geojson', 'polyline', 'polyline6']
     valid_geom_overview = ['full', 'simplified', False]
     valid_annotations = ['duration', 'distance', 'speed']
@@ -62,13 +61,28 @@ class Directions(Service):
                 "{0} is not a valid geometry overview type".format(overview))
         return overview
 
-    def _validate_instruction_format(self, instruction_format):
-        if instruction_format is not None and \
-           instruction_format not in self.valid_instruction_formats:
+    def _validate_bearings(self, bearings, features):
+        result = []
+        if bearings is None:
+            return None
+        if len(bearings) != len(features):
             raise errors.InvalidParameterError(
-                "{0} is not a valid instruction format".format(
-                    instruction_format))
-        return instruction_format
+                'Must provide exactly one bearing tuple for each input feature')
+        for bearing in bearings:
+            if bearing is None:
+                result.append(None)
+            else:
+                try:
+                    angle, rng = bearing
+                except ValueError:
+                    raise errors.InvalidParameterError(
+                        'bearing tuple must contain two elements: (angle, range)')
+
+                if angle <= 0 or angle >= 360 or rng <= 0 or rng >= 360:
+                    raise errors.InvalidParameterError(
+                        'angle and range must be between 0 and 360')
+                result.append((angle, rng))
+        return result
 
     def _validate_radiuses(self, radiuses, features):
         result = []
@@ -85,6 +99,13 @@ class Directions(Service):
                     '{0} is not a valid radius'.format(radius))
         return result
 
+    @staticmethod
+    def _encode_bearing(b):
+        if b is None:
+            return ''
+        else:
+            return '{},{}'.format(*b)
+
     def directions(self, features, profile='mapbox/driving', alternatives=None,
                    geometries=None, overview=None, radiuses=None, steps=None,
                    continue_straight=None, bearings=None, annotations=None,
@@ -97,14 +118,17 @@ class Directions(Service):
         profile: string
         alternatives: boolean
         geometries: string
+            Type of geometry returned (geojson, polyline, polyline6)
         overview: string or False
+            ('full', 'simplified', False)
         radiuses: iterable of numbers or 'unlimited'
             Must be same length as features
         steps: boolean
         continue_straight: boolean
-        bearings: ?
-            final encoding needs to be 'bearing,range' delimited by ;
-            Must be same length as features (sequential `;` skips)
+        bearings: list of bearing 2-tuples
+            where the bearing tuple consists of an angle and range
+                [(215, 45), (315, 90)]
+            Must be same length as features
         annotations: string
         language: string
 
@@ -119,15 +143,12 @@ class Directions(Service):
             warnings.warn('Use `geometries` instead of `geometry`',
                           errors.MapboxDeprecationWarning)
 
-        if bearings is not None:
-            raise NotImplementedError(
-                "Haven't decided on the best python data structure for bearings yet")
-
         profile = self._validate_profile(profile)
         geometries = self._validate_geom_encoding(geometries)
         overview = self._validate_geom_overview(overview)
         annotations = self._validate_annotations(annotations)
         radiuses = self._validate_radiuses(radiuses, features)
+        bearings = self._validate_bearings(bearings, features)
         waypoints = encode_waypoints(
             features, precision=6, min_limit=2, max_limit=25)
 
@@ -150,6 +171,12 @@ class Directions(Service):
             params.update({'annotations': ','.join(annotations)})
         if language is not None:
             params.update({'language': language})
+        if radiuses is not None:
+            params.update(
+                {'radiuses': ';'.join(str(r) for r in radiuses)})
+        if bearings is not None:
+            params.update(
+                {'bearings': ';'.join(self._encode_bearing(b) for b in bearings)})
 
         profile_ns, profile_name = profile.split('/')
 
@@ -162,25 +189,23 @@ class Directions(Service):
 
         def geojson():
             return self._geojson(resp.json())
-
-        if geometries == 'geojson' and overview is not False:
-            # TODO make this work for polyline encoded geometry
-            resp.geojson = geojson
-
+        resp.geojson = geojson
         return resp
 
     def _geojson(self, data):
         fc = {
             'type': 'FeatureCollection',
             'features': []}
+
+        # TODO make this work for polyline encoded geometry
+        # Otherwise the geometry will be invalid GeoJSON
         for route in data['routes']:
             feature = {
                 'type': 'Feature',
+                'geometry': route['geometry'],
                 'properties': {
                     # TODO include RouteLegs and other details
                     'distance': route['distance'],
                     'duration': route['duration']}}
-            feature['geometry'] = route['geometry']
             fc['features'].append(feature)
-
         return fc
