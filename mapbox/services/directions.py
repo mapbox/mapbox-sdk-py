@@ -145,15 +145,18 @@ class Directions(Service):
             warnings.warn('Use `geometries` instead of `geometry`',
                           errors.MapboxDeprecationWarning)
 
-        profile = self._validate_profile(profile)
-        geometries = self._validate_geom_encoding(geometries)
-        overview = self._validate_geom_overview(overview)
         annotations = self._validate_annotations(annotations)
-        radiuses = self._validate_radiuses(radiuses, features)
         bearings = self._validate_bearings(bearings, features)
         coordinates = encode_coordinates(
             features, precision=6, min_limit=2, max_limit=25)
+        geometries = self._validate_geom_encoding(geometries)
+        overview = self._validate_geom_overview(overview)
+        profile = self._validate_profile(profile)
+        radiuses = self._validate_radiuses(radiuses, features)
 
+        if bearings and not radiuses:
+            raise errors.InvalidParameterError(
+                'radiuses is a required parameter when passing bearings')
         params = {}
         if alternatives is not None:
             params.update(

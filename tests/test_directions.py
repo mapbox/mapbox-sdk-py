@@ -62,7 +62,7 @@ def test_directions_geojson():
 def test_invalid_profile():
     with pytest.raises(ValueError):
         mapbox.Directions(access_token='pk.test').directions(
-            None, profile='bogus')
+            points, profile='bogus')
 
 
 @responses.activate
@@ -206,3 +206,9 @@ def test_invalid_bearing_domain():
     with pytest.raises(mapbox.errors.InvalidParameterError) as e:
         service._validate_bearings([(-1, 90), (315, 90)], points)
         assert 'between 0 and 360' in str(e)
+
+
+def test_bearings_without_radius():
+    with pytest.raises(mapbox.errors.InvalidParameterError):
+        mapbox.Directions(access_token='pk.test').directions(
+            points, bearings=[(270, 45), (270, 45)])
