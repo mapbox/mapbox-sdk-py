@@ -41,7 +41,7 @@ def test_directions(cache):
 
 
 @responses.activate
-def test_directions_geojson():
+def test_directions_polyline_as_geojson():
     with open('tests/moors.json') as fh:
         body = fh.read()
 
@@ -54,6 +54,27 @@ def test_directions_geojson():
         content_type='application/json')
 
     res = mapbox.Directions(access_token='pk.test').directions(points)
+    fc = res.geojson()
+    assert fc['type'] == 'FeatureCollection'
+    assert fc['features'][0]['geometry']['type'] == 'LineString'
+
+
+@responses.activate
+def test_directions_geojson_as_geojson():
+    with open('tests/moors_geojson.json') as fh:
+        body = fh.read()
+
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/directions/v5/mapbox/driving/'
+        '-87.337875%2C36.539157%3B-88.247681%2C36.922175.json?access_token=pk.test'
+        '&geometries=geojson',
+        match_querystring=True,
+        body=body, status=200,
+        content_type='application/json')
+
+    res = mapbox.Directions(access_token='pk.test').directions(
+        points, geometries='geojson')
     fc = res.geojson()
     assert fc['type'] == 'FeatureCollection'
     assert fc['features'][0]['geometry']['type'] == 'LineString'

@@ -1,5 +1,6 @@
 import warnings
 
+import polyline
 from uritemplate import URITemplate
 
 from mapbox.encoding import encode_waypoints as encode_coordinates
@@ -193,21 +194,27 @@ class Directions(Service):
         self.handle_http_error(resp)
 
         def geojson():
-            return self._geojson(resp.json())
+            return self._geojson(resp.json(), geom_format=geometries)
         resp.geojson = geojson
         return resp
 
-    def _geojson(self, data):
+    def _geojson(self, data, geom_format=None):
         fc = {
             'type': 'FeatureCollection',
             'features': []}
 
-        # TODO make this work for polyline encoded geometry
-        # Otherwise the geometry will be invalid GeoJSON
         for route in data['routes']:
+            if geom_format == 'geojson':
+                geom = route['geometry']
+            else:
+                # convert default polyline encoded geometry
+                geom = {
+                    'type': 'LineString',
+                    'coodinates': polyline.decode(route['geometry'])}
+
             feature = {
                 'type': 'Feature',
-                'geometry': route['geometry'],
+                'geometry': geom,
                 'properties': {
                     # TODO include RouteLegs and other details
                     'distance': route['distance'],
