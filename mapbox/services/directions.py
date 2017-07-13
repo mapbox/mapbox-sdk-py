@@ -16,7 +16,9 @@ class Directions(Service):
         'mapbox/walking',
         'mapbox/cycling']
     valid_instruction_formats = ['text', 'html']
-    valid_geom_encoding = ['geojson', 'polyline', 'false']
+    valid_geom_encoding = ['geojson', 'polyline', 'polyline6']
+    valid_geom_overview = ['full', 'simplified', False]
+    valid_annotations = ['duration', 'distance', 'speed']
 
     @property
     def baseuri(self):
@@ -35,12 +37,30 @@ class Directions(Service):
                 "{0} is not a valid profile".format(profile))
         return profile
 
+    def _validate_annotations(self, annotations):
+        results = []
+        if annotations is None:
+            return None
+        for annotation in annotations:
+            if annotation not in self.valid_annotations:
+                raise errors.InvalidParameterError(
+                    "{0} is not a valid annotation".format(annotation))
+            else:
+                results.append(annotation)
+        return results
+
     def _validate_geom_encoding(self, geom_encoding):
         if geom_encoding is not None and \
            geom_encoding not in self.valid_geom_encoding:
             raise errors.InvalidParameterError(
-                "{0} is not a valid geometry encoding".format(geom_encoding))
+                "{0} is not a valid geometry format".format(geom_encoding))
         return geom_encoding
+
+    def _validate_geom_overview(self, overview):
+        if overview is not None and overview not in self.valid_geom_overview:
+            raise errors.InvalidParameterError(
+                "{0} is not a valid geometry overview type".format(overview))
+        return overview
 
     def _validate_instruction_format(self, instruction_format):
         if instruction_format is not None and \
@@ -50,12 +70,48 @@ class Directions(Service):
                     instruction_format))
         return instruction_format
 
+    def _validate_radiuses(self, radiuses, features):
+        result = []
+        if radiuses is None:
+            return None
+        if len(radiuses) != len(features):
+            raise errors.InvalidParameterError(
+                'Must provide exactly one radius for each input feature')
+        for radius in radiuses:
+            if radius == 'unlimited' or radius > 0:
+                result.append(radius)
+            else:
+                raise errors.InvalidParameterError(
+                    '{0} is not a valid radius'.format(radius))
+        return result
+
     def directions(self, features, profile='mapbox/driving', alternatives=None,
-                   instructions=None, geometries=None, steps=None, **kwargs):
+                   geometries=None, overview=None, radiuses=None, steps=None,
+                   continue_straight=None, bearings=None, annotations=None,
+                   language=None, **kwargs):
         """Request directions for waypoints encoded as GeoJSON features.
 
-        :param features: sequence of GeoJSON features.
-        :param profile: name of a profile.
+        Parameters
+        ----------
+        features: iterable of GeoJSON-like Feature mappings
+        profile: string
+        alternatives: boolean
+        geometries: string
+        overview: string or False
+        radiuses: iterable of numbers or 'unlimited'
+            Must be same length as features
+        steps: boolean
+        continue_straight: boolean
+        bearings: ?
+            final encoding needs to be 'bearing,range' delimited by ;
+            Must be same length as features (sequential `;` skips)
+        annotations: string
+        language: string
+
+        Returns
+        -------
+        requests.Response
+            the json() method will return a Directions response dict
         """
         # backwards compatible, deprecated
         if 'geometry' in kwargs and geometries is None:
@@ -63,24 +119,37 @@ class Directions(Service):
             warnings.warn('Use `geometries` instead of `geometry`',
                           errors.MapboxDeprecationWarning)
 
+        if bearings is not None:
+            raise NotImplementedError(
+                "Haven't decided on the best python data structure for bearings yet")
+
         profile = self._validate_profile(profile)
-        instructions = self._validate_instruction_format(instructions)
         geometries = self._validate_geom_encoding(geometries)
+        overview = self._validate_geom_overview(overview)
+        annotations = self._validate_annotations(annotations)
+        radiuses = self._validate_radiuses(radiuses, features)
         waypoints = encode_waypoints(
-            features, precision=6, min_limit=2, max_limit=30)
+            features, precision=6, min_limit=2, max_limit=25)
 
         params = {}
         if alternatives is not None:
             params.update(
                 {'alternatives': 'true' if alternatives is True else 'false'})
-        if instructions is not None:
-            params.update({'instructions': instructions})
         if geometries is not None:
+            params.update({'geometries': geometries})
+        if overview is not None:
             params.update(
-                {'geometries': 'false' if geometries is False else geometries})
+                {'overview': 'false' if overview is False else overview})
         if steps is not None:
             params.update(
                 {'steps': 'true' if steps is True else 'false'})
+        if continue_straight is not None:
+            params.update(
+                {'continue_straight': 'true' if steps is True else 'false'})
+        if annotations is not None:
+            params.update({'annotations': ','.join(annotations)})
+        if language is not None:
+            params.update({'language': language})
 
         profile_ns, profile_name = profile.split('/')
 
@@ -94,29 +163,23 @@ class Directions(Service):
         def geojson():
             return self._geojson(resp.json())
 
-        resp.geojson = geojson
+        if geometries == 'geojson' and overview is not False:
+            # TODO make this work for polyline encoded geometry
+            resp.geojson = geojson
+
         return resp
 
     def _geojson(self, data):
         fc = {
             'type': 'FeatureCollection',
             'features': []}
-
         for route in data['routes']:
-
             feature = {
                 'type': 'Feature',
                 'properties': {
-                    # TODO handle these nested structures
-                    # Flatten or ???
-                    # 'destination': data['destination'],
-                    # 'origin': data['origin'],
-                    # 'waypoints': data['waypoints'],
-                    # 'steps': route['steps']
+                    # TODO include RouteLegs and other details
                     'distance': route['distance'],
-                    'duration': route['duration'],
-                    'summary': route['summary']}}
-
+                    'duration': route['duration']}}
             feature['geometry'] = route['geometry']
             fc['features'].append(feature)
 
