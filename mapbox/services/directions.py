@@ -1,3 +1,5 @@
+import warnings
+
 from uritemplate import URITemplate
 
 from mapbox.encoding import encode_waypoints
@@ -49,17 +51,23 @@ class Directions(Service):
         return instruction_format
 
     def directions(self, features, profile='mapbox/driving', alternatives=None,
-                   instructions=None, geometry=None, steps=None):
+                   instructions=None, geometries=None, steps=None, **kwargs):
         """Request directions for waypoints encoded as GeoJSON features.
 
         :param features: sequence of GeoJSON features.
         :param profile: name of a profile.
         """
+        # backwards compatible, deprecated
+        if 'geometry' in kwargs and geometries is None:
+            geometries = kwargs['geometry']
+            warnings.warn('Use `geometries` instead of `geometry`',
+                          errors.MapboxDeprecationWarning)
+
         profile = self._validate_profile(profile)
         instructions = self._validate_instruction_format(instructions)
-        geometry = self._validate_geom_encoding(geometry)
-        waypoints = encode_waypoints(features, precision=6,
-                                     min_limit=2, max_limit=30)
+        geometries = self._validate_geom_encoding(geometries)
+        waypoints = encode_waypoints(
+            features, precision=6, min_limit=2, max_limit=30)
 
         params = {}
         if alternatives is not None:
@@ -67,9 +75,9 @@ class Directions(Service):
                 {'alternatives': 'true' if alternatives is True else 'false'})
         if instructions is not None:
             params.update({'instructions': instructions})
-        if geometry is not None:
+        if geometries is not None:
             params.update(
-                {'geometry': 'false' if geometry is False else geometry})
+                {'geometries': 'false' if geometries is False else geometries})
         if steps is not None:
             params.update(
                 {'steps': 'true' if steps is True else 'false'})
