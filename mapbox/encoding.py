@@ -58,11 +58,11 @@ def encode_waypoints(features, min_limit=None, max_limit=None, precision=6):
 
     if min_limit is not None and len(coords) < min_limit:
         raise InvalidFeatureError(
-            "Not enough features to encode waypoints, "
+            "Not enough features to encode coordinates, "
             "need at least {0}".format(min_limit))
     if max_limit is not None and len(coords) > max_limit:
         raise InvalidFeatureError(
-            "Too many features to encode waypoints, "
+            "Too many features to encode coordinates, "
             "need at most {0}".format(max_limit))
 
     return ';'.join(coords)

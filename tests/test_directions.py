@@ -56,7 +56,7 @@ def test_directions_geojson():
     res = mapbox.Directions(access_token='pk.test').directions(points)
     fc = res.geojson()
     assert fc['type'] == 'FeatureCollection'
-    # TODO assert fc['features'][0]['geometry']['type'] == 'LineString'
+    assert fc['features'][0]['geometry']['type'] == 'LineString'
 
 
 def test_invalid_profile():

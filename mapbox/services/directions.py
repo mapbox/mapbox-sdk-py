@@ -2,7 +2,7 @@ import warnings
 
 from uritemplate import URITemplate
 
-from mapbox.encoding import encode_waypoints
+from mapbox.encoding import encode_waypoints as encode_coordinates
 from mapbox.services.base import Service
 from mapbox import errors
 
@@ -31,6 +31,8 @@ class Directions(Service):
             'mapbox.walking': 'mapbox/walking'}
         if profile in v4_to_v5_profiles:
             profile = v4_to_v5_profiles[profile]
+            warnings.warn('Converting v4 profile to v5, use {} instead'.format(profile),
+                          errors.MapboxDeprecationWarning)
         if profile not in self.valid_profiles:
             raise errors.InvalidProfileError(
                 "{0} is not a valid profile".format(profile))
@@ -149,7 +151,7 @@ class Directions(Service):
         annotations = self._validate_annotations(annotations)
         radiuses = self._validate_radiuses(radiuses, features)
         bearings = self._validate_bearings(bearings, features)
-        waypoints = encode_waypoints(
+        coordinates = encode_coordinates(
             features, precision=6, min_limit=2, max_limit=25)
 
         params = {}
@@ -181,8 +183,8 @@ class Directions(Service):
         profile_ns, profile_name = profile.split('/')
 
         uri = URITemplate(
-            self.baseuri + '/{profile_ns}/{profile_name}/{waypoints}.json').expand(
-                profile_ns=profile_ns, profile_name=profile_name, waypoints=waypoints)
+            self.baseuri + '/{profile_ns}/{profile_name}/{coordinates}.json').expand(
+                profile_ns=profile_ns, profile_name=profile_name, coordinates=coordinates)
 
         resp = self.session.get(uri, params=params)
         self.handle_http_error(resp)
