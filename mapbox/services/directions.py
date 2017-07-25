@@ -64,43 +64,64 @@ class Directions(Service):
                 "{0} is not a valid geometry overview type".format(overview))
         return overview
 
-    def _validate_bearings(self, bearings, features):
-        result = []
-        if bearings is None:
-            return None
-        if len(bearings) != len(features):
+    def _validate_snapping(self, snaps, features):
+        bearings = []
+        radii = []
+        if snaps is None:
+            return (None, None)
+        if len(snaps) != len(features):
             raise errors.InvalidParameterError(
-                'Must provide exactly one bearing tuple for each input feature')
-        for bearing in bearings:
-            if bearing is None:
-                result.append(None)
+                'Must provide exactly one snapping element for each input feature')
+        for snap in snaps:
+            if snap is None:
+                bearings.append(None)
+                radii.append(None)
             else:
                 try:
-                    angle, rng = bearing
-                except ValueError:
-                    raise errors.InvalidParameterError(
-                        'bearing tuple must contain two elements: (angle, range)')
+                    # radius-only
+                    radius = self._validate_radius(snap)
+                    bearing = None
+                except errors.InvalidParameterError:
+                    # (radius, angle, range) tuple
+                    try:
+                        radius, angle, rng = snap
+                    except ValueError:
+                        raise errors.InvalidParameterError(
+                            'waypoint snapping should contain 3 elements: '
+                            '(bearing, angle, range)')
+                    self._validate_radius(radius)
 
-                if angle <= 0 or angle >= 360 or rng <= 0 or rng >= 360:
-                    raise errors.InvalidParameterError(
-                        'angle and range must be between 0 and 360')
-                result.append((angle, rng))
-        return result
+                    try:
+                        assert angle >= 0
+                        assert angle <= 360
+                        assert rng >= 0
+                        assert rng <= 360
+                    except (TypeError, AssertionError):
+                        raise errors.InvalidParameterError(
+                            'angle and range must be between 0 and 360')
+                    bearing = (angle, rng)
 
-    def _validate_radiuses(self, radiuses, features):
-        result = []
-        if radiuses is None:
+                bearings.append(bearing)
+                radii.append(radius)
+
+        if all([b is None for b in bearings]):
+            bearings = None
+
+        return (bearings, radii)
+
+    def _validate_radius(self, radius):
+        if radius is None:
             return None
-        if len(radiuses) != len(features):
-            raise errors.InvalidParameterError(
-                'Must provide exactly one radius for each input feature')
-        for radius in radiuses:
+
+        try:
             if radius == 'unlimited' or radius > 0:
-                result.append(radius)
+                return radius
             else:
                 raise errors.InvalidParameterError(
                     '{0} is not a valid radius'.format(radius))
-        return result
+        except TypeError:
+            raise errors.InvalidParameterError(
+                '{0} is not a valid radius'.format(radius))
 
     @staticmethod
     def _encode_bearing(b):
@@ -109,9 +130,9 @@ class Directions(Service):
         else:
             return '{},{}'.format(*b)
 
-    def directions(self, features, profile='mapbox/driving', alternatives=None,
-                   geometries=None, overview=None, radiuses=None, steps=None,
-                   continue_straight=None, bearings=None, annotations=None,
+    def directions(self, features, profile='mapbox/driving',
+                   alternatives=None, geometries=None, overview=None, steps=None,
+                   continue_straight=None, waypoint_snapping=None, annotations=None,
                    language=None, **kwargs):
         """Request directions for waypoints encoded as GeoJSON features.
 
@@ -124,14 +145,17 @@ class Directions(Service):
             Type of geometry returned (geojson, polyline, polyline6)
         overview: string or False
             ('full', 'simplified', False)
-        radiuses: iterable of numbers or 'unlimited'
-            Must be same length as features
         steps: boolean
         continue_straight: boolean
-        bearings: list of bearing 2-tuples
-            where the bearing tuple consists of an angle and range
-                [(215, 45), (315, 90)]
+        radiuses: iterable of numbers or 'unlimited'
             Must be same length as features
+        waypoint_snapping: list
+            List must be same length as features.
+            Elements of the list must be one of:
+            - A number (interpretted as a snapping radius)
+            - The string 'unlimited' (unlimited snapping radius)
+            - A 3-element tuple consisting of (radius, angle, range)
+            - None (no snapping parameters specified for that waypoint)
         annotations: string
         language: string
 
@@ -147,17 +171,14 @@ class Directions(Service):
                           errors.MapboxDeprecationWarning)
 
         annotations = self._validate_annotations(annotations)
-        bearings = self._validate_bearings(bearings, features)
         coordinates = encode_coordinates(
             features, precision=6, min_limit=2, max_limit=25)
         geometries = self._validate_geom_encoding(geometries)
         overview = self._validate_geom_overview(overview)
         profile = self._validate_profile(profile)
-        radiuses = self._validate_radiuses(radiuses, features)
 
-        if bearings and not radiuses:
-            raise errors.InvalidParameterError(
-                'radiuses is a required parameter when passing bearings')
+        bearings, radii = self._validate_snapping(waypoint_snapping, features)
+
         params = {}
         if alternatives is not None:
             params.update(
@@ -177,9 +198,9 @@ class Directions(Service):
             params.update({'annotations': ','.join(annotations)})
         if language is not None:
             params.update({'language': language})
-        if radiuses is not None:
+        if radii is not None:
             params.update(
-                {'radiuses': ';'.join(str(r) for r in radiuses)})
+                {'radiuses': ';'.join(str(r) for r in radii)})
         if bearings is not None:
             params.update(
                 {'bearings': ';'.join(self._encode_bearing(b) for b in bearings)})

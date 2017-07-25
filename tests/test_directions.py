@@ -108,7 +108,7 @@ def test_direction_params():
         continue_straight=True,
         annotations=['distance', 'speed'],
         language='en',
-        radiuses=[10, 'unlimited'],
+        waypoint_snapping=[10, 'unlimited'],
         steps=False)
     assert res.status_code == 200
 
@@ -148,8 +148,7 @@ def test_direction_bearings():
 
     res = mapbox.Directions(access_token='pk.test').directions(
         points,
-        radiuses=[10, 20],
-        bearings=[(270, 45), (315, 90)])
+        waypoint_snapping=[(10, 270, 45), (20, 315, 90)])
     assert res.status_code == 200
 
 
@@ -166,8 +165,7 @@ def test_direction_bearings_none():
 
     res = mapbox.Directions(access_token='pk.test').directions(
         points,
-        radiuses=[10, 20],
-        bearings=[None, (315, 90)])
+        waypoint_snapping=[10, (20, 315, 90)])
     assert res.status_code == 200
 
 
@@ -197,39 +195,57 @@ def test_invalid_geom_overview():
 def test_invalid_radiuses():
     service = mapbox.Directions(access_token='pk.test')
     with pytest.raises(mapbox.errors.InvalidParameterError) as e:
-        service._validate_radiuses([-1, 'forever'], points)
+        service._validate_radius('forever')
         assert 'not a valid radius' in str(e)
-
-
-def test_invalid_number_of_radiuses():
-    service = mapbox.Directions(access_token='pk.test')
-    with pytest.raises(mapbox.errors.InvalidParameterError) as e:
-        service._validate_radiuses([1, 2, 3], points)
-        assert 'exactly one' in str(e)
 
 
 def test_invalid_number_of_bearings():
     service = mapbox.Directions(access_token='pk.test')
     with pytest.raises(mapbox.errors.InvalidParameterError) as e:
-        service._validate_bearings([1, 2, 3], points)
+        service._validate_snapping([1, 2, 3], points)
         assert 'exactly one' in str(e)
 
 
 def test_invalid_bearing_tuple():
     service = mapbox.Directions(access_token='pk.test')
     with pytest.raises(mapbox.errors.InvalidParameterError) as e:
-        service._validate_bearings([(270, 45, 'extra'), (315,)], points)
+        service._validate_snapping([(270, 45, 'extra'), (315,)], points)
         assert 'bearing tuple' in str(e)
+
+
+def test_snapping_bearing_none():
+    service = mapbox.Directions(access_token='pk.test')
+    bearings, radii = service._validate_snapping([(10, 270, 45), None], points)
+    assert bearings == [(270, 45), None]
+    assert radii == [10, None]
+
+
+def test_snapping_radii_none():
+    service = mapbox.Directions(access_token='pk.test')
+    bearings, radii = service._validate_snapping([(10, 270, 45), None], points)
+    assert bearings == [(270, 45), None]
+    assert radii == [10, None]
+
+
+def test_validate_radius_none():
+    service = mapbox.Directions(access_token='pk.test')
+    assert service._validate_radius(None) is None
+
+
+def test_validate_radius_invalid():
+    service = mapbox.Directions(access_token='pk.test')
+    with pytest.raises(mapbox.errors.InvalidParameterError) as e:
+        service._validate_radius(-1)
 
 
 def test_invalid_bearing_domain():
     service = mapbox.Directions(access_token='pk.test')
     with pytest.raises(mapbox.errors.InvalidParameterError) as e:
-        service._validate_bearings([(-1, 90), (315, 90)], points)
+        service._validate_snapping([(-1, 90), (315, 90)], points)
         assert 'between 0 and 360' in str(e)
 
 
 def test_bearings_without_radius():
-    with pytest.raises(mapbox.errors.InvalidParameterError):
+    with pytest.raises(TypeError):
         mapbox.Directions(access_token='pk.test').directions(
-            points, bearings=[(270, 45), (270, 45)])
+            waypoint_snapping=[(270, 45), (270, 45)])
