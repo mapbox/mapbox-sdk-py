@@ -5,6 +5,9 @@ from uritemplate import URITemplate
 from mapbox.services.base import Service
 from mapbox import errors
 
+API_VERSION = 'v1'
+
+
 class Analytics(Service):
     """Access to Analytics API"""
 
@@ -12,7 +15,7 @@ class Analytics(Service):
 
     @property
     def baseuri(self):
-        return 'https://{0}/analytics/v1'.format(self.host)
+        return 'https://{0}/analytics/{1}'.format(self.host, API_VERSION)
 
     def _validate_resource_type(self, resource_type):
         if resource_type not in self.valid_resource_types:
