@@ -7,16 +7,11 @@ from mapbox import errors
 
 
 class Analytics(Service):
-    """Access to Analytics API"""
+    """Access to Analytics API V1"""
 
     api_name = 'analytics'
     api_version = 'v1'
     valid_resource_types = ['tokens', 'styles', 'accounts', 'tilesets']
-    
-    @property
-    def baseuri(self):
-        return 'https://{0}/{1}/{2}'.format(
-            self.host, self.api_name, self.api_version)
 
     def _validate_resource_type(self, resource_type):
         if resource_type not in self.valid_resource_types:

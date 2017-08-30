@@ -8,11 +8,14 @@ from mapbox.utils import normalize_geojson_featurecollection
 
 
 class Static(Service):
-    """Access to the Static Map API."""
+    """Access to the Static Map API V4"""
+
+    api_name = None
+    api_version = 'v4'
 
     @property
     def baseuri(self):
-        return 'https://{0}/v4'.format(self.host)
+        return 'https://{0}/{1}'.format(self.host, self.api_version)
 
     def _validate_lat(self, val):
         if val < -85.0511 or val > 85.0511:
