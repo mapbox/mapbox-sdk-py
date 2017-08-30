@@ -32,7 +32,7 @@ points = [{
 def test_class_attrs():
     """Get expected class attr values"""
     serv = mapbox.Distance()
-    assert serv.api_name == 'distance'
+    assert serv.api_name == 'distances'
     assert serv.api_version == 'v1'
 
 

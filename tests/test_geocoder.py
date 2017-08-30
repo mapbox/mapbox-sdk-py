@@ -11,7 +11,7 @@ import mapbox
 def test_class_attrs():
     """Get expected class attr values"""
     serv = mapbox.Geocoder()
-    assert serv.api_name == 'geocoder'
+    assert serv.api_name == 'geocoding'
     assert serv.api_version == 'v5'
 
 
