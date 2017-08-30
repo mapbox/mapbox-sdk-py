@@ -11,6 +11,13 @@ access_token = 'pk.{0}.test'.format(
     base64.b64encode(b'{"u":"testuser"}').decode('utf-8'))
 
 
+def test_class_attrs():
+    """Get expected class attr values"""
+    serv = Datasets()
+    assert serv.api_name == 'datasets'
+    assert serv.api_version == 'v1'
+
+
 def test_datasets_service_properties():
     """Get expected username and baseuri."""
     datasets = Datasets(access_token=access_token)
@@ -240,7 +247,7 @@ def test_update_feature():
         callback=request_callback)
 
     response = Datasets(access_token=access_token).update_feature(
-            'test', '1', {'type': 'Feature'})
+        'test', '1', {'type': 'Feature'})
     assert response.status_code == 200
 
 

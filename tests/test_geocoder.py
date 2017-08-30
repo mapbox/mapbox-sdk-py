@@ -8,6 +8,13 @@ import pytest
 import mapbox
 
 
+def test_class_attrs():
+    """Get expected class attr values"""
+    serv = mapbox.Geocoder()
+    assert serv.api_name == 'geocoder'
+    assert serv.api_version == 'v5'
+
+
 def test_geocoder_default_name():
     """Default name is set"""
     geocoder = mapbox.Geocoder()
@@ -121,7 +128,7 @@ def test_validate_country_codes_err():
 
 def test_validate_country():
     assert mapbox.Geocoder()._validate_country_codes(
-        ('us', 'br')) ==  {'country': 'us,br'}
+        ('us', 'br')) == {'country': 'us,br'}
 
 
 def test_validate_place_types_err():
@@ -229,7 +236,7 @@ def test_geocoder_forward_bbox():
 
     response = mapbox.Geocoder(
         access_token='pk.test').forward(
-            'washington', bbox=(-78.3284,38.6039,-78.0428,38.7841))
+            'washington', bbox=(-78.3284, 38.6039, -78.0428, 38.7841))
     assert response.status_code == 200
     assert response.json()['query'] == ["washington"]
 

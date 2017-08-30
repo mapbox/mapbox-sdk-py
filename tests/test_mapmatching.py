@@ -24,6 +24,13 @@ def line_feature():
                 [13.420631289482117, 52.50294888790448]]}}
 
 
+def test_class_attrs():
+    """Get expected class attr values"""
+    serv = mapbox.MapMatcher()
+    assert serv.api_name == 'matching'
+    assert serv.api_version == 'v4'
+
+
 @responses.activate
 def test_matching(line_feature):
 

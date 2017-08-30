@@ -10,6 +10,14 @@ from mapbox.errors import TokenError
 from mapbox.services import base
 
 
+def test_class_attrs():
+    """Get expected class attr values"""
+    serv = base.Service()
+    assert serv.api_name == 'hors service'
+    assert serv.api_version == 'v0'
+    assert serv.baseuri == 'https://api.mapbox.com/hors service/v0'
+
+
 def test_service_session():
     """Get a session using a token"""
     session = base.Session('pk.test')
