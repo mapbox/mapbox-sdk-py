@@ -6,12 +6,11 @@ python:
   - '3.4'
   - '3.5'
   - '3.6'
-  - pypy
+  - pypy-5.3.1
 cache:
   directories:
     - $HOME/.pip-cache/
 install:
-  - pip install cryptography==1.8.2
   - pip install -U pip --cache-dir $HOME/.pip-cache
   - pip install -e .[test] --cache-dir $HOME/.pip-cache
 before_script:
