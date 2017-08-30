@@ -15,56 +15,57 @@ The Mapbox Python SDK is a low-level client API, not a Resource API such as the 
 Services
 ========
 
-- **Analytics** `examples <./docs/analytics.md>`__, `website <https://www.mapbox.com/api-documentation/#analytics>`__
+- **Analytics V1** `examples <./docs/analytics.md>`__, `website <https://www.mapbox.com/api-documentation/#analytics>`__
 
   - API usage for services by resource. 
   - available for premium and enterprise plans.
 
-- **Directions** `examples <./docs/directions.md#directions>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#directions>`__
+- **Directions V4** `examples <./docs/directions.md#directions>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#directions>`__
 
   - Profiles for driving, walking, and cycling
   - GeoJSON & Polyline formatting
   - Instructions as text or HTML
 
-- **Distance** `examples <./docs/distance.md#distance>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#directions-matrix>`__
+- **Distance V1** `examples <./docs/distance.md#distance>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#directions-matrix>`__
 
   - Travel-time tables between up to 100 points
   - Profiles for driving, walking and cycling
 
-- **Geocoding** `examples <./docs/geocoding.md#geocoding>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#geocoding>`__
+- **Geocodingi V5** `examples <./docs/geocoding.md#geocoding>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#geocoding>`__
 
   - Forward (place names ⇢ longitude, latitude)
   - Reverse (longitude, latitude ⇢ place names)
 
-- **Map Matching** `examples <./docs/mapmatching.md#map-matching>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#map-matching>`__
+- **Map Matching V4** `examples <./docs/mapmatching.md#map-matching>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#map-matching>`__
 
   - Snap GPS traces to OpenStreetMap data
 
-- **Static Maps** `examples <./docs/static.md#static-maps>`__, `website <https://www.mapbox.com/api-documentation/pages/static_classic.html>`__
+- **Static Maps V4** `examples <./docs/static.md#static-maps>`__, `website <https://www.mapbox.com/api-documentation/pages/static_classic.html>`__
 
   - Generate standalone images from existing Mapbox *mapids* (tilesets)
   - Render with GeoJSON overlays
   
-- **Static Styles** `examples <./docs/static.md#static-maps>`__, `website <https://www.mapbox.com/api-documentation/#static>`__
+- **Static Styles V1** `examples <./docs/static.md#static-maps>`__, `website <https://www.mapbox.com/api-documentation/#static>`__
 
   - Generate standalone images from existing Mapbox *styles*
   - Render with GeoJSON overlays
   - Adjust pitch and bearing, decimal zoom levels
   
-- **Surface** `examples <./docs/surface.md#surface>`__, `website <https://www.mapbox.com/developers/api/surface/>`__
+- **Surface V4** `examples <./docs/surface.md#surface>`__, `website <https://www.mapbox.com/developers/api/surface/>`__
 
   - Interpolates values along lines. Useful for elevation traces.
 
-- **Uploads** `examples <./docs/uploads.md#uploads>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#uploads>`__
+- **Uploads V1** `examples <./docs/uploads.md#uploads>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#uploads>`__
 
   - Upload data to be processed and hosted by Mapbox.
 
-- **Datasets** `examples <./docs/datasets.md#datasets>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#datasets>`__
+- **Datasetsi V1** `examples <./docs/datasets.md#datasets>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#datasets>`__
 
   - Manage editable collections of GeoJSON features
   - Persistent storage for custom geographic data
 
-Other services coming soon.
+Please note that there may be some lag between the release of new Mapbox web
+services and releases of this package.
 
 Installation
 ============
