@@ -25,6 +25,13 @@ upload_response_body = """
     "name": null}}""".format(username=username)
 
 
+def test_class_attrs():
+    """Get expected class attr values"""
+    serv = mapbox.Uploader()
+    assert serv.api_name == 'uploads'
+    assert serv.api_version == 'v1'
+
+
 @responses.activate
 def test_get_credentials():
     query_body = """

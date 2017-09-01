@@ -8,11 +8,10 @@ from mapbox.services.base import Service
 
 
 class Datasets(Service):
-    """Access to the Datasets API."""
+    """Access to the Datasets API V1"""
 
-    @property
-    def baseuri(self):
-        return 'https://{0}/datasets/v1'.format(self.host)
+    api_name = 'datasets'
+    api_version = 'v1'
 
     def _attribs(self, name=None, description=None):
         """Form an attributes dictionary from keyword args."""

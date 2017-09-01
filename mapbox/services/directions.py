@@ -6,7 +6,10 @@ from mapbox import errors
 
 
 class Directions(Service):
-    """Access to the Directions API."""
+    """Access to the Directions API V4"""
+
+    api_name = 'directions'
+    api_version = 'v4'
 
     valid_profiles = ['mapbox.driving',
                       'mapbox.cycling',
@@ -16,7 +19,8 @@ class Directions(Service):
 
     @property
     def baseuri(self):
-        return 'https://{0}/v4/directions'.format(self.host)
+        return 'https://{0}/{2}/{1}'.format(
+            self.host, self.api_name, self.api_version)
 
     def _validate_profile(self, profile):
         if profile not in self.valid_profiles:

@@ -1,3 +1,8 @@
+Next (YYYY-MM-DD)
+-----------------
+- Add api_name and api_version class attributes (#207).
+
+
 0.14.0 (2017-07-10)
 -------------------
 - Permit images of size 1 and 1280 (#196)

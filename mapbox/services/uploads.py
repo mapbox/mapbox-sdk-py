@@ -10,7 +10,7 @@ from mapbox.services.base import Service
 
 
 class Uploader(Service):
-    """Access to the Upload API.
+    """Access to the Upload API V1
 
     Example usage:
 
@@ -29,9 +29,8 @@ class Uploader(Service):
         assert job not in u.list().json()
     """
 
-    @property
-    def baseuri(self):
-        return 'https://{0}/uploads/v1'.format(self.host)
+    api_name = 'uploads'
+    api_version = 'v1'
 
     def _get_credentials(self):
         """Gets temporary S3 credentials to stage user-uploaded files

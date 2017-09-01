@@ -21,6 +21,13 @@ points = [{
             36.92217534275667]}}]
 
 
+def test_class_attrs():
+    """Get expected class attr values"""
+    serv = mapbox.Directions()
+    assert serv.api_name == 'directions'
+    assert serv.api_version == 'v4'
+
+
 @responses.activate
 @pytest.mark.parametrize("cache", [None, DictCache()])
 def test_directions(cache):
@@ -41,7 +48,6 @@ def test_directions(cache):
 
 
 @responses.activate
-
 def test_directions_geojson():
     with open('tests/moors.json') as fh:
         body = fh.read()
