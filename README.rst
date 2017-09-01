@@ -31,7 +31,7 @@ Services
   - Travel-time tables between up to 100 points
   - Profiles for driving, walking and cycling
 
-- **Geocodingi V5** `examples <./docs/geocoding.md#geocoding>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#geocoding>`__
+- **Geocoding V5** `examples <./docs/geocoding.md#geocoding>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#geocoding>`__
 
   - Forward (place names ⇢ longitude, latitude)
   - Reverse (longitude, latitude ⇢ place names)
@@ -59,7 +59,7 @@ Services
 
   - Upload data to be processed and hosted by Mapbox.
 
-- **Datasetsi V1** `examples <./docs/datasets.md#datasets>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#datasets>`__
+- **Datasets V1** `examples <./docs/datasets.md#datasets>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#datasets>`__
 
   - Manage editable collections of GeoJSON features
   - Persistent storage for custom geographic data
