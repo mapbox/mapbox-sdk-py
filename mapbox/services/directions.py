@@ -11,6 +11,9 @@ from mapbox import errors
 class Directions(Service):
     """Access to the Directions v5 API."""
 
+    api_name = 'directions'
+    api_version = 'v5'
+
     valid_profiles = [
         'mapbox/driving',
         'mapbox/driving-traffic',
@@ -22,7 +25,8 @@ class Directions(Service):
 
     @property
     def baseuri(self):
-        return 'https://{0}/directions/v5'.format(self.host)
+        return 'https://{0}/{2}/{1}'.format(
+            self.host, self.api_name, self.api_version)
 
     def _validate_profile(self, profile):
         # Backwards compatible with v4 profiles

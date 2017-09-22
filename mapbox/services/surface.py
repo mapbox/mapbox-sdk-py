@@ -5,11 +5,15 @@ from mapbox.services.base import Service
 
 
 class Surface(Service):
-    """Access to the Surface API."""
+    """Access to the Surface API V4"""
+
+    api_name = 'surface'
+    api_version = 'v4'
 
     @property
     def baseuri(self):
-        return 'https://{0}/v4/surface'.format(self.host)
+        return 'https://{0}/{2}/{1}'.format(
+            self.host, self.api_name, self.api_version)
 
     def surface(self,
                 features,

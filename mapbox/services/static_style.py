@@ -50,11 +50,10 @@ def validate_bearing(val):
 
 
 class StaticStyle(Service):
-    """Access to the Static Map API."""
+    """Access to the Static Map API V1"""
 
-    @property
-    def baseuri(self):
-        return 'https://{0}/styles/v1'.format(self.host)
+    api_name = 'styles'
+    api_version = 'v1'
 
     def tile(self, username, style_id, z, x, y, tile_size=512, retina=False):
         "/styles/v1/{username}/{style_id}/tiles/{tileSize}/{z}/{x}/{y}{@2x}"

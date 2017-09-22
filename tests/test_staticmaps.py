@@ -18,6 +18,13 @@ import responses
 import mapbox
 
 
+def test_class_attrs():
+    """Get expected class attr values"""
+    serv = mapbox.Static()
+    assert serv.api_name is None
+    assert serv.api_version == 'v4'
+
+
 @pytest.fixture
 def points():
     points = [

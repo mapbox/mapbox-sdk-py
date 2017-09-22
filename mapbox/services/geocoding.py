@@ -7,13 +7,11 @@ from mapbox.services.base import Service
 
 
 class Geocoder(Service):
-    """Access to the Geocoding API."""
+    """Access to the Geocoding API V5"""
 
+    api_name = 'geocoding'
+    api_version = 'v5'
     precision = {'reverse': 5, 'proximity': 3}
-
-    @property
-    def baseuri(self):
-        return 'https://{0}/geocoding/v5'.format(self.host)
 
     def __init__(self, name='mapbox.places', access_token=None, cache=None,
                  host=None):

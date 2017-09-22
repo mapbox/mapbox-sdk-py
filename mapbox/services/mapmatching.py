@@ -7,13 +7,11 @@ from mapbox.services.base import Service
 
 
 class MapMatcher(Service):
-    """Access to the Map Matching API."""
+    """Access to the Map Matching API V4"""
 
+    api_name = 'matching'
+    api_version = 'v4'
     valid_profiles = ['mapbox.driving', 'mapbox.cycling', 'mapbox.walking']
-
-    @property
-    def baseuri(self):
-        return 'https://{0}/matching/v4'.format(self.host)
 
     def _validate_profile(self, profile):
         if profile not in self.valid_profiles:

@@ -42,6 +42,8 @@ class Service(object):
     """Service base class."""
 
     default_host = 'api.mapbox.com'
+    api_name = 'hors service'
+    api_version = 'v0'
 
     def __init__(self, access_token=None, host=None, cache=None):
         """Constructs a Service object.
@@ -54,6 +56,11 @@ class Service(object):
         self.host = host or os.environ.get('MAPBOX_HOST', self.default_host)
         if cache:
             self.session = CacheControl(self.session, cache=cache)
+
+    @property
+    def baseuri(self):
+        return 'https://{0}/{1}/{2}'.format(
+            self.host, self.api_name, self.api_version)
 
     @property
     def username(self):

@@ -33,6 +33,13 @@ def points():
                 coordinates=[-61.6, 12.0]))]
 
 
+def test_class_attrs():
+    """Get expected class attr values"""
+    serv = mapbox.StaticStyle()
+    assert serv.api_name == 'styles'
+    assert serv.api_version == 'v1'
+
+
 @responses.activate
 def test_staticmap_lonlatzpitchbearing():
 

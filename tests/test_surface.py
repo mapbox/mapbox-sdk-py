@@ -20,6 +20,13 @@ points = [{
         "coordinates": [-112.083965, 36.053845]}}]
 
 
+def test_class_attrs():
+    """Get expected class attr values"""
+    serv = mapbox.Surface()
+    assert serv.api_name == 'surface'
+    assert serv.api_version == 'v4'
+
+
 @responses.activate
 def test_surface():
     body = """{"results":[{"id":0,"latlng":{"lat":36.05322,"lng":-112.084004},"ele":2186.361304424316},{"id":1,"latlng":{"lat":36.053573,"lng":-112.083914},"ele":2187.6233827411997},{"id":2,"latlng":{"lat":36.053845,"lng":-112.083965},"ele":2163.921475128245}],"attribution":"&lt;a href='https://www.mapbox.com/about/maps/' target='_blank'&gt;&amp;copy; Mapbox&lt;/a&gt;"}"""
