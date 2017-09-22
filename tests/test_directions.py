@@ -25,7 +25,7 @@ def test_class_attrs():
     """Get expected class attr values"""
     serv = mapbox.Directions()
     assert serv.api_name == 'directions'
-    assert serv.api_version == 'v4'
+    assert serv.api_version == 'v5'
 
 
 @responses.activate

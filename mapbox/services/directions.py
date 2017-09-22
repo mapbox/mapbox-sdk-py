@@ -25,7 +25,7 @@ class Directions(Service):
 
     @property
     def baseuri(self):
-        return 'https://{0}/{2}/{1}'.format(
+        return 'https://{0}/{1}/{2}'.format(
             self.host, self.api_name, self.api_version)
 
     def _validate_profile(self, profile):
