@@ -1,4 +1,5 @@
 import warnings
+from numbers import Number
 
 import polyline
 from uritemplate import URITemplate
@@ -117,15 +118,19 @@ class Directions(Service):
         if radius is None:
             return None
 
-        try:
-            if radius == 'unlimited' or radius > 0:
-                return radius
-            else:
+        if isinstance(radius, str):
+            if radius != 'unlimited':
                 raise errors.InvalidParameterError(
                     '{0} is not a valid radius'.format(radius))
-        except TypeError:
+        elif isinstance(radius, Number):
+            if radius <= 0:
+                raise errors.InvalidParameterError(
+                    'radius must be greater than zero'.format(radius))
+        else:
             raise errors.InvalidParameterError(
                 '{0} is not a valid radius'.format(radius))
+
+        return radius
 
     @staticmethod
     def _encode_bearing(b):
