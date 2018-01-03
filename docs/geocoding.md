@@ -117,9 +117,9 @@ Place results may be biased toward a given longitude and latitude.
 200
 >>> first = response.geojson()['features'][0]
 >>> first['place_name']
-'200 Queen St, Saint John, New Brunswick E2L 2X1, Canada'
->>> first['geometry']['coordinates']
-[-66.050985, 45.270093]
+'200 Queen St...'
+>>> [int(coord) for coord in first['geometry']['coordinates']]
+[-66, 45]
 
 ```
 
@@ -136,8 +136,8 @@ Place results may be limited to those falling within a given bounding box.
 >>> first = response.geojson()['features'][0]
 >>> first['place_name']
 'Washington, Virginia, United States'
->>> first['geometry']['coordinates']
-[-78.1594, 38.7135]
+>>> [round(coord, 2) for coord in first['geometry']['coordinates']]
+[-78.16, 38.71]
 
 ```
 ## Forward geocoding with limited results

@@ -1,6 +1,7 @@
 """
 Mapbox Uploads API
 """
+import re
 
 from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
@@ -54,8 +55,13 @@ class Uploader(Service):
         """
         if '.' not in tileset:
             tileset = "{0}.{1}".format(self.username, tileset)
-        if len(tileset) > 64:
-            raise ValidationError('tileset including username must be < 64 char')
+
+        pattern = '^[a-z0-9-_]{1,32}\.[a-z0-9-_]{1,32}$'
+        if not re.match(pattern, tileset, flags=re.IGNORECASE):
+            raise ValidationError(
+                'tileset {0} is invalid, must match r"{1}"'.format(
+                    tileset, pattern))
+
         return tileset
 
     def stage(self, fileobj, creds=None, callback=None):
