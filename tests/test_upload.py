@@ -416,7 +416,7 @@ def test_upload_patch(monkeypatch):
 
     with open('tests/moors.json', 'rb') as src:
         res = mapbox.Uploader(access_token=access_token).upload(
-            src, 'testuser.test1', name='test1', patch=True)
+            src, 'testuser.Test1', name='test1', patch=True)
 
     assert res.status_code == 201
     job = res.json()
@@ -426,8 +426,17 @@ def test_upload_patch(monkeypatch):
 def test_upload_tileset_validation():
     with pytest.raises(mapbox.errors.ValidationError):
         with open('tests/moors.json', 'rb') as src:
+            # limited to 32 chars, try 40
             mapbox.Uploader(access_token=access_token).upload(
-                src, 'a' * 65, name='test1', patch=True)
+                src, 'username.' + 'aA' * 20, name='test1')
+
+
+def test_upload_tileset_validation_specialchar():
+    with pytest.raises(mapbox.errors.ValidationError):
+        with open('tests/moors.json', 'rb') as src:
+            # limited to a-z0-9-_ chars
+            mapbox.Uploader(access_token=access_token).upload(
+                src, 'username.&#!', name='test1')
 
 
 def test_upload_tileset_validation_username():
