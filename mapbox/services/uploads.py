@@ -59,7 +59,8 @@ class Uploader(Service):
         pattern = '^[a-z0-9-_]{1,32}\.[a-z0-9-_]{1,32}$'
         if not re.match(pattern, tileset, flags=re.IGNORECASE):
             raise ValidationError(
-                f'tileset {tileset} is invalid, must match r"{pattern}"')
+                'tileset {0} is invalid, must match r"{1}"'.format(
+                    tileset, pattern))
 
         return tileset
 
