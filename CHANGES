@@ -1,7 +1,9 @@
-Next (YYYY-MM-DD)
------------------
+0.15.0 (2018-01-10)
+-------------------
 - Add api_name and api_version class attributes (#207).
-
+- Add DirectionsMatrix class for access to the Matrix API V1 (#212).
+- Add support for sequences of geometries and coordinate pairs to read_points
+  (#212).
 
 0.14.0 (2017-07-10)
 -------------------
