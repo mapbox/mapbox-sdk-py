@@ -1,5 +1,10 @@
 # Distance
 
+**DEPRECATED**
+
+The `mapbox.services.distance` module will be removed in 1.0. Please switch
+to the new `mapbox.services.matrix` module.
+
 The `Distance` class from the `mapbox.services.distance` module provides
 access to the Mapbox Distance API. You can also import it directly from the
 `mapbox` module.
