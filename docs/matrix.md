@@ -58,7 +58,7 @@ The input waypoints to the `directions` method are
 
 ```
 
-The `distance` method can be called with a list of point features and the
+The `matrix` method can be called with a list of point features and the
 travel profile.
 
 ```python
@@ -81,4 +81,4 @@ zeros.
 
 ```
 
-See ``import mapbox; help(mapbox.Distance)`` for more detailed usage.
+See ``import mapbox; help(mapbox.DirectionsMatrix)`` for more detailed usage.
