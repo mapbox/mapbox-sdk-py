@@ -57,6 +57,15 @@ def test_matrix(waypoints):
         status=200,
         content_type='application/json')
 
+    # We need a second response because of the difference in rounding between
+    # Python 2 (leaves a '.0') and 3 (no unnecessary '.0').
+    responses.add(
+        responses.GET,
+        'https://api.mapbox.com/directions-matrix/v1/mapbox/driving/-8.0,36.0;-86.0,36.0;-88.0,37.0?access_token=pk.test',
+        match_querystring=True,
+        body='{"durations":[[0,4977,5951],[4963,0,9349],[5881,9317,0]]}',
+        status=200,
+        content_type='application/json')
     res = mapbox.DirectionsMatrix(access_token='pk.test').matrix(waypoints)
     matrix = res.json()['durations']
     # 3x3 list
