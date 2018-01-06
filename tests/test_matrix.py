@@ -61,7 +61,7 @@ def test_matrix(waypoints):
     # Python 2 (leaves a '.0') and 3 (no unnecessary '.0').
     responses.add(
         responses.GET,
-        'https://api.mapbox.com/directions-matrix/v1/mapbox/driving/-8.0,36.0;-86.0,36.0;-88.0,37.0?access_token=pk.test',
+        'https://api.mapbox.com/directions-matrix/v1/mapbox/driving/-87.0,36.0;-86.0,36.0;-88.0,37.0?access_token=pk.test',
         match_querystring=True,
         body='{"durations":[[0,4977,5951],[4963,0,9349],[5881,9317,0]]}',
         status=200,
