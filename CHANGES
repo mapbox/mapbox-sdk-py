@@ -2,6 +2,11 @@ Next (YYYY-MM-DD)
 -----------------
 - Add api_name and api_version class attributes (#207).
 
+Deprecations:
+
+- 'account' keyword argument of `Uploader` class's `list()`, `delete()`,
+  and `status()` methods will be removed at 1.0. It is replaced by the
+  'username' keyword argument.
 
 0.14.0 (2017-07-10)
 -------------------
