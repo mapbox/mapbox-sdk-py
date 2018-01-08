@@ -5,6 +5,12 @@
 - Add support for sequences of geometries and coordinate pairs to read_points
   (#212).
 
+Deprecations:
+
+- 'account' keyword argument of `Uploader` class's `list()`, `delete()`,
+  and `status()` methods will be removed at 1.0. It is replaced by the
+  'username' keyword argument.
+
 0.14.0 (2017-07-10)
 -------------------
 - Permit images of size 1 and 1280 (#196)

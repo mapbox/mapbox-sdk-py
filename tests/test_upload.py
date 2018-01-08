@@ -32,6 +32,14 @@ def test_class_attrs():
     assert serv.api_version == 'v1'
 
 
+# TODO: remove at 1.0.
+def test_resolve_username():
+    """Username is resolved and deprecation warning raised"""
+    serv = mapbox.Uploader()
+    with pytest.warns(DeprecationWarning):
+        assert serv._resolve_username('foo', 'bar') == 'bar'
+
+
 @responses.activate
 def test_get_credentials():
     query_body = """
