@@ -1,7 +1,8 @@
 import pytest
 import responses
 
-import mapbox
+from mapbox import DirectionsMatrix
+from mapbox.errors import MapboxDeprecationWarning
 
 
 points = [{
@@ -27,7 +28,7 @@ points = [{
 
 def test_class_attrs():
     """Get expected class attr values"""
-    serv = mapbox.DirectionsMatrix()
+    serv = DirectionsMatrix()
     assert serv.api_name == 'directions-matrix'
     assert serv.api_version == 'v1'
 
@@ -35,14 +36,34 @@ def test_class_attrs():
 def test_profile_invalid():
     """'jetpack' is not a valid profile."""
     with pytest.raises(ValueError):
-        mapbox.DirectionsMatrix(access_token='pk.test')._validate_profile('jetpack')
+        DirectionsMatrix(access_token='pk.test')._validate_profile('jetpack')
 
 
 @pytest.mark.parametrize('profile', ['mapbox/driving', 'mapbox/cycling', 'mapbox/walking'])
 def test_profile_valid(profile):
     """Profiles are valid"""
-    assert profile == mapbox.DirectionsMatrix(
+    assert profile == DirectionsMatrix(
         access_token='pk.test')._validate_profile(profile)
+
+
+@pytest.mark.parametrize('profile', ['mapbox.driving', 'mapbox.cycling', 'mapbox.walking'])
+def test_deprecated_profile(profile):
+    """Profiles are deprecated"""
+    service = DirectionsMatrix()
+    with pytest.warns(MapboxDeprecationWarning):
+        assert profile.replace('.', '/') == service._validate_profile(profile)
+
+
+def test_null_query():
+    service = DirectionsMatrix()
+    assert service._make_query(None, None) == {}
+
+
+def test_query():
+    service = DirectionsMatrix()
+    params = service._make_query([0, 3], [1, 2])
+    assert params['sources'] == '0;3'
+    assert params['destinations'] == '1;2'
 
 
 @responses.activate
@@ -66,7 +87,7 @@ def test_matrix(waypoints):
         body='{"durations":[[0,4977,5951],[4963,0,9349],[5881,9317,0]]}',
         status=200,
         content_type='application/json')
-    res = mapbox.DirectionsMatrix(access_token='pk.test').matrix(waypoints)
+    res = DirectionsMatrix(access_token='pk.test').matrix(waypoints)
     matrix = res.json()['durations']
     # 3x3 list
     assert len(matrix) == 3

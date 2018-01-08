@@ -25,8 +25,9 @@ directly from the API.
 ## Usage
 
 If you need to optimize travel between several waypoints, you can use the
-Matrix API to create a "Distance Matrix" showing travel times between all
-waypoints.  Each of your input waypoints should be a GeoJSON point feature.
+Matrix API to create a matrix showing travel times between all waypoints. Each
+of your input waypoints should be a GeoJSON point feature, a GeoJSON geometry,
+or a (longitude, latitude) pair.
 
 ```python
 >>> service = DirectionsMatrix()
@@ -62,7 +63,7 @@ The `matrix` method can be called with a list of point features and the
 travel profile.
 
 ```python
->>> response = service.matrix([portland, bend, corvallis], 'driving')
+>>> response = service.matrix([portland, bend, corvallis], profile='mapbox/driving')
 >>> response.status_code
 200
 >>> response.headers['Content-Type']
@@ -70,9 +71,8 @@ travel profile.
 
 ```
 
-And the response JSON contains a durations matrix, a 2-D list with travel
-times (seconds) between all input waypoints. The diagonal will be
-zeros.
+And the response JSON contains a matrix, a 2-D list with travel times (seconds)
+between all input waypoints. The diagonal will be zeros.
 
 ```python
 >>> from pprint import pprint
