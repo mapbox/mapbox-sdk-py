@@ -24,14 +24,17 @@ class DirectionsMatrix(Service):
             self.host, self.api_name, self.api_version)
 
     def _validate_profile(self, profile):
-        # Backwards compatible with Directions v4 profiles
-        v4_to_v5_profiles = {
+        # Support for Distance v1 and Directions v4 profiles
+        profiles_map = {
             'mapbox.driving': 'mapbox/driving',
             'mapbox.cycling': 'mapbox/cycling',
-            'mapbox.walking': 'mapbox/walking'}
-        if profile in v4_to_v5_profiles:
-            profile = v4_to_v5_profiles[profile]
-            warnings.warn("Converting Directions v4 profile to v5, use {} instead".format(profile),
+            'mapbox.walking': 'mapbox/walking',
+            'driving': 'mapbox/driving',
+            'cycling': 'mapbox/cycling',
+            'walking': 'mapbox/walking'}
+        if profile in profiles_map:
+            profile = profiles_map[profile]
+            warnings.warn("Converting deprecated profile, use {} instead".format(profile),
                           MapboxDeprecationWarning)
         if profile not in self.valid_profiles:
             raise InvalidProfileError(

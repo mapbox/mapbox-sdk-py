@@ -63,7 +63,7 @@ The `matrix` method can be called with a list of point features and the
 travel profile.
 
 ```python
->>> response = service.matrix([portland, bend, corvallis], 'driving')
+>>> response = service.matrix([portland, bend, corvallis], profile='mapbox/driving')
 >>> response.status_code
 200
 >>> response.headers['Content-Type']
