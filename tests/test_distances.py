@@ -2,6 +2,7 @@ import pytest
 import responses
 
 import mapbox
+from mapbox.errors import MapboxDeprecationWarning
 
 
 points = [{
@@ -39,7 +40,8 @@ def test_distance():
         status=200,
         content_type='application/json')
 
-    res = mapbox.Distance(access_token='pk.test').distances(points)
+    with pytest.warns(MapboxDeprecationWarning):
+        res = mapbox.Distance(access_token='pk.test').distances(points)
     assert res.status_code == 200
     assert list(res.json().keys()) == ["durations", ]
 
@@ -55,7 +57,8 @@ def test_distances_matrix():
         status=200,
         content_type='application/json')
 
-    res = mapbox.Distance(access_token='pk.test').distances(points)
+    with pytest.warns(MapboxDeprecationWarning):
+        res = mapbox.Distance(access_token='pk.test').distances(points)
     matrix = res.json()['durations']
     # 3x3 list
     assert len(matrix) == 3

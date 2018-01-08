@@ -2,6 +2,7 @@
 
 import warnings
 
+from mapbox.errors import MapboxDeprecationWarning
 from mapbox.services.matrix import DirectionsMatrix
 
 
@@ -11,7 +12,7 @@ class Distance(object):
     def __init__(self, access_token=None, host=None, cache=None):
         warnings.warn(
             "The distance module will be removed in the next version. "
-            "Use the matrix module instead.", DeprecationWarning)
+            "Use the matrix module instead.", MapboxDeprecationWarning)
         self.access_token = access_token
         self.host = host
         self.cache = cache
