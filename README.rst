@@ -26,11 +26,7 @@ Services
   - GeoJSON & Polyline formatting
   - Instructions as text or HTML
 
-- **Distance V1** `examples <./docs/distance.md#distance>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#directions-matrix>`__
-
-  - Travel-time tables between up to 100 points
-  - Profiles for driving, walking and cycling
-
+- **Distance V1** **DEPRECATED**
 - **Geocoding V5** `examples <./docs/geocoding.md#geocoding>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#geocoding>`__
 
   - Forward (place names ⇢ longitude, latitude)
