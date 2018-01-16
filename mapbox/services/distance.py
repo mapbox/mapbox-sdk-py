@@ -9,6 +9,11 @@ from mapbox.services.matrix import DirectionsMatrix
 class Distance(object):
     """Access to the Distance API V1 ***DEPRECATED**"""
 
+    api_name = 'distance-deprecated'
+    api_version = 'v1-deprecated'
+    valid_profiles = DirectionsMatrix.valid_profiles + [
+        'driving', 'cycling', 'walking']
+
     def __init__(self, access_token=None, host=None, cache=None):
         warnings.warn(
             "The distance module will be removed in the next version. "
