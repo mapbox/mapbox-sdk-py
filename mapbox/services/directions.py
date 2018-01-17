@@ -47,8 +47,25 @@ class Directions(Service):
                    instructions=None, geometry=None, steps=None):
         """Request directions for waypoints encoded as GeoJSON features.
 
-        :param features: sequence of GeoJSON features.
-        :param profile: name of a profile.
+		Parameters
+		----------
+		features : list
+			List of GeoJSON features.
+		profile : str
+			Name of a Mapbox profile such as 'mapbox.driving'.
+		alternatives : bool
+
+		instructions : str
+
+		geometry : str
+
+		steps : bool
+
+
+		Returns
+		-------
+		response
+			It returns a response object with a geojson() method for accessing the route(s) as a GeoJSON-like FeatureCollection dictionary.
         """
         profile = self._validate_profile(profile)
         instructions = self._validate_instruction_format(instructions)
