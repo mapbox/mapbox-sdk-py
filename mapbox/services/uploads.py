@@ -19,7 +19,7 @@ class Uploader(Service):
         from mapbox import Uploader
 
         u = Uploader()
-        url = u.stage(open('test.tif'))
+        url = u.stage(open('test.tif', 'rb'))
         job = u.create(url, 'test1').json()
 
         assert job in u.list().json()
