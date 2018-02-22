@@ -1,3 +1,10 @@
+Changes
+=======
+
+Next
+----
+- Added support for Directions v5.
+
 0.15.1 (2018-01-16)
 -------------------
 - Restore the valid_profiles attribute needed by the Mapbox CLI's distance
