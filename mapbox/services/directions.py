@@ -145,18 +145,19 @@ class Directions(Service):
                    language=None, **kwargs):
         """Request directions for waypoints encoded as GeoJSON features.
 
-		    Parameters
-		    ----------
-		    features : iterable
-		        An iterable collection of GeoJSON features
-		    profile : str
-			      Name of a Mapbox profile such as 'mapbox.driving'
-		    alternatives : bool
-            Whether to try to return alternative routes, default: False.
+        Parameters
+        ----------
+        features : iterable
+            An collection of GeoJSON features
+        profile : str
+            Name of a Mapbox profile such as 'mapbox.driving'
+        alternatives : bool
+            Whether to try to return alternative routes, default: False
         geometries : string
             Type of geometry returned (geojson, polyline, polyline6)
         overview : string or False
-            Type of returned overview geometry: 'full', 'simplified', or False
+            Type of returned overview geometry: 'full', 'simplified',
+            or False
         steps : bool
             Whether to return steps and turn-by-turn instructions,
             default: False
@@ -165,26 +166,31 @@ class Directions(Service):
         radiuses : iterable of numbers or 'unlimited'
             Must be same length as features
         waypoint_snapping : list
-            List must be same length as features.
-            Elements of the list must be one of:
+            Controls snapping of waypoints
+
+            The list is zipped with the features collection and must
+            have the same length. Elements of the list must be one of:
+
             - A number (interpretted as a snapping radius)
             - The string 'unlimited' (unlimited snapping radius)
             - A 3-element tuple consisting of (radius, angle, range)
             - None (no snapping parameters specified for that waypoint)
         annotations : str
             Whether or not to return additional metadata along the route
-        
-            Possible values are: 'duration', 'distance', 'speed', and 'congestion'.
-            Several annotations can be used by joining them with ','.
+
+            Possible values are: 'duration', 'distance', 'speed', and
+            'congestion'. Several annotations can be used by joining
+            them with ','.
         language : str
             Language of returned turn-by-turn text instructions,
             default: 'en'
 
-		    Returns
-		    -------
-		    Response
-			      The method returns a response object with a geojson() method for accessing
-            the route(s) as a GeoJSON-like FeatureCollection dictionary.
+        Returns
+        -------
+        requests.Response
+            The response object has a geojson() method for access to
+            the route(s) as a GeoJSON-like FeatureCollection
+            dictionary.
         """
         # backwards compatible, deprecated
         if 'geometry' in kwargs and geometries is None:
