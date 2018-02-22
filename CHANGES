@@ -1,7 +1,23 @@
-Next (YYYY-MM-DD)
------------------
-- Add api_name and api_version class attributes (#207).
+0.15.1 (2018-01-16)
+-------------------
+- Restore the valid_profiles attribute needed by the Mapbox CLI's distance
+  command (#219).
 
+0.15.0 (2018-01-08)
+-------------------
+- Add api_name and api_version class attributes (#207).
+- Add DirectionsMatrix class for access to the Matrix API V1 (#212).
+- Add support for sequences of geometries and coordinate pairs to read_points
+  (#212).
+
+Deprecations:
+
+- 'account' keyword argument of `Uploader` class's `list()`, `delete()`,
+  and `status()` methods will be removed at 1.0. It is replaced by the
+  'username' keyword argument.
+- The Distance class in mapbox.services.distance will be removed at 1.0.
+  In version 0.15 it is a facade for the new DirectionsMatrix class,
+  which should be used instead in all user code.
 
 0.14.0 (2017-07-10)
 -------------------

@@ -1,6 +1,8 @@
+"""Mapbox Uploads API
 """
-Mapbox Uploads API
-"""
+
+import re
+import warnings
 
 from boto3.session import Session as boto3_session
 from uritemplate import URITemplate
@@ -17,7 +19,7 @@ class Uploader(Service):
         from mapbox import Uploader
 
         u = Uploader()
-        url = u.stage(open('test.tif'))
+        url = u.stage(open('test.tif', 'rb'))
         job = u.create(url, 'test1').json()
 
         assert job in u.list().json()
@@ -54,9 +56,23 @@ class Uploader(Service):
         """
         if '.' not in tileset:
             tileset = "{0}.{1}".format(self.username, tileset)
-        if len(tileset) > 64:
-            raise ValidationError('tileset including username must be < 64 char')
+
+        pattern = '^[a-z0-9-_]{1,32}\.[a-z0-9-_]{1,32}$'
+        if not re.match(pattern, tileset, flags=re.IGNORECASE):
+            raise ValidationError(
+                'tileset {0} is invalid, must match r"{1}"'.format(
+                    tileset, pattern))
+
         return tileset
+
+    # TODO: remove this method at 1.0.
+    def _resolve_username(self, account, username):
+        """Resolve username and handle deprecation of account kwarg"""
+        if account is not None:
+            warnings.warn(
+                "Use keyword argument 'username' instead of 'account'",
+                DeprecationWarning)
+        return username or account or self.username
 
     def stage(self, fileobj, creds=None, callback=None):
         """Stages data in a Mapbox-owned S3 bucket
@@ -134,7 +150,7 @@ class Uploader(Service):
         requests.Response
         """
         tileset = self._validate_tileset(tileset)
-        account, _name = tileset.split(".")
+        username, _name = tileset.split(".")
 
         msg = {'tileset': tileset,
                'url': stage_url}
@@ -144,15 +160,15 @@ class Uploader(Service):
 
         msg['name'] = name if name else _name
 
-        uri = URITemplate(self.baseuri + '/{account}').expand(
-            account=account)
+        uri = URITemplate(self.baseuri + '/{username}').expand(
+            username=username)
 
         resp = self.session.post(uri, json=msg)
         self.handle_http_error(resp)
 
         return resp
 
-    def list(self, account=None):
+    def list(self, account=None, username=None):
         """List of all uploads
 
         Returns a Response object, the json() method of which returns
@@ -160,81 +176,74 @@ class Uploader(Service):
 
         Parameters
         ----------
-        account: str
-            Account name, defaults to the service's username.
+        username : str
+            Account username, defaults to the service's username.
+        account : str, **deprecated**
+            Alias for username. Will be removed in version 1.0.
 
         Returns
         -------
         requests.Response
         """
-
-        if account is None:
-            account = self.username
-        uri = URITemplate(self.baseuri + '/{account}').expand(
-            account=account)
+        username = self._resolve_username(account, username)
+        uri = URITemplate(self.baseuri + '/{username}').expand(
+            username=username)
         resp = self.session.get(uri)
         self.handle_http_error(resp)
-
         return resp
 
-    def delete(self, upload, account=None):
+    def delete(self, upload, account=None, username=None):
         """Delete the specified upload
 
         Parameters
         ----------
         upload: str
             The id of the upload or a dict with key 'id'.
-        account: str
-            Account name, defaults to the service's username.
+        username : str
+            Account username, defaults to the service's username.
+        account : str, **deprecated**
+            Alias for username. Will be removed in version 1.0.
 
         Returns
         -------
         requests.Response
         """
-
-        if account is None:
-            account = self.username
-
+        username = self._resolve_username(account, username)
         if isinstance(upload, dict):
             upload_id = upload['id']
         else:
             upload_id = upload
-
-        uri = URITemplate(self.baseuri + '/{account}/{upload_id}').expand(
-            account=account, upload_id=upload_id)
+        uri = URITemplate(self.baseuri + '/{username}/{upload_id}').expand(
+            username=username, upload_id=upload_id)
         resp = self.session.delete(uri)
         self.handle_http_error(resp)
-
         return resp
 
-    def status(self, upload, account=None):
+    def status(self, upload, account=None, username=None):
         """Check status of upload
 
         Parameters
         ----------
         upload: str
             The id of the upload or a dict with key 'id'.
-        account: str
-            Account name, defaults to the service's username.
+        username : str
+            Account username, defaults to the service's username.
+        account : str, **deprecated**
+            Alias for username. Will be removed in version 1.0.
 
         Returns
         -------
         requests.Response
         """
-
-        if account is None:
-            account = self.username
-
+        username = self._resolve_username(account, username)
         if isinstance(upload, dict):
             upload_id = upload['id']
         else:
             upload_id = upload
-
-        uri = URITemplate(self.baseuri + '/{account}/{upload_id}').expand(
-            account=account, upload_id=upload_id)
+        uri = URITemplate(self.baseuri + '/{username}/{upload_id}').expand(
+            username=username, upload_id=upload_id)
         resp = self.session.get(uri)
         self.handle_http_error(resp)
-
         return resp
 
     def upload(self, fileobj, tileset, name=None, patch=False, callback=None):

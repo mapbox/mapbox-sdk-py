@@ -1,29 +1,23 @@
-# Distance
+# DirectionsMatrix
 
-**DEPRECATED**
-
-The `mapbox.services.distance` module will be removed in 1.0. Please switch
-to the new `mapbox.services.matrix` module.
-
-The `Distance` class from the `mapbox.services.distance` module provides
-access to the Mapbox Distance API. You can also import it directly from the
+The `DirectionsMatrix` class from the `mapbox.services.matrix` module provides
+access to the Mapbox Matrix API V1. You can also import it directly from the
 `mapbox` module.
 
 ```python
->>> from mapbox import Distance
+>>> from mapbox import DirectionsMatrix
 
 ```
 
-See https://www.mapbox.com/developers/api/distance/ for general documentation
+See https://www.mapbox.com/api-documentation/#matrix for general documentation
 of the API.
 
 Your Mapbox access token should be set in your environment; see the [access
 tokens](access_tokens.md) documentation for more information.
 
-## Distance methods
+## DirectionsMatrix methods
 
-The methods of the `Distance` class that provide access to the Distance API
-return an instance of
+`DirectionsMatrix` methods return an instance of
 [`requests.Response`](http://docs.python-requests.org/en/latest/api/#requests.Response).
 If the response is successful, the `json()` method returns Python data parsed
 directly from the API.
@@ -31,11 +25,12 @@ directly from the API.
 ## Usage
 
 If you need to optimize travel between several waypoints, you can use the
-Distance API to create a "Distance Matrix" showing travel times between all
-waypoints.  Each of your input waypoints should be a GeoJSON point feature.
+Matrix API to create a matrix showing travel times between all waypoints. Each
+of your input waypoints should be a GeoJSON point feature, a GeoJSON geometry,
+or a (longitude, latitude) pair.
 
 ```python
->>> service = Distance()
+>>> service = DirectionsMatrix()
 
 ```
 
@@ -64,11 +59,11 @@ The input waypoints to the `directions` method are
 
 ```
 
-The `distance` method can be called with a list of point features and the
+The `matrix` method can be called with a list of point features and the
 travel profile.
 
 ```python
->>> response = service.distances([portland, bend, corvallis], 'driving')
+>>> response = service.matrix([portland, bend, corvallis], profile='mapbox/driving')
 >>> response.status_code
 200
 >>> response.headers['Content-Type']
@@ -76,9 +71,8 @@ travel profile.
 
 ```
 
-And the response JSON contains a durations matrix, a 2-D list with travel
-times (seconds) between all input waypoints. The diagonal will be
-zeros.
+And the response JSON contains a matrix, a 2-D list with travel times (seconds)
+between all input waypoints. The diagonal will be zeros.
 
 ```python
 >>> from pprint import pprint
@@ -87,4 +81,4 @@ zeros.
 
 ```
 
-See ``import mapbox; help(mapbox.Distance)`` for more detailed usage.
+See ``import mapbox; help(mapbox.DirectionsMatrix)`` for more detailed usage.

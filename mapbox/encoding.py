@@ -24,7 +24,10 @@ def read_points(features):
     """
     for feature in features:
 
-        if hasattr(feature, '__geo_interface__'):
+        if isinstance(feature, (tuple, list)) and len(feature) == 2:
+            yield feature
+
+        elif hasattr(feature, '__geo_interface__'):
             # An object implementing the geo_interface
             try:
                 # Could be a Feature...
@@ -42,6 +45,11 @@ def read_points(features):
             for pt in _geom_points(geom):
                 yield pt
 
+        elif 'coordinates' in feature:
+            geom = feature
+            for pt in _geom_points(geom):
+                yield pt
+
         else:
             raise InvalidFeatureError(
                 "Unknown object: Not a GeoJSON Point feature or "
@@ -53,7 +61,7 @@ def encode_waypoints(features, min_limit=None, max_limit=None, precision=6):
     return a string encoded in waypoint-style used by certain mapbox APIs
     ("lon,lat" pairs separated by ";")
     """
-    coords = ['{lon:.{p}f},{lat:.{p}f}'.format(lon=lon, lat=lat, p=precision)
+    coords = ['{lon},{lat}'.format(lon=round(lon, precision), lat=round(lat, precision))
               for lon, lat in read_points(features)]
 
     if min_limit is not None and len(coords) < min_limit:
