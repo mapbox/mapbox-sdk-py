@@ -4,11 +4,11 @@ import base64
 import json
 import os
 
-from cachecontrol import CacheControl
-import requests
-
 from .. import __version__
 from mapbox import errors
+
+# cachecontrol is imported lazily below.
+# requests is imported lazily below.
 
 
 def Session(access_token=None, env=None):
@@ -30,6 +30,7 @@ def Session(access_token=None, env=None):
         access_token or
         env.get('MapboxAccessToken') or
         env.get('MAPBOX_ACCESS_TOKEN'))
+    import requests
     session = requests.Session()
     session.params.update(access_token=access_token)
     session.headers.update({
@@ -55,6 +56,7 @@ class Service(object):
         self.session = Session(access_token)
         self.host = host or os.environ.get('MAPBOX_HOST', self.default_host)
         if cache:
+            from cachecontrol import CacheControl
             self.session = CacheControl(self.session, cache=cache)
 
     @property

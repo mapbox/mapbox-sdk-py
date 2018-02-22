@@ -1,7 +1,6 @@
 # mapbox.datasets
 import json
 
-import requests
 from uritemplate import URITemplate
 
 from mapbox.services.base import Service
