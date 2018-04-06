@@ -31,14 +31,15 @@ class Uploader(Service):
         assert job not in u.list().json()
     """
 
-    api_name = 'uploads'
-    api_version = 'v1'
+    api_name = "uploads"
+    api_version = "v1"
 
     def _get_credentials(self):
         """Gets temporary S3 credentials to stage user-uploaded files
         """
-        uri = URITemplate(self.baseuri + '/{username}/credentials').expand(
-            username=self.username)
+        uri = URITemplate(self.baseuri + "/{username}/credentials").expand(
+            username=self.username
+        )
 
         resp = self.session.post(uri)
 
@@ -47,31 +48,35 @@ class Uploader(Service):
             custom_messages={
                 401: "Token is not authorized",
                 404: "Token does not have upload scope",
-                429: "Too many requests"})
+                429: "Too many requests",
+            },
+        )
         return resp
 
     def _validate_tileset(self, tileset):
         """Validate the tileset name and
         ensure that it includes the username
         """
-        if '.' not in tileset:
+        if "." not in tileset:
             tileset = "{0}.{1}".format(self.username, tileset)
 
-        pattern = '^[a-z0-9-_]{1,32}\.[a-z0-9-_]{1,32}$'
+        pattern = "^[a-z0-9-_]{1,32}\.[a-z0-9-_]{1,32}$"
         if not re.match(pattern, tileset, flags=re.IGNORECASE):
             raise ValidationError(
-                'tileset {0} is invalid, must match r"{1}"'.format(
-                    tileset, pattern))
+                'tileset {0} is invalid, must match r"{1}"'.format(tileset, pattern)
+            )
 
         return tileset
 
     # TODO: remove this method at 1.0.
+
     def _resolve_username(self, account, username):
         """Resolve username and handle deprecation of account kwarg"""
         if account is not None:
             warnings.warn(
                 "Use keyword argument 'username' instead of 'account'",
-                DeprecationWarning)
+                DeprecationWarning,
+            )
         return username or account or self.username
 
     def stage(self, fileobj, creds=None, callback=None):
@@ -96,25 +101,26 @@ class Uploader(Service):
             The URL of the staged data
         """
 
-        if not hasattr(fileobj, 'read'):
-            fileobj = open(fileobj, 'rb')
+        if not hasattr(fileobj, "read"):
+            fileobj = open(fileobj, "rb")
 
         if not creds:
             res = self._get_credentials()
             creds = res.json()
 
         session = boto3_session(
-            aws_access_key_id=creds['accessKeyId'],
-            aws_secret_access_key=creds['secretAccessKey'],
-            aws_session_token=creds['sessionToken'],
-            region_name='us-east-1')
+            aws_access_key_id=creds["accessKeyId"],
+            aws_secret_access_key=creds["secretAccessKey"],
+            aws_session_token=creds["sessionToken"],
+            region_name="us-east-1",
+        )
 
-        s3 = session.resource('s3')
-        bucket = s3.Bucket(creds['bucket'])
-        key = creds['key']
+        s3 = session.resource("s3")
+        bucket = s3.Bucket(creds["bucket"])
+        key = creds["key"]
         bucket.upload_fileobj(fileobj, key, Callback=callback)
 
-        return creds['url']
+        return creds["url"]
 
     def create(self, stage_url, tileset, name=None, patch=False):
         """Create a tileset
@@ -152,16 +158,14 @@ class Uploader(Service):
         tileset = self._validate_tileset(tileset)
         username, _name = tileset.split(".")
 
-        msg = {'tileset': tileset,
-               'url': stage_url}
+        msg = {"tileset": tileset, "url": stage_url}
 
         if patch:
-            msg['patch'] = patch
+            msg["patch"] = patch
 
-        msg['name'] = name if name else _name
+        msg["name"] = name if name else _name
 
-        uri = URITemplate(self.baseuri + '/{username}').expand(
-            username=username)
+        uri = URITemplate(self.baseuri + "/{username}").expand(username=username)
 
         resp = self.session.post(uri, json=msg)
         self.handle_http_error(resp)
@@ -186,8 +190,7 @@ class Uploader(Service):
         requests.Response
         """
         username = self._resolve_username(account, username)
-        uri = URITemplate(self.baseuri + '/{username}').expand(
-            username=username)
+        uri = URITemplate(self.baseuri + "/{username}").expand(username=username)
         resp = self.session.get(uri)
         self.handle_http_error(resp)
         return resp
@@ -210,11 +213,12 @@ class Uploader(Service):
         """
         username = self._resolve_username(account, username)
         if isinstance(upload, dict):
-            upload_id = upload['id']
+            upload_id = upload["id"]
         else:
             upload_id = upload
-        uri = URITemplate(self.baseuri + '/{username}/{upload_id}').expand(
-            username=username, upload_id=upload_id)
+        uri = URITemplate(self.baseuri + "/{username}/{upload_id}").expand(
+            username=username, upload_id=upload_id
+        )
         resp = self.session.delete(uri)
         self.handle_http_error(resp)
         return resp
@@ -237,11 +241,12 @@ class Uploader(Service):
         """
         username = self._resolve_username(account, username)
         if isinstance(upload, dict):
-            upload_id = upload['id']
+            upload_id = upload["id"]
         else:
             upload_id = upload
-        uri = URITemplate(self.baseuri + '/{username}/{upload_id}').expand(
-            username=username, upload_id=upload_id)
+        uri = URITemplate(self.baseuri + "/{username}/{upload_id}").expand(
+            username=username, upload_id=upload_id
+        )
         resp = self.session.get(uri)
         self.handle_http_error(resp)
         return resp

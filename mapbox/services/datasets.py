@@ -10,16 +10,16 @@ from mapbox.services.base import Service
 class Datasets(Service):
     """Access to the Datasets API V1"""
 
-    api_name = 'datasets'
-    api_version = 'v1'
+    api_name = "datasets"
+    api_version = "v1"
 
     def _attribs(self, name=None, description=None):
         """Form an attributes dictionary from keyword args."""
         a = {}
         if name:
-            a['name'] = name
+            a["name"] = name
         if description:
-            a['description'] = description
+            a["description"] = description
         return a
 
     def create(self, name=None, description=None):
@@ -31,8 +31,7 @@ class Datasets(Service):
         :param name: the dataset name (optional).
         :param description: the dataset description (optional).
         """
-        uri = URITemplate(self.baseuri + '/{owner}').expand(
-            owner=self.username)
+        uri = URITemplate(self.baseuri + "/{owner}").expand(owner=self.username)
         return self.session.post(uri, json=self._attribs(name, description))
 
     def list(self):
@@ -41,8 +40,7 @@ class Datasets(Service):
         Returns a :class:`requests.Response` containing a list of
         objects describing datasets.
         """
-        uri = URITemplate(self.baseuri + '/{owner}').expand(
-            owner=self.username)
+        uri = URITemplate(self.baseuri + "/{owner}").expand(owner=self.username)
         return self.session.get(uri)
 
     def read_dataset(self, dataset):
@@ -55,8 +53,9 @@ class Datasets(Service):
 
         :param dataset: the dataset identifier string.
         """
-        uri = URITemplate(self.baseuri + '/{owner}/{id}').expand(
-            owner=self.username, id=dataset)
+        uri = URITemplate(self.baseuri + "/{owner}/{id}").expand(
+            owner=self.username, id=dataset
+        )
         return self.session.get(uri)
 
     def update_dataset(self, dataset, name=None, description=None):
@@ -69,8 +68,9 @@ class Datasets(Service):
         :param name: the dataset name.
         :param description: the dataset description.
         """
-        uri = URITemplate(self.baseuri + '/{owner}/{id}').expand(
-            owner=self.username, id=dataset)
+        uri = URITemplate(self.baseuri + "/{owner}/{id}").expand(
+            owner=self.username, id=dataset
+        )
         return self.session.patch(uri, json=self._attribs(name, description))
 
     def delete_dataset(self, dataset):
@@ -78,8 +78,9 @@ class Datasets(Service):
 
         :param dataset: the dataset identifier string.
         """
-        uri = URITemplate(self.baseuri + '/{owner}/{id}').expand(
-            owner=self.username, id=dataset)
+        uri = URITemplate(self.baseuri + "/{owner}/{id}").expand(
+            owner=self.username, id=dataset
+        )
         return self.session.delete(uri)
 
     def list_features(self, dataset, reverse=False, start=None, limit=None):
@@ -90,16 +91,17 @@ class Datasets(Service):
 
         :param dataset: the dataset identifier string.
         """
-        uri = URITemplate(self.baseuri + '/{owner}/{id}/features').expand(
-            owner=self.username, id=dataset)
+        uri = URITemplate(self.baseuri + "/{owner}/{id}/features").expand(
+            owner=self.username, id=dataset
+        )
 
         params = {}
         if reverse:
-            params['reverse'] = 'true'
+            params["reverse"] = "true"
         if start:
-            params['start'] = start
+            params["start"] = start
         if limit:
-            params['limit'] = int(limit)
+            params["limit"] = int(limit)
         return self.session.get(uri, params=params)
 
     def read_feature(self, dataset, fid):
@@ -111,9 +113,9 @@ class Datasets(Service):
         :param dataset: the dataset identifier string.
         :param fid: the feature identifier string.
         """
-        uri = URITemplate(
-            self.baseuri + '/{owner}/{did}/features/{fid}').expand(
-                owner=self.username, did=dataset, fid=fid)
+        uri = URITemplate(self.baseuri + "/{owner}/{did}/features/{fid}").expand(
+            owner=self.username, did=dataset, fid=fid
+        )
         return self.session.get(uri)
 
     def update_feature(self, dataset, fid, feature):
@@ -128,9 +130,9 @@ class Datasets(Service):
         :param fid: the feature identifier string.
         :param feature: a GeoJSON feature object.
         """
-        uri = URITemplate(
-            self.baseuri + '/{owner}/{did}/features/{fid}').expand(
-                owner=self.username, did=dataset, fid=fid)
+        uri = URITemplate(self.baseuri + "/{owner}/{did}/features/{fid}").expand(
+            owner=self.username, did=dataset, fid=fid
+        )
         return self.session.put(uri, json=feature)
 
     def delete_feature(self, dataset, fid):
@@ -139,7 +141,7 @@ class Datasets(Service):
         :param dataset: the dataset identifier string.
         :param fid: the feature identifier string.
         """
-        uri = URITemplate(
-            self.baseuri + '/{owner}/{did}/features/{fid}').expand(
-                owner=self.username, did=dataset, fid=fid)
+        uri = URITemplate(self.baseuri + "/{owner}/{did}/features/{fid}").expand(
+            owner=self.username, did=dataset, fid=fid
+        )
         return self.session.delete(uri)

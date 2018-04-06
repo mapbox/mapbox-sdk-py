@@ -1,4 +1,3 @@
-
 class ValidationError(ValueError):
     pass
 
