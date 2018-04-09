@@ -7,7 +7,19 @@ from mapbox import errors
 
 
 class Analytics(Service):
-    """Access to Analytics API V1"""
+    """Access to Analytics API V1
+    
+    Attributes
+    ----------
+    api_name : str
+        The API's name.
+    
+    api_version : str
+        The API's version number.
+    
+    valid_resource_types : list
+        The possible values for the resource being requested.
+    """
 
     api_name = 'analytics'
     api_version = 'v1'
@@ -44,6 +56,41 @@ class Analytics(Service):
         return id
 
     def analytics(self, resource_type, username, id=None, start=None, end=None):
+        """Returns the request counts per day for a given resource and period.
+        
+        Parameters
+        ----------
+        resource_type : str
+            The resource being requested.
+            
+            Possible values are "tokens", "styles", "tilesets", and "accounts".
+        
+        username : str
+            The username for the account that owns the resource.
+            
+        id : str, optional
+            The id for the resource.
+            
+            If resource_type is "tokens", then id is the complete token.
+            If resource_type is "styles", then id is the style id.
+            If resource_type is "tilesets", then id is a map id.
+            If resource_type is "accounts", then id is not required.
+        
+        start, end : str, optional
+            ISO-formatted start and end dates.
+            
+            If provided, the start date must be earlier than the end date, 
+            and the maximum length of time between the start and end dates 
+            is one year.
+            
+            If not provided, the length of time between the start and end 
+            dates defaults to 90 days.
+        
+        Returns
+        -------
+        requests.Response
+        """
+        
         resource_type = self._validate_resource_type(resource_type)
         username = self._validate_username(username)
         start, end = self._validate_period(start, end)
