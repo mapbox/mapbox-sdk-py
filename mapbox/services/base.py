@@ -82,9 +82,7 @@ class Service(object):
             raise errors.TokenError(
                 "access_token does not contain username")
 
-    def handle_http_error(self, response, custom_messages=None):
-        response_body = response.json()
-        
+    def handle_http_error(self, response, custom_messages=None):        
         if custom_messages\
             and isinstance(custom_messages, dict)\
                 and response.status_code in custom_messages:
@@ -92,6 +90,8 @@ class Service(object):
       
         else:  
             if 400 <= response.status_code < 500:
+                response_body = response.json()
+                
                 status_message = response_body["code"]
         
                 if status_message == "InvalidInput":
