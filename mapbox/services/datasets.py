@@ -53,13 +53,13 @@ class Datasets(Service):
         return self.session.post(uri, json=self._attribs(name, description))
 
     def list(self):
-    """Lists all datasets for a particular account.
+        """Lists all datasets for a particular account.
 
-    Returns
-    -------
-    request.Response
-        The response contains a list of JSON objects describing datasets.
-    """
+        Returns
+        -------
+        request.Response
+            The response contains a list of JSON objects describing datasets.
+        """
         
         uri = URITemplate(self.baseuri + '/{owner}').expand(
             owner=self.username)
