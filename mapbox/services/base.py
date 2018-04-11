@@ -83,21 +83,21 @@ class Service(object):
                 "access_token does not contain username")
 
     def handle_http_error(self, response, custom_messages=None):
-      response_body = response.json()
+        response_body = response.json()
         
-      if custom_messages\
-        and isinstance(custom_messages, dict)\
-          and response.status_code in custom_messages.keys():
-            raise errors.HTTPError(custom_messages[response.status_code])
+        if custom_messages\
+            and isinstance(custom_messages, dict)\
+                and response.status_code in custom_messages:
+                    raise errors.HTTPError(custom_messages[response.status_code])
       
-      else:  
-        if 400 <= response.status_code < 500:
-          status_message = response_body["code"]
+        else:  
+            if 400 <= response.status_code < 500:
+                status_message = response_body["code"]
         
-          if status_message == "InvalidInput":
-            status_message = status_message + ":" + response_body["message"]
+                if status_message == "InvalidInput":
+                    status_message = status_message + ":" + response_body["message"]
             
-          raise errors.HTTPError(status_message)
+                raise errors.HTTPError(status_message)
         
-        elif response.status_code >= 500:
-          response.raise_for_status()
+            elif response.status_code >= 500:
+                response.raise_for_status()
