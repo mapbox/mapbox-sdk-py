@@ -81,23 +81,44 @@ class Service(object):
         except (ValueError, KeyError):
             raise errors.TokenError(
                 "access_token does not contain username")
+            
+    def handle_http_error(self, response, custom_messages=None):
+        # Handle custom errors from uploads.py
 
-    def handle_http_error(self, response, custom_messages=None):        
         if custom_messages\
             and isinstance(custom_messages, dict)\
                 and response.status_code in custom_messages:
-                    raise errors.HTTPError(custom_messages[response.status_code])
+                    status_message = custom_messages[response.status_code]
+
+                    raise errors.HTTPError("{0} Client Error: {1}".format(response.status_code, status_message))
       
-        else:  
-            if 400 <= response.status_code < 500:
+        # Handle client errors
+
+        if 400 <= response.status_code < 500:
+            try:
                 response_body = response.json()
-                
-                status_message = response_body["code"]
-        
-                if status_message == "InvalidInput":
-                    status_message = status_message + ":" + response_body["message"]
-            
-                raise errors.HTTPError(status_message)
-        
-            elif response.status_code >= 500:
+
+                # For Directions, Map Matching, Matrix and Optimization APIs
+
+                if "code" in response_body\
+                    and response_body["code"] == "InvalidInput":
+                        status_message = response_body["code"] + ":" + response_body["message"]
+
+                if "code" in response_body\
+                    and response_body["code"] != "InvalidInput":
+                        status_message = response_body["code"]
+
+                # For Uploads API
+
+                if "error" in response_body\
+                    and response_body["error"] != null:
+                        status_message = response_body["error"]
+
+                raise errors.HTTPError("{0} Client Error: {1}".format(response.status_code, status_message))
+
+            except:
                 response.raise_for_status()
+
+        # Handle everything else
+
+        response.raise_for_status()
