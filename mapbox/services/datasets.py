@@ -146,7 +146,7 @@ class Datasets(Service):
         Returns
         -------
         request.Response
-            The response contains the features of a dataset as a GeonJSON FeatureCollection.
+            The response contains the features of a dataset as a GeoJSON FeatureCollection.
         """
         
         uri = URITemplate(self.baseuri + '/{owner}/{id}/features').expand(
