@@ -64,21 +64,49 @@ def test_user_agent():
 
 
 @responses.activate
+def test_success():
+    url = "https://mapbox.com"
+    responses.add(responses.GET, url, status=200)
+    service = base.Service()
+    response = service.session.get(url)
+
+    assert service.handle_http_error(response) is None
+
+
+@responses.activate
+def test_client_error():
+    url = "https://example.com"
+    responses.add(responses.GET, url, status=400)
+    service = base.Service()
+    response = service.session.get(url)
+
+    with pytest.raises(requests.exceptions.HTTPError) as exc:
+        assert service.handle_http_error(response)
+        assert "400" in exc.value.message
+
+
+@responses.activate
+def test_server_error():
+    url = "https://mapbox.com"
+    responses.add(responses.GET, url, status=500)
+    service = base.Service()
+    response = service.session.get(url)
+
+    with pytest.raises(requests.exceptions.HTTPError) as exc:
+        assert service.handle_http_error(response)
+        assert "500" in exc.value.message
+
+    
+@responses.activate
 def test_custom_messages():
     fakeurl = 'https://example.com'
     responses.add(responses.GET, fakeurl, status=401)
     service = base.Service()
     response = service.session.get(fakeurl)
 
-    assert service.handle_http_error(response) is None
-
     with pytest.raises(mapbox.errors.HTTPError) as exc:
         assert service.handle_http_error(response, custom_messages={401: "error"})
         assert exc.value.message == 'error'
-
-    with pytest.raises(requests.exceptions.HTTPError) as exc:
-        assert service.handle_http_error(response, raise_for_status=True)
-        assert "401" in exc.value.message
 
 
 class MockService(base.Service):
