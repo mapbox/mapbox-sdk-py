@@ -92,7 +92,7 @@ class Service(object):
 
                     raise errors.HTTPError("{0} Client Error: {1}".format(response.status_code, status_message))
       
-        # Handle client errors
+        # Handle Mapbox errors
 
         if 400 <= response.status_code < 500:
             try:
@@ -111,14 +111,15 @@ class Service(object):
                 # For Uploads API
 
                 if "error" in response_body\
-                    and response_body["error"] != null:
+                    and response_body["error"] != "null":
                         status_message = response_body["error"]
 
-                raise errors.HTTPError("{0} Client Error: {1}".format(response.status_code, status_message))
-
             except:
-                response.raise_for_status()
+                pass
 
+            else:
+                raise errors.HTTPError("{0} Client Error: {1}".format(response.status_code, status_message))
+            
         # Handle everything else
 
         response.raise_for_status()
