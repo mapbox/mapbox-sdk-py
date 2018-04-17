@@ -64,21 +64,103 @@ def test_user_agent():
 
 
 @responses.activate
+def test_generic_success():
+    url = "https://mapbox.com"
+    responses.add(responses.GET, url, status=200)
+    service = base.Service()
+    response = service.session.get(url)
+
+    assert service.handle_http_error(response) is None
+
+
+@responses.activate
+def test_generic_client_error():
+    url = "https://mapbox.com"
+    responses.add(responses.GET, url, status=400)
+    service = base.Service()
+    response = service.session.get(url)
+
+    with pytest.raises(requests.HTTPError) as exc:
+        service.handle_http_error(response)
+
+    assert "400" in str(exc.value)
+    assert "Client" in str(exc.value)
+
+
+@responses.activate
+def test_generic_server_error():
+    url = "https://mapbox.com"
+    responses.add(responses.GET, url, status=500)
+    service = base.Service()
+    response = service.session.get(url)
+
+    with pytest.raises(requests.HTTPError) as exc:
+        service.handle_http_error(response)
+
+    assert "500" in str(exc.value)
+    assert "Server" in str(exc.value)
+
+    
+@responses.activate
+def test_mapbox_error_profile_not_found():
+    url = "https://mapbox.com"
+    body = "{\"code\": \"ProfileNotFound\"}"
+    responses.add(responses.GET, url, body=body, status=404)
+    service = base.Service()
+    response = service.session.get(url)
+
+    with pytest.raises(mapbox.errors.HTTPError) as exc:
+        service.handle_http_error(response)
+
+    assert "404" in str(exc.value)
+    assert "Client" in str(exc.value)
+    assert "ProfileNotFound" in str(exc.value)
+
+
+@responses.activate
+def test_mapbox_error_invalid_input():
+    url = "https://mapbox.com"
+    body = "{\"code\": \"InvalidInput\", \"message\": \"error\"}"
+    responses.add(responses.GET, url, body=body, status=422)
+    service = base.Service()
+    response = service.session.get(url)
+
+    with pytest.raises(mapbox.errors.HTTPError) as exc:
+        service.handle_http_error(response)
+
+    assert "422" in str(exc.value)
+    assert "Client" in str(exc.value)
+    assert "InvalidInput:error" in str(exc.value)
+
+@responses.activate
+def test_mapbox_error_upload():
+    url = "https://mapbox.com"
+    body = "{\"error\": \"error\"}"
+    responses.add(responses.GET, url, body=body, status=409)
+    service = base.Service()
+    response = service.session.get(url)
+
+    with pytest.raises(mapbox.errors.HTTPError) as exc:
+        service.handle_http_error(response)
+
+    assert "409" in str(exc.value)
+    assert "Client" in str(exc.value)
+    assert "error" in str(exc.value)
+
+
+@responses.activate
 def test_custom_messages():
     fakeurl = 'https://example.com'
     responses.add(responses.GET, fakeurl, status=401)
     service = base.Service()
     response = service.session.get(fakeurl)
 
-    assert service.handle_http_error(response) is None
-
     with pytest.raises(mapbox.errors.HTTPError) as exc:
-        assert service.handle_http_error(response, custom_messages={401: "error"})
-        assert exc.value.message == 'error'
+        service.handle_http_error(response, custom_messages={401: "error"})
 
-    with pytest.raises(requests.exceptions.HTTPError) as exc:
-        assert service.handle_http_error(response, raise_for_status=True)
-        assert "401" in exc.value.message
+    assert "401" in str(exc.value)
+    assert "Client" in str(exc.value)
+    assert "error" in str(exc.value)
 
 
 class MockService(base.Service):

@@ -1,6 +1,7 @@
 import base64
 import json
 
+import requests
 import responses
 import pytest
 
@@ -377,13 +378,14 @@ def test_upload_error(monkeypatch):
         responses.POST,
         'https://api.mapbox.com/uploads/v1/{0}?access_token={1}'.format(username, access_token),
         match_querystring=True,
-        body="", status=409,
+        body="{\"error\": \"error\"}", status=409,
         content_type='application/json')
 
-    with open('tests/moors.json', 'rb') as src:
-        res = mapbox.Uploader(access_token=access_token).upload(src, 'test1')
+    with pytest.raises(mapbox.errors.HTTPError) as exc:
+        with open('tests/moors.json', 'rb') as src:
+            res = mapbox.Uploader(access_token=access_token).upload(src, 'test1')
 
-    assert res.status_code == 409
+    assert "409" in str(exc.value)
 
 
 @responses.activate
