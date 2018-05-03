@@ -16,9 +16,10 @@ def Session(access_token=None, env=None):
 
     Parameters
     ----------
-    access_token: string
+    access_token : str
         Mapbox access token string (optional).
-    env: dict or None
+    env : dict, optional
+        A dict that subsitutes for os.environ.
 
     Returns
     -------
@@ -39,18 +40,46 @@ def Session(access_token=None, env=None):
 
 
 class Service(object):
-    """Service base class."""
+    """Service base class
+
+    Attributes
+    ----------
+    default_host : str
+        Default service hostname: api.mapbox.com.
+    api_name : str
+        Mapbox API name.
+    api_version : str
+        API version string such as "v1" or "v5".
+    baseuri
+    username
+
+    Methods
+    -------
+    handle_http_errors(response, custom_messages=None, raise_for_status=False)
+        Converts service errors to Python exceptions.
+    """
 
     default_host = 'api.mapbox.com'
     api_name = 'hors service'
     api_version = 'v0'
 
     def __init__(self, access_token=None, host=None, cache=None):
-        """Constructs a Service object.
+        """Constructs a Service object
 
-        :param access_token: Mapbox access token string.
-        :param cache: CacheControl cache instance (Dict or FileCache).
-        :param host: Mapbox API host (advanced usage only).
+        This method should be overridden by subclasses.
+
+        Parameters
+        ----------
+        access_token : str
+            Mapbox access token string.
+        host : str, optional
+            Mapbox API host (advanced usage only).
+        cache : CacheControl cache instance (Dict or FileCache), optional
+            Optional caching, not generally needed.
+
+        Returns
+        -------
+        Service
         """
         self.session = Session(access_token)
         self.host = host or os.environ.get('MAPBOX_HOST', self.default_host)
@@ -59,14 +88,22 @@ class Service(object):
 
     @property
     def baseuri(self):
+        """The service's base URI
+
+        Returns
+        -------
+        str
+        """
         return 'https://{0}/{1}/{2}'.format(
             self.host, self.api_name, self.api_version)
 
     @property
     def username(self):
-        """Get username from access token.
+        """The username in the service's access token
 
-        Token contains base64 encoded json object with username.
+        Returns
+        -------
+        str
         """
         token = self.session.params.get('access_token')
         if not token:
@@ -84,6 +121,21 @@ class Service(object):
 
     def handle_http_error(self, response, custom_messages=None,
                           raise_for_status=False):
+        """Converts service errors to Python exceptions
+
+        Parameters
+        ----------
+        response : requests.Response
+            A service response.
+        custom_messages : dict, optional
+            A mapping of custom exception messages to HTTP status codes.
+        raise_for_status : bool, optional
+            If True, the requests library provides Python exceptions.
+
+        Returns
+        -------
+        None
+        """
         if not custom_messages:
             custom_messages = {}
         if response.status_code in custom_messages.keys():

@@ -60,3 +60,4 @@ target/
 
 # Vim
 *.swp
+.DS_Store
