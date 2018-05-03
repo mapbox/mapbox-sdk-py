@@ -8,7 +8,16 @@ from mapbox.services.base import Service
 
 
 class Datasets(Service):
-    """Access to the Datasets API V1"""
+    """Access to the Datasets API V1
+    
+    Attributes
+    ----------
+    api_name : str
+        The API's name.
+    
+    api_version : str
+        The API's version number.
+    """
 
     api_name = 'datasets'
     api_version = 'v1'
@@ -23,73 +32,123 @@ class Datasets(Service):
         return a
 
     def create(self, name=None, description=None):
-        """Create a new dataset.
+        """Creates a new, empty dataset.
 
-        Returns a :class:`requests.Response` containing the attributes
-        of the new dataset as a JSON object.
+        Parameters
+        ----------
+        name : str, optional
+            The name of the dataset.
 
-        :param name: the dataset name (optional).
-        :param description: the dataset description (optional).
+        description : str, optional
+            The description of the dataset.
+
+        Returns
+        -------
+        request.Response
+            The response contains the properties of a new dataset as a JSON object.
         """
+        
         uri = URITemplate(self.baseuri + '/{owner}').expand(
             owner=self.username)
         return self.session.post(uri, json=self._attribs(name, description))
 
     def list(self):
-        """List datasets.
+        """Lists all datasets for a particular account.
 
-        Returns a :class:`requests.Response` containing a list of
-        objects describing datasets.
+        Returns
+        -------
+        request.Response
+            The response contains a list of JSON objects describing datasets.
         """
+        
         uri = URITemplate(self.baseuri + '/{owner}').expand(
             owner=self.username)
         return self.session.get(uri)
 
     def read_dataset(self, dataset):
-        """Read the attributes of a dataset.
+        """Retrieves (reads) a single dataset.
 
-        Returns a :class:`requests.Response` containing the attributes
-        as a JSON object. The attributes: owner (a Mapbox account),
-        id (dataset id), created (Unix timestamp), modified
-        (timestamp), name (string), and description (string).
+        Parameters
+        ----------
+        dataset : str
+            The dataset id.
 
-        :param dataset: the dataset identifier string.
+        Returns
+        -------
+        request.Response
+            The response contains the properties of the retrieved dataset as a JSON object.
         """
+        
         uri = URITemplate(self.baseuri + '/{owner}/{id}').expand(
             owner=self.username, id=dataset)
         return self.session.get(uri)
 
     def update_dataset(self, dataset, name=None, description=None):
-        """Update the name and description of a dataset.
+        """Updates a single dataset.
 
-        Returns a :class:`requests.Response` containing the updated
-        attributes as a JSON object.
+        Parameters
+        ----------
+        dataset : str
+            The dataset id.
 
-        :param dataset: the dataset identifier string.
-        :param name: the dataset name.
-        :param description: the dataset description.
+        name : str, optional
+            The name of the dataset.
+
+        description : str, optional
+            The description of the dataset.
+
+        Returns
+        -------
+        request.Response
+            The response contains the properties of the updated dataset as a JSON object.
         """
+        
         uri = URITemplate(self.baseuri + '/{owner}/{id}').expand(
             owner=self.username, id=dataset)
         return self.session.patch(uri, json=self._attribs(name, description))
 
     def delete_dataset(self, dataset):
-        """Delete a dataset.
+        """Deletes a single dataset, including all of the features that it contains.
 
-        :param dataset: the dataset identifier string.
+        Parameters
+        ----------
+        dataset : str
+            The dataset id.
+
+        Returns
+        -------
+        HTTP status code.
         """
+        
         uri = URITemplate(self.baseuri + '/{owner}/{id}').expand(
             owner=self.username, id=dataset)
         return self.session.delete(uri)
 
     def list_features(self, dataset, reverse=False, start=None, limit=None):
-        """Get features of a dataset.
+        """Lists features in a dataset.
 
-        Returns a :class:`requests.Response` containing the features of
-        the dataset as a GeoJSON feature collection.
+        Parameters
+        ----------
+        dataset : str             
+            The dataset id.
 
-        :param dataset: the dataset identifier string.
+        reverse : str, optional
+            List features in reverse order.
+
+            Possible value is "true".
+
+        start : str, optional
+            The id of the feature after which to start the list (pagination).
+
+        limit : str, optional
+            The maximum number of features to list (pagination).
+
+        Returns
+        -------
+        request.Response
+            The response contains the features of a dataset as a GeoJSON FeatureCollection.
         """
+        
         uri = URITemplate(self.baseuri + '/{owner}/{id}/features').expand(
             owner=self.username, id=dataset)
 
@@ -103,42 +162,74 @@ class Datasets(Service):
         return self.session.get(uri, params=params)
 
     def read_feature(self, dataset, fid):
-        """Read a dataset feature.
+        """Retrieves (reads) a feature in a dataset.
 
-        Returns a :class:`requests.Response` containing a GeoJSON
-        representation of the feature.
+        Parameters
+        ----------
+        dataset : str
+            The dataset id.
 
-        :param dataset: the dataset identifier string.
-        :param fid: the feature identifier string.
+        fid : str
+            The feature id.
+
+        Returns
+        -------
+        request.Response
+            The response contains a GeoJSON representation of the feature.
         """
+        
         uri = URITemplate(
             self.baseuri + '/{owner}/{did}/features/{fid}').expand(
                 owner=self.username, did=dataset, fid=fid)
         return self.session.get(uri)
 
     def update_feature(self, dataset, fid, feature):
-        """Create or update a dataset feature.
+        """Inserts or updates a feature in a dataset.
+           
+        Parameters
+        ----------
+        dataset : str
+            The dataset id.
 
-        The semantics of HTTP PUT apply: if the dataset has no feature
-        with the given `fid` a new feature will be created. Returns a
-        :class:`requests.Response` containing a GeoJSON representation
-        of the new or updated feature.
+        fid : str
+            The feature id.
+               
+            If the dataset has no feature with the given feature id, 
+            then a new feature will be created.
 
-        :param dataset: the dataset identifier string.
-        :param fid: the feature identifier string.
-        :param feature: a GeoJSON feature object.
+        feature : dict
+            The GeoJSON feature object.
+
+            This should be one individual GeoJSON feature and not a 
+            GeoJSON FeatureCollection.
+
+        Returns
+        -------
+        request.Response
+            The response contains a GeoJSON representation of the new or updated feature.
         """
+        
         uri = URITemplate(
             self.baseuri + '/{owner}/{did}/features/{fid}').expand(
                 owner=self.username, did=dataset, fid=fid)
         return self.session.put(uri, json=feature)
 
     def delete_feature(self, dataset, fid):
-        """Delete a dataset feature.
+        """Removes a feature from a dataset.
 
-        :param dataset: the dataset identifier string.
-        :param fid: the feature identifier string.
+        Parameters
+        ----------
+        dataset : str
+            The dataset id.
+
+        fid : str
+            The feature id.
+
+        Returns
+        -------
+        HTTP status code.
         """
+        
         uri = URITemplate(
             self.baseuri + '/{owner}/{did}/features/{fid}').expand(
                 owner=self.username, did=dataset, fid=fid)
