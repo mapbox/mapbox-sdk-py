@@ -1,11 +1,14 @@
+import warnings
+
 from uritemplate import URITemplate
 
 from mapbox.encoding import encode_waypoints, encode_polyline
+from mapbox.errors import MapboxDeprecationWarning
 from mapbox.services.base import Service
 
 
 class Surface(Service):
-    """Access to the Surface API V4"""
+    """Access to the Surface API V4 **DEPRECATED**"""
 
     api_name = 'surface'
     api_version = 'v4'
@@ -24,6 +27,10 @@ class Surface(Service):
                 polyline=False,
                 interpolate=None,
                 zoom=None):
+
+        warnings.warn(
+            "The surface module will be removed in the next version. "
+            "It has no replacement.", MapboxDeprecationWarning)
 
         params = {
             'layer': layer,
