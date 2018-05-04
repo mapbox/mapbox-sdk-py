@@ -26,7 +26,6 @@ Services
   - GeoJSON & Polyline formatting
   - Instructions as text or HTML
 
-- **Distance V1** **DEPRECATED**
 - **Geocoding V5** `examples <./docs/geocoding.md#geocoding>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#geocoding>`__
 
   - Forward (place names ⇢ longitude, latitude)
@@ -106,7 +105,6 @@ Documentation
    static.md
    uploads.md
    analytics.md
-   distance.md
    mapmatching.md
    static_style.md
    api/mapbox.rst

@@ -36,14 +36,6 @@ mapbox.services.directions module
     :undoc-members:
     :show-inheritance:
 
-mapbox.services.distance module
--------------------------------
-
-.. automodule:: mapbox.services.distance
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 mapbox.services.geocoding module
 --------------------------------
 

@@ -1,4 +1,4 @@
-# DirectionsMatrix
+# Directions Matrix
 
 The `DirectionsMatrix` class from the `mapbox.services.matrix` module provides
 access to the Mapbox Matrix API V1. You can also import it directly from the
