@@ -40,9 +40,6 @@ setup(name='mapbox',
       install_requires=[
           'boto3>=1.4',
           'cachecontrol',
-          'click',
-          'click-plugins',
-          'cligj',
           'iso3166',
           'python-dateutil>=2.5.0'
           'requests',
