@@ -63,6 +63,11 @@ Services
 Please note that there may be some lag between the release of new Mapbox web
 services and releases of this package.
 
+Documentation
+=============
+
+Please see https://mapbox-mapbox.readthedocs-hosted.com/en/latest/
+
 Installation
 ============
 
@@ -76,16 +81,17 @@ Testing
 .. code:: bash
 
     pip install -e .[test]
-    py.test
+    python -m pytest
 
 To run the examples as integration tests on your own Mapbox account
 
 .. code:: bash
 
-    MAPBOX_ACCESS_TOKEN="MY_ACCESS_TOKEN" py.test --doctest-glob='*.md' docs/*.md
+    MAPBOX_ACCESS_TOKEN="MY_ACCESS_TOKEN" python -m pytest --doctest-glob='*.md' docs/*.md
 
 See Also
 ========
 
-* Command line interface: https://github.com/mapbox/mapbox-cli-py
+* Mapbox API Documentation: https://www.mapbox.com/api-documentation/
 * Javascript SDK: https://github.com/mapbox/mapbox-sdk-js
+* Mapbox API command line interface: https://github.com/mapbox/mapbox-cli-py
