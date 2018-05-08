@@ -1,7 +1,7 @@
 Changes
 =======
 
-0.16.0 (2018-05-07)
+0.16.0 (2018-05-08)
 -------------------
 - Added support for Directions v5 (#203).
 - The Mapbox Distance API is no more and the distance module has been deleted
