@@ -84,14 +84,6 @@ mapbox.services.static\_style module
     :undoc-members:
     :show-inheritance:
 
-mapbox.services.surface module
-------------------------------
-
-.. automodule:: mapbox.services.surface
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 mapbox.services.uploads module
 ------------------------------
 

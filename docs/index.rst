@@ -47,10 +47,7 @@ Services
   - Render with GeoJSON overlays
   - Adjust pitch and bearing, decimal zoom levels
   
-- **Surface V4** `examples <./docs/surface.md#surface>`__, `website <https://www.mapbox.com/developers/api/surface/>`__
-
-  - Interpolates values along lines. Useful for elevation traces.
-
+- **Surface V4** **DEPRECATED**
 - **Uploads V1** `examples <./docs/uploads.md#uploads>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#uploads>`__
 
   - Upload data to be processed and hosted by Mapbox.
@@ -100,7 +97,6 @@ Documentation
    datasets.md
    geocoding.md
    matrix.md
-   surface.md
    directions.md
    input_features.md
    static.md
