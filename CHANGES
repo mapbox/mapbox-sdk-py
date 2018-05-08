@@ -1,9 +1,13 @@
 Changes
 =======
 
-Next
-----
-- Added support for Directions v5.
+0.16.0 (2018-05-07)
+-------------------
+- Added support for Directions v5 (#203).
+- The Mapbox Distance API is no more and the distance module has been deleted
+  (#232). Users must use the DirectionsMatrix introduced in 0.15.
+- Project documentation is now on Read the Docs: 
+  https://mapbox-mapbox.readthedocs-hosted.com/en/latest/.
 
 0.15.1 (2018-01-16)
 -------------------
