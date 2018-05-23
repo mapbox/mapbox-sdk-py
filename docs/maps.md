@@ -115,7 +115,7 @@ Evaluate whether the request succeeded, and retrieve the TileJSON metadata from 
 
 ```python
 >>> if response.status_code == 200:
-...     features = response.get_json()
+...     metadata = response.get_json()
 ```
 
 ## Usage: Retrieving a Standalone Marker
