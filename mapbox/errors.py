@@ -1,4 +1,3 @@
-
 class ValidationError(ValueError):
     pass
 
@@ -64,4 +63,40 @@ class InvalidId(ValidationError):
 
 
 class MapboxDeprecationWarning(UserWarning):
+    pass
+
+
+class InvalidZoomError(ValidationError):
+    pass
+
+
+class InvalidColumnError(ValidationError):
+    pass
+
+
+class InvalidRowError(ValidationError):
+    pass
+
+
+class InvalidFileFormatError(ValidationError):
+    pass
+
+
+class InvalidOptionError(ValidationError):
+    pass
+
+
+class InvalidFeatureFormatError(ValidationError):
+    pass
+
+
+class InvalidMarkerNameError(ValidationError):
+    pass
+
+
+class InvalidLabelError(ValidationError):
+    pass
+
+
+class InvalidColorError(ValidationError):
     pass
