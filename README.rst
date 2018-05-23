@@ -60,7 +60,7 @@ Services
   - Manage editable collections of GeoJSON features
   - Persistent storage for custom geographic data
 
-- **Maps V4** `examples <./docs/maps.md#maps>`__, `website <https://www.mapbox/com/api-documentation/?language=Python#maps>`__
+- **Maps V4** `examples <./docs/maps.md#maps>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#maps>`__
 
   - Retrieve an image tile, vector tile, or UTFGrid in the specific format
   - Retrieve an HTML slippy map for embedding or sharing
