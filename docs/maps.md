@@ -18,7 +18,7 @@ See https://www.mapbox.com/api-documentation/#maps for general documentation of 
 
 Use of the Maps API requires an access token, which you should set in your environment.  For more information, see the [access tokens](access_tokens.md) documentation.
 
-## Maps methods
+## Maps Methods
 
 The public methods of the `Maps` class provide access to the Maps API and return an instance of [`requests.Response`](http://docs.python-requests.org/en/latest/api/#requests.Response).
 
@@ -97,7 +97,7 @@ __KML__:
 ...         output.write(response.text)
 ```
 
-## Retrieving TileJSON Metadata
+## Usage: Retrieving TileJSON Metadata
 
 Instantiate `Maps`.
 
@@ -118,7 +118,7 @@ Evaluate whether the request succeeded, and retrieve the TileJSON metadata from 
 ...     features = response.get_json()
 ```
 
-## Retrieving a Standalone Marker
+## Usage: Retrieving a Standalone Marker
 
 Instantiate `Maps`.
 
