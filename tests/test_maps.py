@@ -722,7 +722,7 @@ def test_get_standalone_marker_error():
 def test_get_standalone_marker():
     add(
         method=GET,
-        url="https://api.mapbox.com/v4/marker/pin-s.png?access_token=pk.test&secure",
+        url="https://api.mapbox.com/v4/marker/pin-s.png?access_token=pk.test",
         match_querystring=True,
         body="pin-s.png",
         status=200
@@ -740,7 +740,7 @@ def test_get_standalone_marker():
 def test_get_standalone_marker_with_label():
     add(
         method=GET,
-        url="https://api.mapbox.com/v4/marker/pin-s-label.png?access_token=pk.test&secure",
+        url="https://api.mapbox.com/v4/marker/pin-s-label.png?access_token=pk.test",
         match_querystring=True,
         body="pin-s-label.png",
         status=200
@@ -759,7 +759,7 @@ def test_get_standalone_marker_with_label():
 def test_get_standalone_marker_with_color():
     add(
         method=GET,
-        url="https://api.mapbox.com/v4/marker/pin-s+00f.png?access_token=pk.test&secure",
+        url="https://api.mapbox.com/v4/marker/pin-s+00f.png?access_token=pk.test",
         match_querystring=True,
         body="pin-s-00f.png",
         status=200
@@ -778,7 +778,7 @@ def test_get_standalone_marker_with_color():
 def test_get_standalone_marker_with_retina():
     add(
         method=GET,
-        url="https://api.mapbox.com/v4/marker/pin-s@2x.png?access_token=pk.test&secure",
+        url="https://api.mapbox.com/v4/marker/pin-s@2x.png?access_token=pk.test",
         match_querystring=True,
         body="pin-s@2x.png",
         status=200
@@ -797,7 +797,7 @@ def test_get_standalone_marker_with_retina():
 def test_get_standalone_marker_with_label_and_color():
     add(
         method=GET,
-        url="https://api.mapbox.com/v4/marker/pin-s-label+00f.png?access_token=pk.test&secure",
+        url="https://api.mapbox.com/v4/marker/pin-s-label+00f.png?access_token=pk.test",
         match_querystring=True,
         body="pin-s-label+00f.png",
         status=200
@@ -817,7 +817,7 @@ def test_get_standalone_marker_with_label_and_color():
 def test_get_standalone_marker_with_color_and_retina():
     add(
         method=GET,
-        url="https://api.mapbox.com/v4/marker/pin-s+00f@2x.png?access_token=pk.test&secure",
+        url="https://api.mapbox.com/v4/marker/pin-s+00f@2x.png?access_token=pk.test",
         match_querystring=True,
         body="pin-s+00f@2x.png",
         status=200
@@ -837,7 +837,7 @@ def test_get_standalone_marker_with_color_and_retina():
 def test_get_standalone_marker_with_label_and_retina():
     add(
         method=GET,
-        url="https://api.mapbox.com/v4/marker/pin-s-label@2x.png?access_token=pk.test&secure",
+        url="https://api.mapbox.com/v4/marker/pin-s-label@2x.png?access_token=pk.test",
         match_querystring=True,
         body="pin-s-label@2x.png",
         status=200
@@ -857,7 +857,7 @@ def test_get_standalone_marker_with_label_and_retina():
 def test_get_standalone_marker_with_label_and_color_and_retina():
     add(
         method=GET,
-        url="https://api.mapbox.com/v4/marker/pin-s-label+00f@2x.png?access_token=pk.test&secure",
+        url="https://api.mapbox.com/v4/marker/pin-s-label+00f@2x.png?access_token=pk.test",
         match_querystring=True,
         body="pin-s-label+00f@2x.png",
         status=200
