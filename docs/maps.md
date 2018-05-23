@@ -2,9 +2,13 @@
 
 The `Maps` class provides access to the Mapbox Maps API.  You can import it from either the `mapbox` module or the `mapbox.services.maps` module.
 
+__mapbox__:
+
 ```python
 >>> from mapbox import Maps
 ```
+
+__mapbox.services.maps__:
 
 ```python
 >>> from mapbox.services.maps import Maps
