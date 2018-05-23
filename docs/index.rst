@@ -56,6 +56,14 @@ Services
   - Manage editable collections of GeoJSON features
   - Persistent storage for custom geographic data
 
+- **Maps V4** `examples <./docs/maps.md#maps>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#maps>`__
+
+  - Retrieve an image tile, vector tile, or UTFGrid in the specific format
+  - Retrieve an HTML slippy map for embedding or sharing
+  - Retrieve vector features from Mapbox Editor projects as GeoJSON or KML
+  - Retrieve TileJSON metadata for a tileset
+  - Retrieve a single marker image without any background map
+
 Please note that there may be some lag between the release of new Mapbox web
 services and releases of this package.
 
@@ -103,6 +111,7 @@ Documentation
    analytics.md
    mapmatching.md
    static_style.md
+   maps.md
    api/mapbox.rst
    api/mapbox.services.rst
    api/modules.rst
