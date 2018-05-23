@@ -12,3 +12,4 @@ from .services.static import Static
 from .services.static_style import StaticStyle
 from .services.uploads import Uploader
 from .services.analytics import Analytics
+from .services.maps import Maps
