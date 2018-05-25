@@ -54,9 +54,6 @@ Services
 
 - **Datasets V1** `examples <./datasets.html#datasets>`__, `website <https://www.mapbox.com/api-documentation/maps/#datasets>`__
 
-- **Tilesets V1** `examples <./docs/tilesets.md#tilesets>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#tilesets>`__
-  - Read metadata for raster and vector tilesets
-
   - Manage editable collections of GeoJSON features
   - Persistent storage for custom geographic data
 
@@ -70,6 +67,10 @@ Services
   - Retrieve vector features from Mapbox Editor projects as GeoJSON or KML
   - Retrieve TileJSON metadata for a tileset
   - Retrieve a single marker image without any background map
+
+- **Tilesets V1** `examples <./docs/tilesets.md#tilesets>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#tilesets>`__
+  
+  - Read metadata for raster and vector tilesets
 
 Please note that there may be some lag between the release of new Mapbox web
 services and releases of this package.
