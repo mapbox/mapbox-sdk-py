@@ -1,4 +1,3 @@
-
 class ValidationError(ValueError):
     pass
 
@@ -64,4 +63,20 @@ class InvalidId(ValidationError):
 
 
 class MapboxDeprecationWarning(UserWarning):
+    pass
+
+
+class InvalidTilesetTypeError(ValidationError):
+    pass
+
+
+class InvalidVisibilityError(ValidationError):
+    pass
+
+
+class InvalidSortbyError(ValidationError):
+    pass
+
+
+class InvalidLimitError(ValidationError):
     pass
