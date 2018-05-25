@@ -54,6 +54,9 @@ Services
 
 - **Datasets V1** `examples <./datasets.html#datasets>`__, `website <https://www.mapbox.com/api-documentation/maps/#datasets>`__
 
+- **Tilesets V1** `examples <./docs/tilesets.md#tilesets>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#tilesets>`__
+  - Read metadata for raster and vector tilesets
+
   - Manage editable collections of GeoJSON features
   - Persistent storage for custom geographic data
 
