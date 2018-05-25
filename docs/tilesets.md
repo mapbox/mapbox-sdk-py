@@ -18,7 +18,7 @@ See https://www.mapbox.com/api-documentation/#tilesets for general documentation
 
 Use of the Tilesets API requires an access token, which you should set in your environment.  For more information, see the [access tokens](access_tokens.md) documentation.
 
-## Tilesets Methods
+## Tilesets Method
 
 The public method of the `Tilesets` class provides access to the Tilesets API and returns an instance of [`requests.Response`](http://docs.python-requests.org/en/latest/api/#requests.Response).
 
