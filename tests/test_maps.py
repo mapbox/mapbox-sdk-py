@@ -267,31 +267,6 @@ def test_validate_color():
 def test_tile_error():
     maps = Maps(access_token="pk.test")
 
-    # invalid number of *args
-
-    with raises(ValidationError) as exception:
-        response = maps.tile(
-            "mapbox.streets",
-        )
-
-    # invalid number of *args
-
-    with raises(ValidationError) as exception:
-        response = maps.tile(
-            "mapbox.streets",
-            0
-        )
-
-    # invalid number of *args
-
-    with raises(ValidationError) as exception:
-        response = maps.tile(
-            "mapbox.streets",
-            0,
-            0
-        )
-
-
     # x = None
 
     with raises(ValidationError) as exception:
