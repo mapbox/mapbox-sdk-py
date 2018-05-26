@@ -30,19 +30,17 @@ Instantiate `Maps`.
 >>> maps = Maps()
 ```
 
-Call the `tile` method, passing in values for `map_id` and `*args`.  `*args` must be a Mapbox `mercantile tile` or individual `x` (column), `y` (row), and `z` (zoom level).  Pass in values for optional arguments as necessary - `retina` (double scale), `file_format`, `style_id`, and `timestamp`.
+Call the `tile` method, passing in values for `map_id`, `x` (column), `y` (row), and `z` (zoom level).  (You may pass in individual values for x, y, and z or a Mapbox `mercantile tile`.)  Pass in values for optional arguments as necessary - `retina` (double scale), `file_format`, `style_id`, and `timestamp`.
+
+__x, y, and z__:
+```python
+>>> response = maps.tile("mapbox.streets", 0, 0, 0)
+```
 
 __mercantile tile__:
 ```python
 >>> tile = mercantile.tile(0, 0, 0)
 >>> response = maps.tile("mapbox.streets", *tile)
-```
-
-(When passing in a `mercantile tile`, failure to include the leading "*" will result in a `ValidationError`.)
-
-__x, y, and z__:
-```python
->>> response = maps.tile("mapbox.streets", 0, 0, 0)
 ```
 
 Evaluate whether the request succeeded, and retrieve the tile from the response object.
