@@ -191,7 +191,7 @@ class Maps(Service):
 
         return color
 
-    def tile(self, map_id, *args, retina=False, 
+    def tile(self, map_id, x, y, z, retina=False, 
              file_format="png", style_id=None, timestamp=None):
 
         """Returns an image tile, vector tile, or UTFGrid
@@ -202,24 +202,17 @@ class Maps(Service):
         map_id : str
             The tile's unique identifier in the format username.id.
 
-        *args : Mapbox mercantile tile or individual x (column), y (row), and z (zoom level)
+        x : int
+            The tile's column, where 0 is the minimum value
+            and ((2**z) - 1) is the maximum value.
 
-            Mapbox mercantile tile : named tuple
-                The tile's column, row, and zoom level.
+        y : int
+            The tile's row, where 0 is the minimum value
+            and ((2**z) - 1) is the maximum value.
 
-            -or-
-
-            x : int
-                The tile's column, where 0 is the minimum value
-                and ((2**z) - 1) is the maximum value.
-
-            y : int
-                The tile's row, where 0 is the minimum value
-                and ((2**z) - 1) is the maximum value.
-
-            z : int
-                The tile's zoom level, where 0 is the minimum value
-                and 20 is the maximum value.
+        z : int
+            The tile's zoom level, where 0 is the minimum value
+            and 20 is the maximum value.
 
         retina : bool, optional
             The tile's scale, where True indicates Retina scale
@@ -248,16 +241,6 @@ class Maps(Service):
         request.Response
             The response object with a tile in the specified format.
         """
-
-        # Retrieve x, y, and z.
-
-        try:
-            x, y, z = args
-
-        except:   
-            raise ValidationError(
-                "*args must be a Mapbox mercantile tile or individual x, y, and z"
-            )
 
         # Check x, y, and z.
 
