@@ -191,8 +191,8 @@ class Maps(Service):
 
         return color
 
-    def tile(self, map_id, *args, retina=False, 
-             file_format="png", style_id=None, timestamp=None):
+    def tile(self, map_id, retina=False, file_format="png", 
+             style_id=None, timestamp=None, *args):
 
         """Returns an image tile, vector tile, or UTFGrid
         in the specified file format.
