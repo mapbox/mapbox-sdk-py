@@ -4,8 +4,6 @@ from mapbox.errors import (
     InvalidRowError,
     InvalidFileFormatError,
     InvalidPeriodError,
-    InvalidOptionError,
-    InvalidCoordError,
     InvalidFeatureFormatError,
     InvalidMarkerNameError,
     InvalidLabelError,
@@ -29,7 +27,6 @@ def test_object_properties():
     assert maps.api_name
     assert maps.api_version
     assert maps.valid_file_formats
-    assert maps.valid_options
     assert maps.valid_feature_formats
     assert maps.valid_marker_names
     assert maps.base_uri
@@ -161,69 +158,6 @@ def test_validate_timestamp():
    result = maps._validate_timestamp(timestamp)
    assert result == timestamp
 
-def test_validate_options():
-    maps = Maps()
-
-    # invalid value
-
-    with raises(InvalidOptionError) as exception:
-        option = ["invalid"]
-        result = maps._validate_options(option)
-
-    # valid values
-
-    options = [
-        "zoomwheel",
-        "zoompan",
-        "geocoder",
-        "share"
-    ] 
-
-    result = maps._validate_options(options)
-    assert result == ",".join(options)
-
-def test_validate_lat():
-    maps = Maps()
-
-    # invalid value
-
-    with raises(InvalidCoordError) as exception:
-        lat = -86
-        result = maps._validate_lat(lat)
-
-    # invalid value
-
-    with raises(InvalidCoordError) as exception:
-        lat = 86
-        result = maps._validate_lat(lat)
-
-    # valid value
-
-    lat = 0
-    result = maps._validate_lat(lat)
-    assert result == lat
-
-def test_validate_lon():
-    maps = Maps()
-
-    # invalid value
-
-    with raises(InvalidCoordError) as exception:
-        lon = -181
-        result = maps._validate_lon(lon)
-
-    # invalid value
-
-    with raises(InvalidCoordError) as exception:
-        lon = 181
-        result = maps._validate_lon(lon)
-
-    # valid value
-
-    lon = 0
-    result = maps._validate_lon(lon)
-    assert result == lon
-
 def test_validate_feature_format():
     maps = Maps()
 
@@ -330,41 +264,68 @@ def test_validate_color():
     result = maps._validate_color(color)
     assert result == color
 
-def test_get_tile_error():
+def test_tile_error():
     maps = Maps(access_token="pk.test")
 
-    # no z
+    # invalid number of *args
 
     with raises(ValidationError) as exception:
-        response = maps.get_tile(
-            "mapbox.streets", 
-            z=None, 
-            x=0, 
-            y=0
+        response = maps.tile(
+            "mapbox.streets",
         )
 
-    # no x
+    # invalid number of *args
 
     with raises(ValidationError) as exception:
-        response = maps.get_tile(
-            "mapbox.streets", 
-            z=0, 
-            x=None, 
-            y=0
+        response = maps.tile(
+            "mapbox.streets",
+            0
         )
 
-    # no y
+    # invalid number of *args
 
     with raises(ValidationError) as exception:
-        response = maps.get_tile(
+        response = maps.tile(
+            "mapbox.streets",
+            0,
+            0
+        )
+
+
+    # x = None
+
+    with raises(ValidationError) as exception:
+        response = maps.tile(
             "mapbox.streets", 
-            z=0, 
-            x=0, 
-            y=None
+            None, 
+            0, 
+            0
+        )
+
+    # y = None
+
+    with raises(ValidationError) as exception:
+        response = maps.tile(
+            "mapbox.streets", 
+            0, 
+            None, 
+            0
+        )
+
+    # z = None
+
+    with raises(ValidationError) as exception:
+        response = maps.tile(
+            "mapbox.streets", 
+            0, 
+            0, 
+            None
         )
 
 @activate
-def test_get_tile():
+def test_tile():
+    # tuple
+
     add(
         method=GET,
         url="https://api.mapbox.com/v4/mapbox.streets/0/0/0.png?access_token=pk.test",
@@ -375,17 +336,36 @@ def test_get_tile():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_tile(
+    response = maps.tile(
         "mapbox.streets", 
-        z=0, 
-        x=0, 
-        y=0
+        *(0,0,0)
+    )
+
+    assert response.status_code == 200
+
+    # individual x, y, and z
+
+    add(
+        method=GET,
+        url="https://api.mapbox.com/v4/mapbox.streets/0/0/0.png?access_token=pk.test",
+        match_querystring=True,
+        body="0.png",
+        status=200
+    )
+
+    maps = Maps(access_token="pk.test")
+
+    response = maps.tile(
+        "mapbox.streets", 
+        0, 
+        0, 
+        0
     )
 
     assert response.status_code == 200
 
 @activate
-def test_get_tile_with_retina():
+def test_tile_with_retina():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/mapbox.streets/0/0/0@2x.png?access_token=pk.test",
@@ -396,18 +376,18 @@ def test_get_tile_with_retina():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_tile(
+    response = maps.tile(
         "mapbox.streets", 
-        z=0, 
-        x=0, 
-        y=0, 
+        0, 
+        0, 
+        0, 
         retina=True
     )
 
     assert response.status_code == 200
 
 @activate
-def test_get_tile_with_different_file_format():
+def test_tile_with_different_file_format():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/mapbox.streets/0/0/0.grid.json?access_token=pk.test",
@@ -418,18 +398,18 @@ def test_get_tile_with_different_file_format():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_tile(
+    response = maps.tile(
         "mapbox.streets", 
-        z=0, 
-        x=0, 
-        y=0, 
+        0, 
+        0, 
+        0, 
         file_format="grid.json"
     )
 
     assert response.status_code == 200
 
 @activate
-def test_get_tile_with_retina_and_different_file_format():
+def test_tile_with_retina_and_different_file_format():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/mapbox.streets/0/0/0@2x.grid.json?access_token=pk.test",
@@ -440,11 +420,11 @@ def test_get_tile_with_retina_and_different_file_format():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_tile(
+    response = maps.tile(
         "mapbox.streets", 
-        z=0, 
-        x=0, 
-        y=0,
+        0, 
+        0, 
+        0,
         retina=True, 
         file_format="grid.json"
     )
@@ -452,7 +432,7 @@ def test_get_tile_with_retina_and_different_file_format():
     assert response.status_code == 200
 
 @activate
-def test_get_tile_with_style():
+def test_tile_with_style():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/mapbox.streets/0/0/0.png?access_token=pk.test&style=mapbox://styles/mapbox/streets-v10@2018-01-01T00:00:00.000Z",
@@ -463,11 +443,11 @@ def test_get_tile_with_style():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_tile(
+    response = maps.tile(
         "mapbox.streets", 
-        z=0, 
-        x=0, 
-        y=0,
+        0, 
+        0, 
+        0,
         style_id="mapbox://styles/mapbox/streets-v10", 
         timestamp="2018-01-01T00:00:00.000Z"
     )
@@ -475,7 +455,7 @@ def test_get_tile_with_style():
     assert response.status_code == 200
 
 @activate
-def test_get_tile_with_style_and_retina():
+def test_tile_with_style_and_retina():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/mapbox.streets/0/0/0@2x.png?access_token=pk.test&style=mapbox://styles/mapbox/streets-v10@2018-01-01T00:00:00.000Z",
@@ -486,11 +466,11 @@ def test_get_tile_with_style_and_retina():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_tile(
+    response = maps.tile(
         "mapbox.streets", 
-        z=0, 
-        x=0, 
-        y=0,
+        0, 
+        0, 
+        0,
         retina=True,
         style_id="mapbox://styles/mapbox/streets-v10", 
         timestamp="2018-01-01T00:00:00.000Z"
@@ -499,7 +479,7 @@ def test_get_tile_with_style_and_retina():
     assert response.status_code == 200
 
 @activate
-def test_get_tile_with_style_and_different_file_format():
+def test_tile_with_style_and_different_file_format():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/mapbox.streets/0/0/0.grid.json?access_token=pk.test&style=mapbox://styles/mapbox/streets-v10@2018-01-01T00:00:00.000Z",
@@ -510,11 +490,11 @@ def test_get_tile_with_style_and_different_file_format():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_tile(
+    response = maps.tile(
         "mapbox.streets", 
-        z=0, 
-        x=0, 
-        y=0,
+        0, 
+        0, 
+        0,
         file_format="grid.json",
         style_id="mapbox://styles/mapbox/streets-v10", 
         timestamp="2018-01-01T00:00:00.000Z"
@@ -523,7 +503,7 @@ def test_get_tile_with_style_and_different_file_format():
     assert response.status_code == 200
 
 @activate
-def test_get_tile_with_style_and_retina_and_different_file_format():
+def test_tile_with_style_and_retina_and_different_file_format():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/mapbox.streets/0/0/0@2x.grid.json?access_token=pk.test&style=mapbox://styles/mapbox/streets-v10@2018-01-01T00:00:00.000Z",
@@ -534,11 +514,11 @@ def test_get_tile_with_style_and_retina_and_different_file_format():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_tile(
+    response = maps.tile(
         "mapbox.streets", 
-        z=0, 
-        x=0, 
-        y=0,
+        0, 
+        0, 
+        0,
         retina=True,
         file_format="grid.json",
         style_id="mapbox://styles/mapbox/streets-v10", 
@@ -548,98 +528,7 @@ def test_get_tile_with_style_and_retina_and_different_file_format():
     assert response.status_code == 200
 
 @activate
-def test_get_html_slippy_map():
-    add(
-        method=GET,
-        url="https://api.mapbox.com/v4/mapbox.streets.html?access_token=pk.test",
-        match_querystring=True,
-        body="<html></html>",
-        status=200
-    )
-
-    maps = Maps(access_token="pk.test")
-
-    response = maps.get_html_slippy_map(
-        "mapbox.streets"
-    )
-
-    assert response.status_code == 200
-
-
-@activate
-def test_get_html_slippy_map_with_options():
-    add(
-        method=GET,
-        url="https://api.mapbox.com/v4/mapbox.streets/zoomwheel%2Czoompan%2Cgeocoder%2Cshare.html?access_token=pk.test",
-        match_querystring=True,
-        body="<html></html>",
-        status=200
-    )
-
-    maps = Maps(access_token="pk.test")
-
-    response = maps.get_html_slippy_map(
-        "mapbox.streets",
-        options=[
-            "zoomwheel", 
-            "zoompan", 
-            "geocoder", 
-            "share"
-        ]
-    )
-
-    assert response.status_code == 200
-
-@activate
-def test_get_html_slippy_map_with_z_and_lat_and_lon():
-    add(
-        method=GET,
-        url="https://api.mapbox.com/v4/mapbox.streets.html?access_token=pk.test#0/0/0",
-        match_querystring=True,
-        body="<html></html>",
-        status=200
-    )
-
-    maps = Maps(access_token="pk.test")
-
-    response = maps.get_html_slippy_map(
-        "mapbox.streets",
-        z=0,
-        lat=0,
-        lon=0
-    )
-
-    assert response.status_code == 200
-
-@activate
-def test_get_html_slippy_map_with_options_and_z_and_lat_and_lon():
-    add(
-        method=GET,
-        url="https://api.mapbox.com/v4/mapbox.streets/zoomwheel%2Czoompan%2Cgeocoder%2Cshare.html?access_token=pk.test#0/0/0",
-        match_querystring=True,
-        body="<html></html>",
-        status=200
-    )
-
-    maps = Maps(access_token="pk.test")
-
-    response = maps.get_html_slippy_map(
-        "mapbox.streets",
-        options=[
-            "zoomwheel", 
-            "zoompan", 
-            "geocoder", 
-            "share"
-        ],
-        z=0,
-        lat=0,
-        lon=0
-    )
-
-    assert response.status_code == 200
-
-@activate
-def test_get_vector_features():
+def test_features():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/mapbox.streets/features.json?access_token=pk.test",
@@ -650,14 +539,14 @@ def test_get_vector_features():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_vector_features(
+    response = maps.features(
         "mapbox.streets",
     )
 
     assert response.status_code == 200
 
 @activate
-def test_get_vector_features_with_different_format():
+def test_features_with_different_format():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/mapbox.streets/features.kml?access_token=pk.test",
@@ -668,7 +557,7 @@ def test_get_vector_features_with_different_format():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_vector_features(
+    response = maps.features(
         "mapbox.streets",
         feature_format="kml"
     )
@@ -676,7 +565,7 @@ def test_get_vector_features_with_different_format():
     assert response.status_code == 200
 
 @activate
-def test_get_tilejson_metadata():
+def test_metadata():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/mapbox.streets.json?access_token=pk.test",
@@ -687,14 +576,14 @@ def test_get_tilejson_metadata():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_tilejson_metadata(
+    response = maps.metadata(
         "mapbox.streets"
     )
 
     assert response.status_code == 200
 
 @activate
-def test_get_tilejson_metadata_with_secure():
+def test_metadata_with_secure():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/mapbox.streets.json?access_token=pk.test&secure",
@@ -705,21 +594,21 @@ def test_get_tilejson_metadata_with_secure():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_tilejson_metadata(
+    response = maps.metadata(
         "mapbox.streets",
         secure=True
     )
 
     assert response.status_code == 200
 
-def test_get_standalone_marker_error():
+def test_standalone_marker_error():
     maps = Maps(access_token="pk.test")
 
     with raises(ValidationError) as exception:
-        response = maps.get_standalone_marker()
+        response = maps.standalone_marker()
 
 @activate
-def test_get_standalone_marker():
+def test_standalone_marker():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/marker/pin-s.png?access_token=pk.test",
@@ -730,14 +619,14 @@ def test_get_standalone_marker():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_standalone_marker(
+    response = maps.standalone_marker(
         marker_name="pin-s"
     )
 
     assert response.status_code == 200
 
 @activate
-def test_get_standalone_marker_with_label():
+def test_standalone_marker_with_label():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/marker/pin-s-label.png?access_token=pk.test",
@@ -748,7 +637,7 @@ def test_get_standalone_marker_with_label():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_standalone_marker(
+    response = maps.standalone_marker(
         marker_name="pin-s",
         label="label"
     )
@@ -756,7 +645,7 @@ def test_get_standalone_marker_with_label():
     assert response.status_code == 200
 
 @activate
-def test_get_standalone_marker_with_color():
+def test_standalone_marker_with_color():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/marker/pin-s+00f.png?access_token=pk.test",
@@ -767,7 +656,7 @@ def test_get_standalone_marker_with_color():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_standalone_marker(
+    response = maps.standalone_marker(
         marker_name="pin-s",
         color="00f"
     )
@@ -775,7 +664,7 @@ def test_get_standalone_marker_with_color():
     assert response.status_code == 200
 
 @activate
-def test_get_standalone_marker_with_retina():
+def test_standalone_marker_with_retina():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/marker/pin-s@2x.png?access_token=pk.test",
@@ -786,7 +675,7 @@ def test_get_standalone_marker_with_retina():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_standalone_marker(
+    response = maps.standalone_marker(
         marker_name="pin-s",
         retina=True
     )
@@ -794,7 +683,7 @@ def test_get_standalone_marker_with_retina():
     assert response.status_code == 200
 
 @activate
-def test_get_standalone_marker_with_label_and_color():
+def test_standalone_marker_with_label_and_color():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/marker/pin-s-label+00f.png?access_token=pk.test",
@@ -805,7 +694,7 @@ def test_get_standalone_marker_with_label_and_color():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_standalone_marker(
+    response = maps.standalone_marker(
         marker_name="pin-s",
         label="label",
         color="00f"
@@ -814,7 +703,7 @@ def test_get_standalone_marker_with_label_and_color():
     assert response.status_code == 200
 
 @activate
-def test_get_standalone_marker_with_color_and_retina():
+def test_standalone_marker_with_color_and_retina():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/marker/pin-s+00f@2x.png?access_token=pk.test",
@@ -825,7 +714,7 @@ def test_get_standalone_marker_with_color_and_retina():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_standalone_marker(
+    response = maps.standalone_marker(
         marker_name="pin-s",
         color="00f",
         retina=True
@@ -834,7 +723,7 @@ def test_get_standalone_marker_with_color_and_retina():
     assert response.status_code == 200
 
 @activate
-def test_get_standalone_marker_with_label_and_retina():
+def test_standalone_marker_with_label_and_retina():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/marker/pin-s-label@2x.png?access_token=pk.test",
@@ -845,7 +734,7 @@ def test_get_standalone_marker_with_label_and_retina():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_standalone_marker(
+    response = maps.standalone_marker(
         marker_name="pin-s",
         label="label",
         retina=True
@@ -854,7 +743,7 @@ def test_get_standalone_marker_with_label_and_retina():
     assert response.status_code == 200
 
 @activate
-def test_get_standalone_marker_with_label_and_color_and_retina():
+def test_standalone_marker_with_label_and_color_and_retina():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/marker/pin-s-label+00f@2x.png?access_token=pk.test",
@@ -865,7 +754,7 @@ def test_get_standalone_marker_with_label_and_color_and_retina():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.get_standalone_marker(
+    response = maps.standalone_marker(
         marker_name="pin-s",
         label="label",
         color="00f",
