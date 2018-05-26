@@ -10,8 +10,6 @@ from mapbox.errors import (
     InvalidRowError,
     InvalidFileFormatError,
     InvalidPeriodError,
-    InvalidOptionError,
-    InvalidCoordError,
     InvalidFeatureFormatError,
     InvalidMarkerNameError,
     InvalidLabelError,
@@ -38,9 +36,6 @@ class Maps(Service):
     valid_file_formats : list
         The possible values for file_format.
 
-    valid_options : list
-        The possible values for options (map controls and behaviors).
-
     valid_feature_formats : list
         The possible values for feature_format.
 
@@ -66,13 +61,6 @@ class Maps(Service):
         "jpg70",
         "jpg80",
         "jpg90" 
-    ]
-
-    valid_options = [
-        "zoomwheel",
-        "zoompan",
-        "geocoder",
-        "share"
     ]
 
     valid_feature_formats = [
@@ -153,39 +141,6 @@ class Maps(Service):
 
         return timestamp
 
-    def _validate_options(self, options):
-        """Validates options (map controls and behaviors), raising error if invalid."""
-
-        for option in options:
-            if option not in self.valid_options:
-                raise InvalidOptionError(
-                    "{} is not a valid option (map control or behavior)".format(option)
-                )
-
-        options = ",".join(options)
-        
-        return options
-
-    def _validate_lat(self, lat):
-        """Validates latitude, raising error if invalid."""
-
-        if (lat < -85.0511) or (lat > 85.0511):
-            raise InvalidCoordError(
-                "Latitude must be between -85.0511 and 85.0511"
-            )
-
-        return lat
-
-    def _validate_lon(self, lon):
-        """Validates longitude, raising error if invalid."""
-
-        if (lon < -180) or (lon > 180):
-            raise InvalidCoordError(
-                "Longitude must be between -180 and 180"
-            )
-
-        return lon
-
     def _validate_feature_format(self, feature_format):
         """Validates feature format, raising error if invalid."""
 
@@ -236,9 +191,8 @@ class Maps(Service):
 
         return color
 
-    def get_tile(self, map_id, z=None, x=None, y=None, 
-                 retina=False, file_format="png", 
-                 style_id=None, timestamp=None):
+    def tile(self, map_id, *args, retina=False, 
+             file_format="png", style_id=None, timestamp=None):
 
         """Returns an image tile, vector tile, or UTFGrid
         in the specified file format.
@@ -248,17 +202,24 @@ class Maps(Service):
         map_id : str
             The tile's unique identifier in the format username.id.
 
-        z : int
-            The tile's zoom level, where 0 is the minimum value
-            and 20 is the maximum value.
+        *args : Mapbox mercantile tile or individual x (column), y (row), and z (zoom level)
 
-        x : int
-            The tile's column, where 0 is the minimum value
-            and ((2**z) - 1) is the maximum value.
+            Mapbox mercantile tile : named tuple
+                The tile's column, row, and zoom level.
 
-        y : int
-            The tile's row, where 0 is the minimum value
-            and ((2**z) - 1) is the maximum value.
+            -or-
+
+            x : int
+                The tile's column, where 0 is the minimum value
+                and ((2**z) - 1) is the maximum value.
+
+            y : int
+                The tile's row, where 0 is the minimum value
+                and ((2**z) - 1) is the maximum value.
+
+            z : int
+                The tile's zoom level, where 0 is the minimum value
+                and 20 is the maximum value.
 
         retina : bool, optional
             The tile's scale, where True indicates Retina scale
@@ -288,18 +249,28 @@ class Maps(Service):
             The response object with a tile in the specified format.
         """
 
-        # Check for z, x, and y.
+        # Retrieve x, y, and z.
 
-        if z is None or x is None or y is None:
+        try:
+            x, y, z = args
+
+        except:   
             raise ValidationError(
-                "map_id, z, x, and y are required arguments."
+                "*args must be a Mapbox mercantile tile or individual x, y, and z"
             )
 
-        # Validate z, x, y, retina, and file_format.
+        # Check x, y, and z.
 
-        z = self._validate_z(z)
+        if x is None or y is None or z is None:
+            raise ValidationError(
+                "x, y, and z must be not be None"
+            )
+
+        # Validate x, y, z, retina, and file_format.
+
         x = self._validate_x(x, z)
         y = self._validate_y(y, z)
+        z = self._validate_z(z)
         retina = self._validate_retina(retina)
         file_format = self._validate_file_format(file_format)
 
@@ -307,9 +278,9 @@ class Maps(Service):
 
         path_values = dict(
             map_id=map_id,
-            z=str(z),
             x=str(x),
             y=str(y),
+            z=str(z)
         )
 
         # Start building URI resource path.
@@ -340,87 +311,7 @@ class Maps(Service):
 
         return response
 
-    def get_html_slippy_map(self, map_id, options=None,
-                            z=None, lat=None, lon=None):
-        """Returns an HTML slippy map for sharing or embedding.
-    
-        Parameters
-        ----------
-        map_id : str
-            The map's unique identifier in the format username.id.
-
-        options : list, optional
-            The comma-separated list of controls and behaviors to
-            include in the map.
-
-        z : int, optional
-            The tile's zoom level, where 0 is the minimum value
-            and 20 is the maximum value.
-
-            z must used together with lat and lon.
-
-        lat : float, optional
-            The map's latitude, where -85.0511 is the minimum value
-            and 85.0511 is the maximum value.
-
-            lat must be used together with z and lon.
-
-        lon : float, optional
-            The map's longitude, where -180 is the minimum value
-            and 180 is the maximum value.
-
-            lon must be used together with z and lat.
-
-        Returns
-        -------
-        request.Response
-            The response object with HTML of a slippy map.
-        """
-
-        # Create a dict to assist in building URI resouce path.
-
-        path_values = dict(
-            map_id=map_id
-        )
-
-        # Start building URI resource path.
-
-        path_part = "/{map_id}"
-
-        # Validate options, update dict,
-        # and continue building URI resource path.
-
-        if options is not None:
-            options = self._validate_options(options)
-            path_values["options"] = options
-            path_part += "/{options}"
-
-        path_part += ".html"
-
-        # Validate z, lat, and lon; update dict;
-        # and continue building URI resource path.
-
-        if z is not None and lat is not None and lon is not None:
-            z = self._validate_z(z)
-            lat = self._validate_lat(lat)
-            lon = self._validate_lon(lon)
-            path_values["z"] = z
-            path_values["lat"] = lat
-            path_values["lon"] = lon
-            path_part += "#{z}/{lat}/{lon}"
-
-        # Finish building URI resource path.
-
-        uri = URITemplate(self.base_uri + path_part).expand(**path_values)
-
-        # Send HTTP GET request.
-
-        response = self.session.get(uri)
-        self.handle_http_error(response)
-
-        return response
-
-    def get_vector_features(self, map_id, feature_format="json"):
+    def features(self, map_id, feature_format="json"):
         """Returns vector features from Mapbox Editor projects
         as GeoJSON or KML.
 
@@ -463,7 +354,7 @@ class Maps(Service):
 
         return response
 
-    def get_tilejson_metadata(self, map_id, secure=False):
+    def metadata(self, map_id, secure=False):
         """Returns TileJSON metadata for a tileset.
 
         Parameters
@@ -509,8 +400,8 @@ class Maps(Service):
 
         return response
 
-    def get_standalone_marker(self, marker_name=None, label=None, 
-                              color=None, retina=False):
+    def standalone_marker(self, marker_name=None, label=None, 
+                          color=None, retina=False):
         """Returns a single marker image without any
            background map.
 
