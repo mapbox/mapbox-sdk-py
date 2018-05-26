@@ -82,10 +82,6 @@ class InvalidFileFormatError(ValidationError):
     pass
 
 
-class InvalidOptionError(ValidationError):
-    pass
-
-
 class InvalidFeatureFormatError(ValidationError):
     pass
 
