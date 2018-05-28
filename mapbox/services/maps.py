@@ -124,7 +124,7 @@ class Maps(Service):
 
         if file_format not in self.valid_file_formats:
             raise InvalidFileFormatError(
-                "{} is not a valid file format".format(format)
+                "{} is not a valid file format".format(file_format)
             )
 
         return file_format
