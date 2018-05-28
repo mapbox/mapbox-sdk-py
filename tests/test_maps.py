@@ -625,7 +625,7 @@ def test_standalone_marker_with_color():
         method=GET,
         url="https://api.mapbox.com/v4/marker/pin-s+00f.png?access_token=pk.test",
         match_querystring=True,
-        body="pin-s-00f.png",
+        body="pin-s+00f.png",
         status=200
     )
 
