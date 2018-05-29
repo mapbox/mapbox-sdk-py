@@ -45,9 +45,7 @@ __x, y, and z__:
 __mercantile tile__:
 
 ```python
->>> import mercantile
->>> tile = mercantile.tile(0, 0, 0)
->>> response = maps.tile("mapbox.streets", *tile)
+>>> response = maps.tile("mapbox.streets", *mercantile.tile(0, 0, 0))  # doctest: +SKIP
 
 ```
 
