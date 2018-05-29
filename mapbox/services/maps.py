@@ -383,8 +383,8 @@ class Maps(Service):
 
         return response
 
-    def standalone_marker(self, marker_name=None, label=None, 
-                          color=None, retina=False):
+    def marker(self, marker_name=None, label=None, 
+               color=None, retina=False):
         """Returns a single marker image without any
            background map.
 
