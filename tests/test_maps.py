@@ -576,14 +576,14 @@ def test_metadata_with_secure():
 
     assert response.status_code == 200
 
-def test_standalone_marker_error():
+def test_marker_error():
     maps = Maps(access_token="pk.test")
 
     with raises(ValidationError) as exception:
-        response = maps.standalone_marker()
+        response = maps.marker()
 
 @activate
-def test_standalone_marker():
+def test_marker():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/marker/pin-s.png?access_token=pk.test",
@@ -594,14 +594,14 @@ def test_standalone_marker():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.standalone_marker(
+    response = maps.marker(
         marker_name="pin-s"
     )
 
     assert response.status_code == 200
 
 @activate
-def test_standalone_marker_with_label():
+def test_marker_with_label():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/marker/pin-s-label.png?access_token=pk.test",
@@ -612,7 +612,7 @@ def test_standalone_marker_with_label():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.standalone_marker(
+    response = maps.marker(
         marker_name="pin-s",
         label="label"
     )
@@ -620,7 +620,7 @@ def test_standalone_marker_with_label():
     assert response.status_code == 200
 
 @activate
-def test_standalone_marker_with_color():
+def test_marker_with_color():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/marker/pin-s+00f.png?access_token=pk.test",
@@ -631,7 +631,7 @@ def test_standalone_marker_with_color():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.standalone_marker(
+    response = maps.marker(
         marker_name="pin-s",
         color="00f"
     )
@@ -639,7 +639,7 @@ def test_standalone_marker_with_color():
     assert response.status_code == 200
 
 @activate
-def test_standalone_marker_with_retina():
+def test_marker_with_retina():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/marker/pin-s@2x.png?access_token=pk.test",
@@ -650,7 +650,7 @@ def test_standalone_marker_with_retina():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.standalone_marker(
+    response = maps.marker(
         marker_name="pin-s",
         retina=True
     )
@@ -658,7 +658,7 @@ def test_standalone_marker_with_retina():
     assert response.status_code == 200
 
 @activate
-def test_standalone_marker_with_label_and_color():
+def test_marker_with_label_and_color():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/marker/pin-s-label+00f.png?access_token=pk.test",
@@ -669,7 +669,7 @@ def test_standalone_marker_with_label_and_color():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.standalone_marker(
+    response = maps.marker(
         marker_name="pin-s",
         label="label",
         color="00f"
@@ -678,7 +678,7 @@ def test_standalone_marker_with_label_and_color():
     assert response.status_code == 200
 
 @activate
-def test_standalone_marker_with_color_and_retina():
+def test_marker_with_color_and_retina():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/marker/pin-s+00f@2x.png?access_token=pk.test",
@@ -689,7 +689,7 @@ def test_standalone_marker_with_color_and_retina():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.standalone_marker(
+    response = maps.marker(
         marker_name="pin-s",
         color="00f",
         retina=True
@@ -698,7 +698,7 @@ def test_standalone_marker_with_color_and_retina():
     assert response.status_code == 200
 
 @activate
-def test_standalone_marker_with_label_and_retina():
+def test_marker_with_label_and_retina():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/marker/pin-s-label@2x.png?access_token=pk.test",
@@ -709,7 +709,7 @@ def test_standalone_marker_with_label_and_retina():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.standalone_marker(
+    response = maps.marker(
         marker_name="pin-s",
         label="label",
         retina=True
@@ -718,7 +718,7 @@ def test_standalone_marker_with_label_and_retina():
     assert response.status_code == 200
 
 @activate
-def test_standalone_marker_with_label_and_color_and_retina():
+def test_marker_with_label_and_color_and_retina():
     add(
         method=GET,
         url="https://api.mapbox.com/v4/marker/pin-s-label+00f@2x.png?access_token=pk.test",
@@ -729,7 +729,7 @@ def test_standalone_marker_with_label_and_color_and_retina():
 
     maps = Maps(access_token="pk.test")
 
-    response = maps.standalone_marker(
+    response = maps.marker(
         marker_name="pin-s",
         label="label",
         color="00f",
