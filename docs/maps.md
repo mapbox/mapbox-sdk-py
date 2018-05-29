@@ -111,10 +111,10 @@ Instantiate `Maps`.
 >>> maps = Maps()
 ```
 
-Call the `standalone_marker` method, passing in a value for `marker_name`.  Pass in values for optional arguments as necessary - `label`, `color`, and `retina`.
+Call the `marker` method, passing in a value for `marker_name`.  Pass in values for optional arguments as necessary - `label`, `color`, and `retina`.
 
 ```python
->>> response = maps.standalone_marker(marker_name="pin-s")
+>>> response = maps.marker(marker_name="pin-s")
 ```
 
 Evaluate whether the request succeeded, and retrieve the marker from the response object.
