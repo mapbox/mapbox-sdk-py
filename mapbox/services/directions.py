@@ -8,6 +8,10 @@ from mapbox.encoding import encode_waypoints as encode_coordinates
 from mapbox.services.base import Service
 from mapbox import errors
 
+try:
+    basestring
+except NameError:
+    basestring = str
 
 class Directions(Service):
     """Access to the Directions v5 API."""
@@ -118,7 +122,7 @@ class Directions(Service):
         if radius is None:
             return None
 
-        if isinstance(radius, str):
+        if isinstance(radius, basestring):
             if radius != 'unlimited':
                 raise errors.InvalidParameterError(
                     '{0} is not a valid radius'.format(radius))
