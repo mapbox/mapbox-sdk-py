@@ -90,7 +90,7 @@ def encode_coordinates_json(features):
     """Given an iterable of features
     return a JSON string to be used as the request body for the distance API:
     a JSON object, with a key coordinates,
-    which has an array of [ Longitude, Latitidue ] pairs
+    which has an array of [ Longitude, Lattitude ] pairs
     """
     coords = {
         'coordinates': list(read_points(features))}
