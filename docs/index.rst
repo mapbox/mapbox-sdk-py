@@ -60,6 +60,13 @@ Services
   
   - Read metadata for raster and vector tilesets
 
+- **Maps V4** `examples <./docs/maps.md#maps>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#maps>`__
+
+  - Retrieve an image tile, vector tile, or UTFGrid in the specified format
+  - Retrieve vector features from Mapbox Editor projects as GeoJSON or KML
+  - Retrieve TileJSON metadata for a tileset
+  - Retrieve a single marker image without any background map
+
 Please note that there may be some lag between the release of new Mapbox web
 services and releases of this package.
 
@@ -107,6 +114,7 @@ Documentation
    analytics.md
    mapmatching.md
    static_style.md
+   maps.md
    api/mapbox.rst
    api/mapbox.services.rst
    api/modules.rst
