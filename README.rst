@@ -60,6 +60,10 @@ Services
   - Manage editable collections of GeoJSON features
   - Persistent storage for custom geographic data
 
+- **Optimization V1** `examples <./docs/optimization.md#optimization>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#optimization>`__
+
+  - Retrieve a duration-optimized route
+
 Please note that there may be some lag between the release of new Mapbox web
 services and releases of this package.
 
