@@ -1,6 +1,11 @@
 Changes
 =======
 
+0.16.1
+------
+- Python 2/3 bugfixes (#239)
+- Add support for Maps v4 (#228).
+
 0.16.0 (2018-05-08)
 -------------------
 - Added support for Directions v5 (#203).
