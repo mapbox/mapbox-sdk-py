@@ -1,6 +1,14 @@
 import json
 
-from .errors import InvalidFeatureError
+from numbers import Number
+
+from .compat import string_type
+
+from .errors import (
+    InvalidFeatureError,
+    InvalidParameterError
+)
+
 import polyline
 
 
@@ -93,3 +101,75 @@ def encode_coordinates_json(features):
     coords = {
         'coordinates': list(read_points(features))}
     return json.dumps(coords)
+
+
+def validate_snapping(snaps, features):
+    bearings = []
+    radii = []
+    if snaps is None:
+        return (None, None)
+    if len(snaps) != len(features):
+        raise InvalidParameterError(
+            'Must provide exactly one snapping element for each input feature')
+    for snap in snaps:
+        if snap is None:
+            bearings.append(None)
+            radii.append(None)
+        else:
+            try:
+                # radius-only
+                radius = validate_radius(snap)
+                bearing = None
+            except InvalidParameterError:
+                # (radius, angle, range) tuple
+                try:
+                    radius, angle, rng = snap
+                except ValueError:
+                    raise InvalidParameterError(
+                        'waypoint snapping should contain 3 elements: '
+                        '(bearing, angle, range)')
+                validate_radius(radius)
+
+                try:
+                    assert angle >= 0
+                    assert angle <= 360
+                    assert rng >= 0
+                    assert rng <= 360
+                except (TypeError, AssertionError):
+                    raise InvalidParameterError(
+                        'angle and range must be between 0 and 360')
+                bearing = (angle, rng)
+
+            bearings.append(bearing)
+            radii.append(radius)
+
+    if all([b is None for b in bearings]):
+        bearings = None
+
+    return (bearings, radii)
+
+
+def validate_radius(radius):
+    if radius is None:
+        return None
+
+    if isinstance(radius, string_type):
+        if radius != 'unlimited':
+            raise InvalidParameterError(
+                '{0} is not a valid radius'.format(radius))
+    elif isinstance(radius, Number):
+        if radius <= 0:
+            raise InvalidParameterError(
+                'radius must be greater than zero'.format(radius))
+    else:
+        raise InvalidParameterError(
+            '{0} is not a valid radius'.format(radius))
+
+    return radius
+
+
+def encode_bearing(b):
+    if b is None:
+        return ''
+    else:
+        return '{},{}'.format(*b)
