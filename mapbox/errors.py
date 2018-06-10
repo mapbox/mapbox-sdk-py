@@ -65,3 +65,7 @@ class InvalidId(ValidationError):
 
 class MapboxDeprecationWarning(UserWarning):
     pass
+
+
+class InvalidStartError(ValidationError):
+    pass
