@@ -1,4 +1,4 @@
-from json import dumps
+from json import loads
 
 from mapbox.errors import (
     InvalidFileFormatError,
@@ -193,6 +193,7 @@ class Styles(Service):
         if not isinstance(style_object, dict):
             with open(style_object, "r") as file:
                 json = file.read()
+                json = loads(json)
         else:
             json = style_object
 
@@ -249,6 +250,7 @@ class Styles(Service):
         if not isinstance(style_object, dict):
             with open(style_object, "r") as file:
                 json = file.read()
+                json = loads(json)
         else:
             json = style_object
 
