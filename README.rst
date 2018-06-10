@@ -60,6 +60,18 @@ Services
   - Manage editable collections of GeoJSON features
   - Persistent storage for custom geographic data
 
+- **Styles V1** `examples <./docs/styles.md#styles>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#styles>`__
+
+  - Retrieve a style
+  - Retrieve a list of styles
+  - Create a style
+  - Update a style
+  - Delete a style
+  - Retrieve a font glyph range
+  - Retrieve a sprite image or JSON
+  - Add a new image to an existing sprite
+  - Delete an image from an existing sprite
+
 Please note that there may be some lag between the release of new Mapbox web
 services and releases of this package.
 
