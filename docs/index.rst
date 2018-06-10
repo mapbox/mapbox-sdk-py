@@ -123,6 +123,7 @@ Documentation
    mapmatching.md
    static_style.md
    maps.md
+   styles.md
    api/mapbox.rst
    api/mapbox.services.rst
    api/modules.rst
