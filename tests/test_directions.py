@@ -239,10 +239,17 @@ def test_validate_radius_none():
     assert service._validate_radius(None) is None
 
 
+def test_validate_radius_unlimited():
+    service = mapbox.Directions(access_token='pk.test')
+    assert service._validate_radius('unlimited') == 'unlimited'
+
+
 def test_validate_radius_invalid():
     service = mapbox.Directions(access_token='pk.test')
     with pytest.raises(mapbox.errors.InvalidParameterError) as e:
         service._validate_radius(-1)
+    with pytest.raises(mapbox.errors.InvalidParameterError) as e:
+        service._validate_radius('nothing')
 
 
 def test_invalid_bearing_domain():
@@ -256,3 +263,11 @@ def test_bearings_without_radius():
     with pytest.raises(TypeError):
         mapbox.Directions(access_token='pk.test').directions(
             waypoint_snapping=[(270, 45), (270, 45)])
+
+
+def test_validate_snapping():
+    service = mapbox.Directions(access_token='pk.test')
+    snaps = service._validate_snapping(
+        [(1, 1, 1), u'unlimited'], [None, None])
+
+    assert snaps == ([(1, 1), None], [1, 'unlimited'])
