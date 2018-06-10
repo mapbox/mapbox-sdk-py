@@ -98,7 +98,7 @@ __file__:
 
 ```
 
-Evaluate whether the request succeeded, and retrieve the properties of the style object.
+Evaluate whether the request succeeded, and retrieve the properties of the created style object.
 
 ```python
 >>> if response.status_code == 200:
@@ -134,7 +134,7 @@ __file__:
 
 ```
 
-Evaluate whether the request succeeded, and retrieve the properties of the style object.
+Evaluate whether the request succeeded, and retrieve the properties of the updated style object.
 
 ```python
 >>> if response.status_code == 200:
