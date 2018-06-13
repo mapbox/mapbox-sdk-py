@@ -149,7 +149,7 @@ def test_encode_waypoints_rounding():
     assert expected == encode_waypoints(int_coord_features)
 
     
-# copied from test_directions.py
+# copied from test_directions.py and modified
 
 points = [{
     "type": "Feature",
@@ -228,3 +228,13 @@ def test_validate_snapping():
     snaps = validate_snapping(
         [(1, 1, 1), u'unlimited'], [None, None])
     assert snaps == ([(1, 1), None], [1, 'unlimited'])
+
+
+def test_validate_snapping_none():
+    snaps = validate_snapping(None, points)
+    assert snaps == (None, None)
+
+    
+def test_encode_bearing_none():
+    bearing = encode_bearing(None)
+    assert bearing == ""
