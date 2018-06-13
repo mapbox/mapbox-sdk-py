@@ -102,8 +102,8 @@ class Tilesets(Service):
 
         return limit
 
-    def list_tilesets(self, tileset_type=None, visibility=None, 
-                      sortby=None, limit=None):
+    def tilesets(self, tileset_type=None, visibility=None, 
+                 sortby=None, limit=None):
         """Lists all tilesets for an account.
 
         tileset_type : str, optional
