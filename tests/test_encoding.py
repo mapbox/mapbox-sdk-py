@@ -10,7 +10,7 @@ from mapbox.encoding import (
     validate_radius,
     validate_snapping
 )
-
+import mapbox
 
 
 gj_point_features = [{
