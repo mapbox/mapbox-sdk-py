@@ -232,6 +232,7 @@ class Optimization(Service):
               waypoint_snapping=None, roundtrip=None, source=None, 
               destination=None, distributions=None, annotations=None, 
               language=None):
+        
         """The Optimization API returns a duration-optimized route
         between the input coordinates.
 
@@ -353,14 +354,17 @@ class Optimization(Service):
 
         if waypoint_snapping is not None:
             bearings, radiuses = validate_snapping(waypoint_snapping, features)
+        else:
+            bearings = None
+            radiuses = None
 
-            if bearings is not None:
-                 bearings = ";".join(encode_bearing(bearing) for bearing in bearings)
-                 query_parameters["bearings"] = bearings
+        if bearings is not None:
+            bearings = ";".join(encode_bearing(bearing) for bearing in bearings)
+            query_parameters["bearings"] = bearings
 
-            if radiuses is not None:
-                radiuses = ";".join(str(radius) for radius in radiuses)
-                query_parameters["radiuses"] = radiuses
+        if radiuses is not None:
+            radiuses = ";".join(str(radius) for radius in radiuses)
+            query_parameters["radiuses"] = radiuses
 
         if roundtrip is not None:
             query_parameters["roundtrip"] = "true" if roundtrip is True else "false"
