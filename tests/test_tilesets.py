@@ -122,7 +122,7 @@ def test_tilesets():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.list_tilesets()
+    response = tilesets.tilesets()
     assert response.status_code == 200
 
 @activate
@@ -136,7 +136,7 @@ def test_tilesets_with_tileset_type():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.list_tilesets(tileset_type="raster")
+    response = tilesets.tilesets(tileset_type="raster")
     assert response.status_code == 200
 
     add(
@@ -148,7 +148,7 @@ def test_tilesets_with_tileset_type():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.list_tilesets(tileset_type="vector")
+    response = tilesets.tilesets(tileset_type="vector")
     assert response.status_code == 200
 
 @activate
@@ -162,7 +162,7 @@ def test_tilesets_with_visibility():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.list_tilesets(visibility="private")
+    response = tilesets.tilesets(visibility="private")
     assert response.status_code == 200
 
     add(
@@ -174,7 +174,7 @@ def test_tilesets_with_visibility():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.list_tilesets(visibility="public")
+    response = tilesets.tilesets(visibility="public")
     assert response.status_code == 200
 
 @activate
@@ -188,7 +188,7 @@ def test_tilesets_with_sortby():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.list_tilesets(sortby="created")
+    response = tilesets.tilesets(sortby="created")
     assert response.status_code == 200
 
     add(
@@ -200,7 +200,7 @@ def test_tilesets_with_sortby():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.list_tilesets(sortby="modified")
+    response = tilesets.tilesets(sortby="modified")
     assert response.status_code == 200
 
 @activate
@@ -214,7 +214,7 @@ def test_tilesets_with_limit():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.list_tilesets(limit=500)
+    response = tilesets.tilesets(limit=500)
     assert response.status_code == 200
 
 @activate
@@ -228,7 +228,7 @@ def test_tilesets_with_tileset_type_and_visibility():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.list_tilesets(tileset_type="vector", visibility="public")
+    response = tilesets.tilesets(tileset_type="vector", visibility="public")
     assert response.status_code == 200
 
 @activate
@@ -242,7 +242,7 @@ def test_tilesets_with_tileset_type_and_sortby():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.list_tilesets(tileset_type="vector", sortby="created")
+    response = tilesets.tilesets(tileset_type="vector", sortby="created")
     assert response.status_code == 200
 
 @activate
@@ -256,7 +256,7 @@ def test_tilesets_with_tileset_type_and_limit():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.list_tilesets(tileset_type="vector", limit=500)
+    response = tilesets.tilesets(tileset_type="vector", limit=500)
     assert response.status_code == 200
 
 @activate
@@ -270,7 +270,7 @@ def test_tilesets_with_visibility_and_sortby():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.list_tilesets(visibility="public", sortby="created")
+    response = tilesets.tilesets(visibility="public", sortby="created")
     assert response.status_code == 200
 
 @activate
@@ -284,7 +284,7 @@ def test_tilesets_with_visibility_and_limit():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.list_tilesets(visibility="public", limit=500)
+    response = tilesets.tilesets(visibility="public", limit=500)
     assert response.status_code == 200
 
 @activate
@@ -298,5 +298,5 @@ def test_tilesets_with_sortby_and_limit():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.list_tilesets(sortby="created", limit=500)
+    response = tilesets.tilesets(sortby="created", limit=500)
     assert response.status_code == 200
