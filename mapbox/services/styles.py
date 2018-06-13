@@ -306,7 +306,7 @@ class Styles(Service):
 
     def font_glyphs(self, fonts, start):
         """Returns a font glyph range as a protocol-buffer-encoded
-           signed distance field.
+           signed-distance-field.
 
         Parameters
         ----------
