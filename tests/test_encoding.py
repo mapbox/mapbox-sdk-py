@@ -146,6 +146,23 @@ def test_encode_waypoints_rounding():
     
 # copied from test_directions.py
 
+points = [{
+    "type": "Feature",
+    "properties": {},
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -87.33787536621092,
+            36.539156961321574]}}, {
+    "type": "Feature",
+    "properties": {},
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -88.2476806640625,
+            36.92217534275667]}}]
+
+
 def test_invalid_radiuses():
     service = mapbox.Directions(access_token='pk.test')
     with pytest.raises(mapbox.errors.InvalidParameterError) as e:
