@@ -5,6 +5,7 @@ from mapbox.encoding import (read_points,
                              encode_waypoints,
                              encode_polyline,
                              encode_coordinates_json)
+import mapbox
 
 
 gj_point_features = [{
