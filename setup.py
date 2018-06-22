@@ -41,7 +41,7 @@ setup(name='mapbox',
           'boto3>=1.4',
           'cachecontrol',
           'iso3166',
-          'python-dateutil>=2.5.0'
+          'python-dateutil>=2.5.0',
           'requests',
           'polyline>=1.3.1',
           'uritemplate>=2.0'],
