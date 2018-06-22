@@ -1,8 +1,13 @@
 Changes
 =======
 
-0.16.1
-------
+0.16.2 (2018-06-22)
+-------------------
+- Fix GeoJSON coordinates in directions (#243).
+- Add missing comma in setup requirements list (#247).
+
+0.16.1 (2018-06-01)
+-------------------
 - Python 2/3 bugfixes (#239)
 - Add support for Maps v4 (#228).
 
