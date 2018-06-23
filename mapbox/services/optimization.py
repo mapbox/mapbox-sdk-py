@@ -227,6 +227,41 @@ class Optimization(Service):
 
         return ",".join(annotations)
 
+    # Copied from directions.py and modified.
+
+    def _geojson(self, data, geometry_format=None):
+        """Converts JSON to GeoJSON in response object."""
+        
+        feature_collection = {
+            "type": "FeatureCollection",
+            "features": []
+        }
+
+        for route in data["trips"]:
+            if geometry_format == "geojson":
+                geometry = route["geometry"]
+ 
+            else:
+                geometry = {
+                    "type": "LineString",
+                    "coordinates": polyline.decode(
+                        route["geometry"]
+                    )
+                }
+
+            feature = {
+                "type": "Feature",
+                "geometry": geometry,
+                "properties": {
+                    "distance": route["distance"],
+                    "duration": route["duration"]
+                }
+            }
+
+            feature_collection["features"].append(feature)
+
+        return feature_collection
+    
     def route(self, features, profile="mapbox/driving",
               geometries=None, overview=None, steps=None, 
               waypoint_snapping=None, roundtrip=None, source=None, 
@@ -393,4 +428,14 @@ class Optimization(Service):
         response = self.session.get(uri, params=query_parameters)
         self.handle_http_error(response)
 
+        # Add geojson method to response object.
+
+        def geojson():
+            return self._geojson(
+                response.json(),
+                geometry_format=geometries
+            )
+
+        response.geojson = geojson
+        
         return response
