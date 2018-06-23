@@ -13,6 +13,8 @@ from mapbox.errors import (
 
 from mapbox.services.base import Service
 
+import polyline
+
 from uritemplate import URITemplate
 
 
