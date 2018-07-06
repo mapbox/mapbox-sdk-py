@@ -6,6 +6,7 @@ from uritemplate import URITemplate
 
 from mapbox.encoding import encode_waypoints as encode_coordinates
 from mapbox.services.base import Service
+from mapbox.compat import string_type
 from mapbox import errors
 
 
@@ -118,7 +119,7 @@ class Directions(Service):
         if radius is None:
             return None
 
-        if isinstance(radius, str):
+        if isinstance(radius, string_type):
             if radius != 'unlimited':
                 raise errors.InvalidParameterError(
                     '{0} is not a valid radius'.format(radius))
@@ -259,7 +260,7 @@ class Directions(Service):
                 # convert default polyline encoded geometry
                 geom = {
                     'type': 'LineString',
-                    'coodinates': polyline.decode(route['geometry'])}
+                    'coordinates': polyline.decode(route['geometry'])}
 
             feature = {
                 'type': 'Feature',
