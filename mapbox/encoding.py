@@ -1,3 +1,5 @@
+"""Utility functions to encode/decode iterables of different types."""
+
 import json
 
 from .errors import InvalidFeatureError
