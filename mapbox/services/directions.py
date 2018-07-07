@@ -1,5 +1,4 @@
-"""The Directions class, providing access to Mapbox's Directions API.
-"""
+"""The Directions class provides access to Mapbox's Directions API."""
 
 import warnings
 from numbers import Number
