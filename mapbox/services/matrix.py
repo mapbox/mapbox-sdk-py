@@ -1,4 +1,5 @@
-"""Matrix API V1"""
+"""The DirectionsMatrix class, providing access to Mapbox's Matrix API.
+"""
 
 import re
 import warnings
