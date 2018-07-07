@@ -1,5 +1,4 @@
-"""The MapMatcher class, providing access to Mapbox's Map Matching API.
-"""
+"""The MapMatcher class provides access to Mapbox's Map Matching API."""
 
 import json
 
