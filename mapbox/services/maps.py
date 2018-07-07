@@ -1,3 +1,6 @@
+"""The Maps class, providing access to Mapbox's Maps API.
+"""
+
 from re import (
     compile,
     match
