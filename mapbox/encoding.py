@@ -61,7 +61,9 @@ def encode_waypoints(features, min_limit=None, max_limit=None, precision=6):
     return a string encoded in waypoint-style used by certain mapbox APIs
     ("lon,lat" pairs separated by ";")
     """
-    coords = ['{lon},{lat}'.format(lon=round(lon, precision), lat=round(lat, precision))
+    coords = ['{lon},{lat}'.format(
+                  lon=float(round(lon, precision)),
+                  lat=float(round(lat, precision)))
               for lon, lat in read_points(features)]
 
     if min_limit is not None and len(coords) < min_limit:
@@ -88,7 +90,7 @@ def encode_coordinates_json(features):
     """Given an iterable of features
     return a JSON string to be used as the request body for the distance API:
     a JSON object, with a key coordinates,
-    which has an array of [ Longitude, Latitidue ] pairs
+    which has an array of [ Longitude, Lattitude ] pairs
     """
     coords = {
         'coordinates': list(read_points(features))}
