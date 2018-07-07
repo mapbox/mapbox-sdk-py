@@ -1,3 +1,6 @@
+"""The Analytics class, providing access to Mapbox's Analytics API.
+"""
+
 import dateutil.parser
 from dateutil.relativedelta import relativedelta
 from uritemplate import URITemplate
