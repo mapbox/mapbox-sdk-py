@@ -1,3 +1,5 @@
+"""The StaticStyle class provides access to Mapbox's Static API."""
+
 import json
 import warnings
 
