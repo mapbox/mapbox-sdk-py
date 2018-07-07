@@ -1,5 +1,4 @@
-"""The Datasets class, providing access to Mapbox's Datasets API.
-"""
+"""The Datasets class provides access to Mapbox's Datasets API."""
 
 # mapbox.datasets
 import json
