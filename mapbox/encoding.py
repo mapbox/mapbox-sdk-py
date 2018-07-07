@@ -1,4 +1,6 @@
-"""Utility functions to encode/decode iterables."""
+"""Utility functions used by the Python SDK for Mapbox 
+to encode/decode iterables.
+"""
 
 import json
 
