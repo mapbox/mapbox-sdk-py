@@ -1,3 +1,6 @@
+"""The MapMatcher class, providing access to Mapbox's Map Matching API.
+"""
+
 import json
 
 from uritemplate import URITemplate
