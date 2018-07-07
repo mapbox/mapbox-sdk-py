@@ -105,7 +105,7 @@ def test_validate_radius_geometry(geometry):
 
 
 @activate
-def test_tilequery():
+def test_tilequery_one_mapid():
     add(
         method=GET,
         url="https://api.mapbox.com" +
@@ -129,7 +129,33 @@ def test_tilequery():
 
     assert response.status_code == 200
 
+    
+@activate
+def test_tilequery_two_mapids():
+    add(
+        method=GET,
+        url="https://api.mapbox.com" +
+        "/v4" +
+        "/mapbox.mapbox-streets-v9,mapbox.mapbox-streets-v10" +
+        "/tilequery" +
+        "/0.0%2C1.1.json" +
+        "?access_token=pk.test",
+        match_querystring=True,
+        body="{\"key\": \"value\"}",
+        status=200
+    )
 
+    tilequery = Tilequery(access_token="pk.test")
+
+    response = tilequery.tilequery(
+        ["mapbox.mapbox-streets-v9", "mapbox.mapbox-streets-v10"],
+        0.0,
+        1.1
+    )
+
+    assert response.status_code == 200
+    
+    
 @activate
 def test_tilequery_with_radius():
     add(
