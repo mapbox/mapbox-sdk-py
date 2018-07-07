@@ -1,3 +1,5 @@
+"""The Python SDK for Mapbox provides access to Mapbox's APIs."""
+
 # mapbox
 __version__ = "0.16.2"
 
