@@ -1,4 +1,4 @@
-"""Mapbox Uploads API
+"""The Uploader class provides access to Mapbox's Uploads API.
 """
 
 import re
