@@ -1,3 +1,5 @@
+"""Utility functions used by the Python SDK for Mapbox."""
+
 from collections import Mapping, Sequence
 
 
