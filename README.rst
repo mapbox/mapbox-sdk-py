@@ -60,6 +60,10 @@ Services
   - Manage editable collections of GeoJSON features
   - Persistent storage for custom geographic data
 
+- **Tilequery V4** `examples <./docs/tilequery.md#tilequery>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#tilequery>`__
+
+  - Retrieve data about specific features from a vector tileset
+
 Please note that there may be some lag between the release of new Mapbox web
 services and releases of this package.
 
