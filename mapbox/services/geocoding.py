@@ -1,5 +1,4 @@
-"""The Geocoder class, providing access to Mapbox's Geocoding API.
-"""
+"""The Geocoder class provides access to Mapbox's Geocoding API."""
 
 # mapbox
 from iso3166 import countries
