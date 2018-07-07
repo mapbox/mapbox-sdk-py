@@ -1,4 +1,4 @@
-"""Utility functions to encode/decode iterables of different types."""
+"""Utility functions to encode/decode iterables."""
 
 import json
 
