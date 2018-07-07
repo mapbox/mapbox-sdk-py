@@ -1,6 +1,4 @@
-"""This module contains a block of code that ensures 
-compatibility across Python 2.x and 3.x
-"""
+"""Block of code that ensures compatibility across Python 2.x and 3.x."""
 
 import sys
 
