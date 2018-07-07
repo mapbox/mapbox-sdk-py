@@ -1,5 +1,4 @@
-"""The Analytics class, providing access to Mapbox's Analytics API.
-"""
+"""The Analytics class provides access to Mapbox's Analytics API."""
 
 import dateutil.parser
 from dateutil.relativedelta import relativedelta
