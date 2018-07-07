@@ -1,3 +1,5 @@
+"""The Static API provides access to Mapbox's Static (Classic) API."""
+
 import json
 
 from uritemplate import URITemplate
