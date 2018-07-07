@@ -1,3 +1,6 @@
+"""The Geocoder class, providing access to Mapbox's Geocoding API.
+"""
+
 # mapbox
 from iso3166 import countries
 from uritemplate import URITemplate
