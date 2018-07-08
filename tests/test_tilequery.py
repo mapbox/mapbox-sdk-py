@@ -136,7 +136,7 @@ def test_tilequery_two_mapids():
         method=GET,
         url="https://api.mapbox.com" +
         "/v4" +
-        "/mapbox.mapbox-streets-v9,mapbox.mapbox-streets-v10" +
+        "/mapbox.mapbox-streets-v9%2Cmapbox.mapbox-streets-v10" +
         "/tilequery" +
         "/0.0%2C1.1.json" +
         "?access_token=pk.test",
