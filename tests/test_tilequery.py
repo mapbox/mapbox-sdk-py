@@ -634,3 +634,30 @@ def test_tilequery_with_radius_limit_dedupe_geometry_and_layers():
     )
 
     assert response.status_code == 200
+    
+    
+@activate
+def test_tilequery_geojson_method():
+    add(
+        method=GET,
+        url="https://api.mapbox.com" +
+        "/v4" +
+        "/mapbox.mapbox-streets-v10" +
+        "/tilequery" +
+        "/0.0%2C1.1.json" +
+        "?access_token=pk.test",
+        match_querystring=True,
+        body="{\"key\": \"value\"}",
+        status=200
+    )
+
+    tilequery = Tilequery(access_token="pk.test")
+
+    response = tilequery.tilequery(
+        "mapbox.mapbox-streets-v10",
+        0.0,
+        1.1
+    )
+
+    assert response.status_code == 200
+    assert response.geojson() == response.json()
