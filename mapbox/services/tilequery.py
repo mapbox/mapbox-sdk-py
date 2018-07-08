@@ -211,4 +211,12 @@ class Tilequery(Service):
         response = self.session.get(uri, params=query_parameters)
         self.handle_http_error(response)
 
+        # To be consistent with other services, 
+        # add geojson method to response object.
+        
+        def geojson():
+            return response.json()
+        
+        response.geojson = geojson
+        
         return response
