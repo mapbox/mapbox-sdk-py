@@ -1,3 +1,5 @@
+"""The Styles class provides access to Mapbox's Styles API."""
+
 from json import loads
 
 from mapbox.errors import (
