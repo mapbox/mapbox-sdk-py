@@ -9,7 +9,10 @@ from mapbox.services.styles import Styles
 
 from base64 import b64encode
 
-from pytest import raises
+from pytest import (
+    mark,
+    raises
+)
 
 from responses import (
     activate,
@@ -58,76 +61,49 @@ def test_object_properties():
     assert styles.base_uri
 
 
-def test_validate_start():
+@mark.parametrize("start", [-1, 65281, 257])
+def test_validate_start_invalid(start):
     styles = Styles()
 
-    # invalid value (value < 0)
-
     with raises(InvalidStartError):
-        start = -1
         result = styles._validate_start(start)
 
-    # invalid value (value > 65280)
 
-    with raises(InvalidStartError):
-        start = 65281
-        result = styles._validate_start(start)
-
-    # invalid value (value % 256 != 0)
-
-    with raises(InvalidStartError):
-        start = 257
-        result = styles._validate_start(start)
-
-    # valid value
-
-    start = 0
-    result = styles._validate_start(start)
-    assert result == start
-
-    # valid value
-
-    start = 256
+@mark.parametrize("start", [0, 256])
+def test_validate_start_valid(start):
+    styles = Styles()
     result = styles._validate_start(start)
     assert result == start
 
 
-def test_validate_retina():
+def test_validate_retina_true():
     styles = Styles()
-
-    # True
-
     retina = True
     result = styles._validate_retina(retina)
     assert result == "@2x"
 
-    # False
 
+def test_validate_retina_false():
+    styles = Styles()
     retina = False
     result = styles._validate_retina(retina)
     assert result == ""
 
 
-def test_validate_file_format():
+def test_validate_file_format_invalid():
     styles = Styles()
-
-    # invalid value
 
     with raises(InvalidFileFormatError) as exception:
         file_format = "invalid"
         result = styles._validate_file_format(file_format)
+
+
+@mark.parametrize("file_format", ["json", "png"])
+def test_validate_file_format_valid(file_format):
+    styles = Styles()
+    result = styles._validate_file_format(file_format)
+    assert result == file_format
     
-    # valid values
-
-    file_formats = [
-        "json",
-        "png"
-    ]
-
-    for file_format in file_formats:
-        result = styles._validate_file_format(file_format)
-        assert result == file_format
-
 
 @activate
 def test_style():
@@ -144,11 +120,7 @@ def test_style():
     )
 
     styles = Styles(access_token=ACCESS_TOKEN)
-
-    response = styles.style(
-        STYLE_ID
-    )
-
+    response = styles.style(STYLE_ID)
     assert response.status_code == 200
 
 
@@ -166,16 +138,17 @@ def test_list_styles():
     )
 
     styles = Styles(access_token=ACCESS_TOKEN)
-
     response = styles.list_styles()
-
     assert response.status_code == 200
 
 
 @activate
-def test_create_style():
+@mark.parametrize("style_object", [{"key": "value"}, "style-object.json"])
+def test_create_style(style_object):
+    # create fixture if style_object is str (filename)
 
-    # style_object == dict
+    if style_object == "style-object.json":
+        create_test_style_object()
 
     add(
         method=POST,
@@ -189,71 +162,22 @@ def test_create_style():
     )
 
     styles = Styles(access_token=ACCESS_TOKEN)
-
-    response = styles.create_style(
-        {
-            "key": "value"
-        }
-    )
-
+    response = styles.create_style(style_object)
     assert response.status_code == 200
 
-    # style_object == file
+    # delete fixture
 
-    create_test_style_object()
-
-    add(
-        method=POST,
-        url="https://api.mapbox.com" +
-        "/styles/v1" +
-        "/user" +
-        "?access_token={}".format(ACCESS_TOKEN),
-        match_querystring=True,
-        body="{\"key\": \"value\"}",
-        status=200
-    )
-
-    styles = Styles(access_token=ACCESS_TOKEN)
-
-    response = styles.create_style(
-        "style-object.json"
-    )
-
-    assert response.status_code == 200
-    remove("style-object.json")
+    if style_object == "style-object.json":
+        remove("./style-object.json")
 
 
 @activate
-def test_update_style():
+@mark.parametrize("style_object", [{"key": "value"}, "style-object.json"])
+def test_update_style(style_object):
+    # create fixture if style_object is str (filename)
 
-    # style_object == dict
-
-    add(
-        method=PATCH,
-        url="https://api.mapbox.com" +
-        "/styles/v1" +
-        "/user" +
-        "?access_token={}".format(ACCESS_TOKEN),
-        match_querystring=True,
-        body="{\"key\": \"value\"}",
-        status=200
-    )
-
-    styles = Styles(access_token=ACCESS_TOKEN)
-
-    response = styles.update_style(
-        {
-            "key": "value",
-            "created": "value",
-            "modified": "value"
-        }
-    )
-
-    assert response.status_code == 200
-
-    # style_object == file
-
-    create_test_style_object_with_invalid_keys()
+    if style_object == "style-object.json":
+        create_test_style_object_with_invalid_keys()
 
     add(
         method=PATCH,
@@ -267,13 +191,13 @@ def test_update_style():
     )
 
     styles = Styles(access_token=ACCESS_TOKEN)
-
-    response = styles.update_style(
-        "style-object.json"
-    )
-
+    response = styles.update_style(style_object)
     assert response.status_code == 200
-    remove("style-object.json")
+
+    # delete fixture
+
+    if style_object == "style-object.json":
+        remove("./style-object.json")
 
 
 @activate
@@ -290,19 +214,12 @@ def test_delete_style():
     )
 
     styles = Styles(access_token=ACCESS_TOKEN)
-
-    response = styles.delete_style(
-        STYLE_ID
-    )
-
+    response = styles.delete_style(STYLE_ID)
     assert response.status_code == 204
 
 
 @activate
-def test_font_glyphs():
-
-    # one font
-
+def test_font_glyphs_one_font():
     add(
         method=GET,
         url="https://api.mapbox.com" +
@@ -325,8 +242,9 @@ def test_font_glyphs():
 
     assert response.status_code == 200
 
-    # multiple fonts
 
+@activate
+def test_font_glyphs_multiple_fonts():
     add(
         method=GET,
         url="https://api.mapbox.com" +
