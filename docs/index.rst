@@ -120,6 +120,7 @@ Documentation
    mapmatching.md
    static_style.md
    tilequery.md
+   tilesets.md
    maps.md
    api/mapbox.rst
    api/mapbox.services.rst
