@@ -67,6 +67,14 @@ class MapboxDeprecationWarning(UserWarning):
 
 
 class InvalidStartError(ValidationError):
+    """InvalidStartError
+
+    Parameters
+    ----------
+    message : str, optional
+        A human-readable string describing the error.
+    """
+
     pass
   
   
