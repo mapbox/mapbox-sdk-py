@@ -1,3 +1,5 @@
+"""The Tilesets class provides access to Mapbox's Tilesets API."""
+
 from mapbox.errors import (
     InvalidTilesetTypeError,
     InvalidVisibilityError,
