@@ -260,7 +260,7 @@ class Directions(Service):
                 # convert default polyline encoded geometry
                 geom = {
                     'type': 'LineString',
-                    'coodinates': polyline.decode(route['geometry'])}
+                    'coordinates': polyline.decode(route['geometry'])}
 
             feature = {
                 'type': 'Feature',

@@ -47,6 +47,7 @@ Services
   - Adjust pitch and bearing, decimal zoom levels
   
 - **Surface V4** **DEPRECATED**
+
 - **Uploads V1** `examples <./uploads.html#uploads>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#uploads>`__
 
   - Upload data to be processed and hosted by Mapbox.
