@@ -1,3 +1,5 @@
+"""The Optimization class provides access to Mapbox's Optimization API."""
+
 from mapbox.encoding import (
     encode_bearing,
     encode_waypoints,
