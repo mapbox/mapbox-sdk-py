@@ -37,7 +37,6 @@ def test_validate_lon_invalid(lon):
 @mark.parametrize("lon", [-180, 0, 180])
 def test_validate_lon_valid(lon):
     tilequery = Tilequery()
-
     result = tilequery._validate_lon(lon)
     assert result == lon
 
@@ -53,7 +52,6 @@ def test_validate_lat_invalid(lat):
 @mark.parametrize("lat", [-85.0511, 0, 85.0511])
 def test_validate_lat_valid(lat):
     tilequery = Tilequery()
-
     result = tilequery._validate_lat(lat)
     assert result == lat
 
@@ -68,7 +66,6 @@ def test_validate_radius_invalid():
 @mark.parametrize("radius", [0, 1000000])
 def test_validate_radius_valid(radius):
     tilequery = Tilequery()
-
     result = tilequery._validate_radius(radius)
     assert result == radius
 
@@ -84,7 +81,6 @@ def test_validate_limit_invalid(limit):
 @mark.parametrize("limit", [1, 25, 50])
 def test_validate_limit_valid(limit):
     tilequery = Tilequery()
-
     result = tilequery._validate_limit(limit)
     assert result == limit
 
@@ -99,7 +95,6 @@ def test_validate_geometry_invalid():
 @mark.parametrize("geometry", ["linestring", "point", "polygon"])
 def test_validate_radius_geometry(geometry):
     tilequery = Tilequery()
-
     result = tilequery._validate_geometry(geometry)
     assert result == geometry
 
