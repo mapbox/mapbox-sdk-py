@@ -67,18 +67,50 @@ class MapboxDeprecationWarning(UserWarning):
 
 
 class InvalidTilesetTypeError(ValidationError):
+    """InvalidTilesetTypeError
+
+    Parameters
+    ----------
+    message : str, optional
+        A human-readable string describing the error.
+    """
+
     pass
 
 
 class InvalidVisibilityError(ValidationError):
+    """InvalidVisibilityError
+
+    Parameters
+    ----------
+    message : str, optional
+        A human-readable string describing the error.
+    """
+
     pass
 
 
 class InvalidSortbyError(ValidationError):
+    """InvalidSortbyError
+
+    Parameters
+    ----------
+    message : str, optional
+        A human-readable string describing the error.
+    """
+
     pass
 
 
 class InvalidLimitError(ValidationError):
+    """InvalidLimitError
+
+    Parameters
+    ----------
+    message : str, optional
+        A human-readable string describing the error.
+    """
+
     pass
 
   
