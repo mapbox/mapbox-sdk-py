@@ -6,7 +6,10 @@ from mapbox.errors import (
 
 from mapbox.services.optimization import Optimization
 
-from pytest import raises
+from pytest import (
+    mark,
+    raises
+)
 
 from responses import (
     activate,
@@ -21,28 +24,24 @@ FEATURES = [
     {
         "type": "Feature",
         "properties": {},
-        "geometry": 
-            {
-                "type": "Point",
-                "coordinates": 
-                    [
-                        0.0,
-                        0.0
-                    ]
-            }
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                0.0,
+                0.0
+            ]
+        }
     }, 
     {
         "type": "Feature",
         "properties": {},
-        "geometry": 
-            {
-                "type": "Point",
-                "coordinates": 
-                    [
-                        1.0,
-                        1.0
-                    ]
-            }
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                1.0,
+                1.0
+            ]
+        }
     }
 ]
 
@@ -63,197 +62,155 @@ def test_object_properties():
     assert optimization.valid_destinations
 
 
-def test_validate_profile():
+def test_validate_profile_invalid():
     optimization = Optimization()
-
-    # invalid value
 
     with raises(InvalidProfileError) as exception:
         profile = "invalid"
         result = optimization._validate_profile(profile)
 
-    # valid values
 
-    profiles = [
-        "mapbox/cycling",
-        "mapbox/driving",
-        "mapbox/walking"
-    ]
-
-    for profile in profiles:
-        result = optimization._validate_profile(profile)
-        assert result == profile   
-
-
-def test_validate_geometry():
+@mark.parametrize("profile", ["mapbox/cycling", "mapbox/driving", "mapbox/walking"])
+def test_validate_profile_valid(profile):
     optimization = Optimization()
+    result = optimization._validate_profile(profile)
+    assert result == profile   
 
-    # invalid value
+
+def test_validate_geometry_invalid():
+    optimization = Optimization()
 
     with raises(InvalidParameterError) as exception:
         geometry = "invalid"
         result = optimization._validate_geometry(geometry)
 
-    # valid values
 
-    geometries = [
-        "geojson",
-        "polyline",
-        "polyline6"
-    ]
-
-    for geometry in geometries:
-        result = optimization._validate_geometry(geometry)
-        assert result == geometry
-
-
-def test_validate_overview():
+@mark.parametrize("geometry", ["geojson", "polyline", "polyline6"])
+def test_validate_geometry_valid(geometry):
     optimization = Optimization()
+    result = optimization._validate_geometry(geometry)
+    assert result == geometry
 
-    # invalid value
+
+def test_validate_overview_invalid():
+    optimization = Optimization()
 
     with raises(InvalidParameterError) as exception:
         overview = "invalid"
         result = optimization._validate_overview(overview)
 
-    # valid values
 
-    overviews = [
-        "full",
-        "simplified",
-        False
-    ]
-
-    for overview in overviews:
-        result = optimization._validate_overview(overview)
-        assert result == overview
-
-
-def test_validate_source():
+@mark.parametrize("overview", ["full", "simplified", False])
+def test_validate_overview_valid(overview):
     optimization = Optimization()
+    result = optimization._validate_overview(overview)
+    assert result == overview
 
-    # invalid value
+
+def test_validate_source_invalid():
+    optimization = Optimization()
 
     with raises(InvalidParameterError) as exception:
         source = "invalid"
         result = optimization._validate_source(source)
 
-    # valid values
 
-    sources = [
-        "any",
-        "first"
-    ]
-
-    for source in sources:
-        result = optimization._validate_source(source)
-        assert result == source
-
-
-def test_validate_destination():
+@mark.parametrize("source", ["any", "first"])
+def test_validate_source_valid(source):
     optimization = Optimization()
+    result = optimization._validate_source(source)
+    assert result == source
 
-    # invalid value
+
+def test_validate_destination_invalid():
+    optimization = Optimization()
 
     with raises(InvalidParameterError) as exception:
         destination = "invalid"
         result = optimization._validate_destination(destination)
 
-    # valid values
 
-    destinations = [
-        "any",
-        "last"
+@mark.parametrize("destination", ["any", "last"])
+def test_validate_destination_valid(destination):
+    optimization = Optimization()
+    result = optimization._validate_destination(destination)
+    assert result == destination
+
+
+# too many distribution pairs
+# too few values in each pair
+# too many values in each pair
+# values are the same
+# first value is not a valid index
+# second value is not a valid index
+
+@mark.parametrize(
+    "distributions", 
+    [
+        [[0, 1], [0, 1], [0, 1]],
+        [[0], [0]],
+        [[0, 1, 0], [0, 1, 0]],
+        [[0, 0], [0, 0]],
+        [[100, 0], [0, 0]],
+        [[0, 100], [0, 0]]
     ]
-
-    for destination in destinations:
-        result = optimization._validate_destination(destination)
-        assert result == destination
-
-
-def test_validate_distributions():
+)
+def test_validate_distributions_invalid(distributions):
     optimization = Optimization()
 
-    # None
-
-    distributions = None
-    result = optimization._validate_distributions(distributions, COORDINATES)
-    assert result == distributions
-
-    # invalid value - too many distribution pairs
-
     with raises(InvalidParameterError) as exception:
-        distributions = [[0, 1], [0, 1], [0, 1]]
         result = optimization._validate_distributions(distributions, COORDINATES)
 
-    # invalid value - too few values in each pair
 
-    with raises(InvalidParameterError) as exception:
-        distributions = [[0], [0]]
-        result = optimization._validate_distributions(distributions, COORDINATES)
-
-    # invalid value - too many values in each pair
-
-    with raises(InvalidParameterError) as exception:
-        distributions = [[0, 1, 0], [0, 1, 0]]
-        result = optimization._validate_distributions(distributions, COORDINATES)
-
-    # invalid value - values are the same
-
-    with raises(InvalidParameterError) as exception:
-        distributions = [[0, 0], [0, 0]]
-        result = optimization._validate_distributions(distributions, COORDINATES)
-
-    # invalid value - first value is not a valid index
-
-    with raises(InvalidParameterError) as exception:
-        distributions = [[100, 0], [0, 0]]
-        result = optimization._validate_distributions(distributions, COORDINATES)
-
-    # invalid value - second value is not a valid index
-
-    with raises(InvalidParameterError) as exception:
-        distributions = [[0, 100], [0, 0]]
-        result = optimization._validate_distributions(distributions, COORDINATES)
-
-    # valid value
-
-    distributions = [[0, 1],[0, 1]]
+def test_validate_distributions_valid():
+    optimization = Optimization()
+    distributions = [[0, 1], [0, 1]]
     result = optimization._validate_distributions(distributions, COORDINATES)
     assert result == "0,1;0,1"
 
 
-def test_validate_annotations():
+def test_validate_distributions_none():
     optimization = Optimization()
+    distributions = None
+    result = optimization._validate_distributions(distributions, COORDINATES)
+    assert result == distributions
 
-    # None
 
-    annotation = None
-    result = optimization._validate_annotations(annotation)
-    assert result == annotation
-
-    # invalid value
+def test_validate_annotations_invalid():
+    optimization = Optimization()
 
     with raises(InvalidParameterError) as exception:
         annotation = ["invalid"]
         result = optimization._validate_annotations(annotation)
 
-    # valid values
 
-    annotations = [
-        "distance",
-        "duration",
-        "speed"
+@mark.parametrize(
+    "annotations", 
+    [
+        ["distance"], 
+        ["duration"], 
+        ["speed"],
+        ["distance", "duration"],
+        ["distance", "speed"],
+        ["duration", "speed"],
+        ["distance", "duration", "speed"]
     ]
-
+)
+def test_validate_annotations_valid(annotations):
+    optimization = Optimization()
     result = optimization._validate_annotations(annotations)
     assert result == ",".join(annotations)
 
 
-def test_route_error():
-    optimization = Optimization(access_token=ACCESS_TOKEN)
+def test_validate_annotations_none():
+    optimization = Optimization()
+    annotations = None
+    result = optimization._validate_annotations(annotations)
+    assert result == annotations
 
-    # no source
+
+def test_route_error_no_source():
+    optimization = Optimization(access_token=ACCESS_TOKEN)
 
     with raises(ValidationError) as exception:
         response = optimization.route(
@@ -262,16 +219,20 @@ def test_route_error():
             destination="any"
         )
 
-    # no destination
+
+def test_route_error_no_destination():
+    optimization = Optimization(access_token=ACCESS_TOKEN)
 
     with raises(ValidationError) as exception:
         response = optimization.route(
             FEATURES,
             roundtrip=False,
             source="any"
-        )
+      )
 
-    # no source, no destination
+
+def test_route_error_no_source_no_destination():
+    optimization = Optimization(access_token=ACCESS_TOKEN)
 
     with raises(ValidationError) as exception:
         response = optimization.route(
@@ -295,9 +256,7 @@ def test_route():
     )
 
     optimization = Optimization(access_token=ACCESS_TOKEN)
-
     response = optimization.route(FEATURES)
-
     assert response.status_code == 200
 
 
