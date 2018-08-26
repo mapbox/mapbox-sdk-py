@@ -1,6 +1,3 @@
-"""Errors raised by the Python SDK for Mapbox."""
-
-
 class ValidationError(ValueError):
     """ValidationError
 
