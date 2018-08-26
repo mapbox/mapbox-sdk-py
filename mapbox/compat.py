@@ -1,7 +1,3 @@
-"""Block of code used by the Python SDK for Mapbox
-to ensure compatibility across Python 2.x and 3.x.
-"""
-
 import sys
 
 if sys.version_info[0] >= 3:  # pragma: no cover
