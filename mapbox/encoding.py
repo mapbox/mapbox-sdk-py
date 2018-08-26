@@ -1,7 +1,3 @@
-"""Utility functions used by the Python SDK for Mapbox 
-to encode/decode iterables.
-"""
-
 import json
 
 from .errors import InvalidFeatureError
