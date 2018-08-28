@@ -128,3 +128,16 @@ def test_encode_coordinates_json():
     assert expected == json.loads(encode_coordinates_json(gj_point_features))
     assert expected == json.loads(encode_coordinates_json(gj_multipoint_features))
     assert expected == json.loads(encode_coordinates_json(gj_line_features))
+
+
+def test_encode_waypoints_rounding():
+    expected = "1.0,0.0"
+    int_coord_features = [{
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": [1, 0]
+        },
+        "properties": {}}]
+
+    assert expected == encode_waypoints(int_coord_features)

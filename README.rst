@@ -20,11 +20,10 @@ Services
   - API usage for services by resource. 
   - available for premium and enterprise plans.
 
-- **Directions V4** `examples <./docs/directions.md#directions>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#directions>`__
+- **Directions V5** `examples <./docs/directions.md#directions>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#directions>`__
 
   - Profiles for driving, walking, and cycling
   - GeoJSON & Polyline formatting
-  - Instructions as text or HTML
 
 - **Distance V1** **DEPRECATED**
 - **Geocoding V5** `examples <./docs/geocoding.md#geocoding>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#geocoding>`__
