@@ -7,11 +7,10 @@ service, for example, like so:
 ```python
 >>> from mapbox import Geocoder
 >>> geocoder = Geocoder(access_token="pk.YOUR_ACCESS_TOKEN")
-
 ```
 
 Please note that an actual token string must be used. Tokens may be generated
-using the web application at https://www.mapbox.com/account/access-tokens.
+using the web application at [https://www.mapbox.com/account/access-tokens](https://www.mapbox.com/account/access-tokens).
 
 Your Mapbox access token can also be set in the environment of your program
 
@@ -27,7 +26,6 @@ and it will be found automatically when creating a new instance. We'll use the
 >>> import os
 >>> geocoder.session.params['access_token'] == os.environ['MAPBOX_ACCESS_TOKEN']
 True
-
 ```
 
 Best practice for access tokens and geocoding sources is to create a new
