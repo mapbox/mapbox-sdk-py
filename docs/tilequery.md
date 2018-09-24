@@ -37,7 +37,7 @@ Instantiate `Tilequery`.
 Call the `tilequery` method, passing in values for `map_id`, `lon`, and `lat`.  Pass in values for optional arguments as necessary - `radius`, `limit`, `dedupe`, `geometry`, and `layers`.
 
 ```python
->>> response = tilequery.tilequery("mapbox.mapbox-streets-v10", 0.0, 1.1)
+>>> response = tilequery.tilequery("mapbox.mapbox-streets-v10", lon=0.0, lat=1.1)
 
 ```
 

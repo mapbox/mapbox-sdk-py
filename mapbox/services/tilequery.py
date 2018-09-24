@@ -1,9 +1,6 @@
 """The Tilequery class provides access to Mapbox's Tilequery API."""
 
-from mapbox.errors import (
-    InvalidCoordError,
-    InvalidParameterError
-)
+from mapbox.errors import (InvalidCoordError, InvalidParameterError)
 
 from mapbox.services.base import Service
 
@@ -32,11 +29,7 @@ class Tilequery(Service):
 
     api_version = "v4"
 
-    valid_geometries = [
-        "linestring",
-        "point",
-        "polygon"
-    ]
+    valid_geometries = ["linestring", "point", "polygon"]
 
     @property
     def base_uri(self):
@@ -48,9 +41,7 @@ class Tilequery(Service):
         """Validates longitude, raising error if invalid."""
 
         if (lon < -180) or (lon > 180):
-            raise InvalidCoordError(
-                "Longitude must be between -180 and 180"
-            )
+            raise InvalidCoordError("Longitude must be between -180 and 180")
 
         return lon
 
@@ -58,49 +49,47 @@ class Tilequery(Service):
         """Validates latitude, raising error if invalid."""
 
         if (lat < -85.0511) or (lat > 85.0511):
-            raise InvalidCoordError(
-                "Latitude must be between -85.0511 and 85.0511"
-            )
+            raise InvalidCoordError("Latitude must be between -85.0511 and 85.0511")
 
         return lat
 
     def _validate_radius(self, radius):
         """Validates radius, raising error if invalid."""
 
-        if radius is not None\
-            and radius < 0:
-                raise InvalidParameterError(
-                    "Radius must be greater than or equal to 0"
-                )
+        if radius is not None and radius < 0:
+            raise InvalidParameterError("Radius must be greater than or equal to 0")
 
         return radius
 
     def _validate_limit(self, limit):
         """Validates limit, raising error if invalid."""
 
-        if limit is not None\
-            and ((limit < 1) or (limit > 50)) :
-                raise InvalidParameterError(
-                    "Limit must be between 1 and 50"
-                )
+        if limit is not None and ((limit < 1) or (limit > 50)):
+            raise InvalidParameterError("Limit must be between 1 and 50")
 
         return limit
 
     def _validate_geometry(self, geometry):
         """Validates geometry, raising error if invalid."""
 
-        if geometry is not None\
-            and geometry not in self.valid_geometries:
-                raise InvalidParameterError(
-                    "{} is not a valid geometry".format(geometry)
-                )
+        if geometry is not None and geometry not in self.valid_geometries:
+            raise InvalidParameterError("{} is not a valid geometry".format(geometry))
 
         return geometry
 
-    def tilequery(self, map_id, lon, lat, radius=None, limit=None, 
-                  dedupe=None, geometry=None, layers=None):
+    def tilequery(
+        self,
+        map_id,
+        lon=None,
+        lat=None,
+        radius=None,
+        limit=None,
+        dedupe=None,
+        geometry=None,
+        layers=None,
+    ):
 
-        """Returns data about specific features 
+        """Returns data about specific features
         from a vector tileset.
 
         Parameters
@@ -108,22 +97,22 @@ class Tilequery(Service):
         map_id : str or list
             The tileset's unique identifier in the
             format username.id.
-            
-            map_id may be either a str with one value 
+
+            map_id may be either a str with one value
             or a list with multiple values.
 
         lon : float
-            The longitude to query, where -180 
-            is the minimum value and 180 is the 
+            The longitude to query, where -180
+            is the minimum value and 180 is the
             maximum value.
 
         lat : float
-            The latitude to query, where -85.0511 
-            is the minimum value and 85.0511 is the 
+            The latitude to query, where -85.0511
+            is the minimum value and 85.0511 is the
             maximum value.
 
         radius : int, optional
-            The approximate distance in meters to 
+            The approximate distance in meters to
             query, where 0 is the minimum value.
             (There is no maximum value.)
 
@@ -148,8 +137,8 @@ class Tilequery(Service):
             The list of layers to query.
 
             If a specified layer does not exist,
-            then the Tilequery API will skip it.  
-            If no layers exist, then the API will 
+            then the Tilequery API will skip it.
+            If no layers exist, then the API will
             return an empty GeoJSON FeatureCollection.
 
         Returns
@@ -174,11 +163,9 @@ class Tilequery(Service):
         # Create dict to assist in building URI resource path.
 
         path_values = dict(
-            map_id=map_id,
-            api_name=self.api_name,
-            coordinates="{},{}".format(lon, lat)
+            map_id=map_id, api_name=self.api_name, coordinates="{},{}".format(lon, lat)
         )
-        
+
         # Build URI resource path.
 
         path_part = "/{map_id}/{api_name}/{coordinates}.json"
@@ -211,12 +198,12 @@ class Tilequery(Service):
         response = self.session.get(uri, params=query_parameters)
         self.handle_http_error(response)
 
-        # To be consistent with other services, 
+        # To be consistent with other services,
         # add geojson method to response object.
-        
+
         def geojson():
             return response.json()
-        
+
         response.geojson = geojson
-        
+
         return response

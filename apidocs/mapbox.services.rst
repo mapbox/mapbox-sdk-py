@@ -3,7 +3,7 @@
 mapbox\.services
 ================
 
-mapbox\.services\.analytics 
+mapbox\.services\.analytics
 ----------------------------------
 
 .. automodule:: mapbox.services.analytics
@@ -11,7 +11,7 @@ mapbox\.services\.analytics
     :undoc-members:
     :show-inheritance:
 
-mapbox\.services\.base 
+mapbox\.services\.base
 -----------------------------
 
 .. automodule:: mapbox.services.base
@@ -19,7 +19,7 @@ mapbox\.services\.base
     :undoc-members:
     :show-inheritance:
 
-mapbox\.services\.datasets 
+mapbox\.services\.datasets
 ---------------------------------
 
 .. automodule:: mapbox.services.datasets
@@ -27,7 +27,7 @@ mapbox\.services\.datasets
     :undoc-members:
     :show-inheritance:
 
-mapbox\.services\.directions 
+mapbox\.services\.directions
 -----------------------------------
 
 .. automodule:: mapbox.services.directions
@@ -35,7 +35,7 @@ mapbox\.services\.directions
     :undoc-members:
     :show-inheritance:
 
-mapbox\.services\.distance 
+mapbox\.services\.distance
 ---------------------------------
 
 .. automodule:: mapbox.services.distance
@@ -43,7 +43,7 @@ mapbox\.services\.distance
     :undoc-members:
     :show-inheritance:
 
-mapbox\.services\.geocoding 
+mapbox\.services\.geocoding
 ----------------------------------
 
 .. automodule:: mapbox.services.geocoding
@@ -51,7 +51,7 @@ mapbox\.services\.geocoding
     :undoc-members:
     :show-inheritance:
 
-mapbox\.services\.mapmatching 
+mapbox\.services\.mapmatching
 ------------------------------------
 
 .. automodule:: mapbox.services.mapmatching
@@ -59,7 +59,7 @@ mapbox\.services\.mapmatching
     :undoc-members:
     :show-inheritance:
 
-mapbox\.services\.static 
+mapbox\.services\.static
 -------------------------------
 
 .. automodule:: mapbox.services.static
@@ -67,7 +67,7 @@ mapbox\.services\.static
     :undoc-members:
     :show-inheritance:
 
-mapbox\.services\.static\_style 
+mapbox\.services\.static\_style
 --------------------------------------
 
 .. automodule:: mapbox.services.static_style
@@ -75,7 +75,7 @@ mapbox\.services\.static\_style
     :undoc-members:
     :show-inheritance:
 
-mapbox\.services\.surface 
+mapbox\.services\.surface
 --------------------------------
 
 .. automodule:: mapbox.services.surface
@@ -83,7 +83,15 @@ mapbox\.services\.surface
     :undoc-members:
     :show-inheritance:
 
-mapbox\.services\.uploads 
+mapbox\.services\.tilequery
+---------------------------
+
+.. automodule:: mapbox.services.tilequery
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+mapbox\.services\.uploads
 --------------------------------
 
 .. automodule:: mapbox.services.uploads
