@@ -57,7 +57,11 @@ Services
   - Manage editable collections of GeoJSON features
   - Persistent storage for custom geographic data
 
-- **Maps V4** `examples <./docs/maps.md#maps>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#maps>`__
+- **Tilequery V4** `examples <./tilequery.html#tilequery>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#tilequery>`__
+
+  - Retrieve data about specific features from a vector tileset
+
+- **Maps V4** `examples <./maps.html#maps>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#maps>`__
 
   - Retrieve an image tile, vector tile, or UTFGrid in the specified format
   - Retrieve vector features from Mapbox Editor projects as GeoJSON or KML
@@ -111,6 +115,7 @@ Documentation
    analytics.md
    mapmatching.md
    static_style.md
+   tilequery.md
    maps.md
    api/mapbox.rst
    api/mapbox.services.rst
