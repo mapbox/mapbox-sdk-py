@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.17.0 (TBD)
+------------
+
+New features:
+
+- Added support for Tilequery API v4 (#256).
+
 0.16.2 (2018-06-22)
 -------------------
 - Fix GeoJSON coordinates in directions (#243).

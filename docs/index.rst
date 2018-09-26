@@ -69,6 +69,10 @@ Services
   - Add a new image to an existing sprite
   - Delete an image from an existing sprite
 
+- **Tilequery V4** `examples <./tilequery.html#tilequery>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#tilequery>`__
+
+  - Retrieve data about specific features from a vector tileset
+
 - **Maps V4** `examples <./maps.html#maps>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#maps>`__
 
   - Retrieve an image tile, vector tile, or UTFGrid in the specified format
@@ -123,6 +127,7 @@ Documentation
    analytics.md
    mapmatching.md
    static_style.md
+   tilequery.md
    maps.md
    styles.md
    api/mapbox.rst

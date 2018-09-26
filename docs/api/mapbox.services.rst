@@ -76,6 +76,14 @@ mapbox.services.static\_style module
     :undoc-members:
     :show-inheritance:
 
+mapbox.services.tilequery module
+--------------------------------
+
+.. automodule:: mapbox.services.tilequery
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 mapbox.services.uploads module
 ------------------------------
 
