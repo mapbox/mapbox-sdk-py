@@ -1,5 +1,5 @@
 # mapbox
-__version__ = "0.16.2"
+__version__ = "0.17.0"
 
 from .services.datasets import Datasets
 from .services.directions import Directions
@@ -13,4 +13,5 @@ from .services.static_style import StaticStyle
 from .services.uploads import Uploader
 from .services.analytics import Analytics
 from .services.optimization import Optimization
+from .services.tilequery import Tilequery
 from .services.maps import Maps
