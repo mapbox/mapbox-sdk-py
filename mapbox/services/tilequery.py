@@ -163,12 +163,12 @@ class Tilequery(Service):
         # Create dict to assist in building URI resource path.
 
         path_values = dict(
-            map_id=map_id, api_name=self.api_name, coordinates="{},{}".format(lon, lat)
+            api_name=self.api_name, lon=lon, lat=lat
         )
 
         # Build URI resource path.
 
-        path_part = "/{map_id}/{api_name}/{coordinates}.json"
+        path_part = "/" + map_id + "/{api_name}/{lon},{lat}.json"
         uri = URITemplate(self.base_uri + path_part).expand(**path_values)
 
         # Build URI query_parameters.
