@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.17.1 (2018-09-26)
+-------------------
+
+Bug fixes:
+
+- Fix for the encoding of Tilequery coordinates (#259).
+
 0.17.0 (TBD)
 ------------
 

@@ -1,5 +1,5 @@
 # mapbox
-__version__ = "0.17.0"
+__version__ = "0.17.1"
 
 from .services.datasets import Datasets
 from .services.directions import Directions

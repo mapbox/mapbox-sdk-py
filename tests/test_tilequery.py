@@ -97,7 +97,7 @@ def test_tilequery_one_mapid():
         + "/v4"
         + "/mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test",
         match_querystring=True,
         body='{"key": "value"}',
@@ -117,9 +117,9 @@ def test_tilequery_two_mapids():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v9%2Cmapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v9,mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test",
         match_querystring=True,
         body='{"key": "value"}',
@@ -143,7 +143,7 @@ def test_tilequery_with_radius():
         + "/v4"
         + "/mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test"
         + "&radius=25",
         match_querystring=True,
@@ -168,7 +168,7 @@ def test_tilequery_with_limit():
         + "/v4"
         + "/mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test"
         + "&limit=25",
         match_querystring=True,
@@ -193,7 +193,7 @@ def test_tilequery_with_dedupe():
         + "/v4"
         + "/mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test"
         + "&dedupe=true",
         match_querystring=True,
@@ -218,7 +218,7 @@ def test_tilequery_with_geometry():
         + "/v4"
         + "/mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test"
         + "&geometry=linestring",
         match_querystring=True,
@@ -243,9 +243,9 @@ def test_tilequery_with_layers():
         + "/v4"
         + "/mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test"
-        + "&layers=layer0%2Clayer1%2Clayer2",
+        + "&layers=layer0,layer1%2Clayer2",
         match_querystring=True,
         body='{"key": "value"}',
         status=200,
@@ -271,7 +271,7 @@ def test_tilequery_with_radius_and_limit():
         + "/v4"
         + "/mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test"
         + "&radius=25"
         + "&limit=25",
@@ -297,7 +297,7 @@ def test_tilequery_with_radius_and_dedupe():
         + "/v4"
         + "/mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test"
         + "&radius=25"
         + "&dedupe=true",
@@ -323,7 +323,7 @@ def test_tilequery_with_radius_and_geometry():
         + "/v4"
         + "/mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test"
         + "&radius=25"
         + "&geometry=linestring",
@@ -349,10 +349,10 @@ def test_tilequery_with_radius_and_layers():
         + "/v4"
         + "/mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test"
         + "&radius=25"
-        + "&layers=layer0%2Clayer1%2Clayer2",
+        + "&layers=layer0,layer1%2Clayer2",
         match_querystring=True,
         body='{"key": "value"}',
         status=200,
@@ -379,7 +379,7 @@ def test_tilequery_with_radius_limit_and_dedupe():
         + "/v4"
         + "/mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test"
         + "&radius=25"
         + "&limit=25"
@@ -406,7 +406,7 @@ def test_tilequery_with_radius_limit_and_geometry():
         + "/v4"
         + "/mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test"
         + "&radius=25"
         + "&limit=25"
@@ -438,11 +438,11 @@ def test_tilequery_with_radius_limit_and_layers():
         + "/v4"
         + "/mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test"
         + "&radius=25"
         + "&limit=25"
-        + "&layers=layer0%2Clayer1%2Clayer2",
+        + "&layers=layer0,layer1%2Clayer2",
         match_querystring=True,
         body='{"key": "value"}',
         status=200,
@@ -470,7 +470,7 @@ def test_tilequery_with_radius_limit_dedupe_and_geometry():
         + "/v4"
         + "/mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test"
         + "&radius=25"
         + "&limit=25"
@@ -504,12 +504,12 @@ def test_tilequery_with_radius_limit_dedupe_and_layers():
         + "/v4"
         + "/mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test"
         + "&radius=25"
         + "&limit=25"
         + "&dedupe=true"
-        + "&layers=layer0%2Clayer1%2Clayer2",
+        + "&layers=layer0,layer1%2Clayer2",
         match_querystring=True,
         body='{"key": "value"}',
         status=200,
@@ -538,13 +538,13 @@ def test_tilequery_with_radius_limit_dedupe_geometry_and_layers():
         + "/v4"
         + "/mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test"
         + "&radius=25"
         + "&limit=25"
         + "&dedupe=true"
         + "&geometry=linestring"
-        + "&layers=layer0%2Clayer1%2Clayer2",
+        + "&layers=layer0,layer1%2Clayer2",
         match_querystring=True,
         body='{"key": "value"}',
         status=200,
@@ -574,7 +574,7 @@ def test_tilequery_geojson_method():
         + "/v4"
         + "/mapbox.mapbox-streets-v10"
         + "/tilequery"
-        + "/0.0%2C1.1.json"
+        + "/0.0,1.1.json"
         + "?access_token=pk.test",
         match_querystring=True,
         body='{"key": "value"}',
