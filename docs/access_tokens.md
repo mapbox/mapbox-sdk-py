@@ -1,34 +1,32 @@
 # Access Tokens
 
-All Mapbox API's require an access token. Your Mapbox access token can be exported
-into your environment
+All Mapbox APIs require an access token. Thus all service object constructors
+take an `access_token` keyword argument. Access can be granted to a geocoding
+service, for example, like so:
 
-```bash
-
-export MAPBOX_ACCESS_TOKEN="YOUR_ACCESS_TOKEN"
+```python
+>>> from mapbox import Geocoder
+>>> geocoder = Geocoder(access_token="pk.YOUR_ACCESS_TOKEN")
 
 ```
 
-and it will be found automatically when creating a new instance. We'll use the `Geocoder` in this 
-example but the same applies for all `mapbox` classes.
+Please note that an actual token string must be used. Tokens may be generated
+using the web application at [https://www.mapbox.com/account/access-tokens](https://www.mapbox.com/account/access-tokens).
+
+Your Mapbox access token can also be set in the environment of your program
+
+```bash
+export MAPBOX_ACCESS_TOKEN="pk.YOUR_ACCESS_TOKEN"
+```
+
+and it will be found automatically when creating a new instance. We'll use the
+`Geocoder` in this example but the same applies for all `mapbox` classes.
 
 ```python
-
->>> from mapbox import Geocoder
 >>> geocoder = Geocoder()
 >>> import os
 >>> geocoder.session.params['access_token'] == os.environ['MAPBOX_ACCESS_TOKEN']
 True
-
-```
-
-Or it can be passed explicitly to the constructor.
-
-```python
-
-
->>> YOUR_ACCESS_TOKEN = os.environ['MAPBOX_ACCESS_TOKEN']
->>> geocoder = Geocoder(access_token=YOUR_ACCESS_TOKEN)
 
 ```
 

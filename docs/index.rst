@@ -61,6 +61,10 @@ Services
   
   - Read metadata for raster and vector tilesets
 
+- **Tilequery V4** `examples <./tilequery.html#tilequery>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#tilequery>`__
+
+  - Retrieve data about specific features from a vector tileset
+
 - **Maps V4** `examples <./maps.html#maps>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#maps>`__
 
   - Retrieve an image tile, vector tile, or UTFGrid in the specified format
@@ -116,6 +120,7 @@ Documentation
    mapmatching.md
    static_style.md
    tilesets.md
+   tilequery.md
    maps.md
    api/mapbox.rst
    api/mapbox.services.rst
