@@ -95,7 +95,7 @@ def test_tilequery_one_mapid():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test",
@@ -106,7 +106,7 @@ def test_tilequery_one_mapid():
 
     tilequery = Tilequery(access_token="pk.test")
 
-    response = tilequery.tilequery("mapbox.mapbox-streets-v10", lon=0.0, lat=1.1)
+    response = tilequery.tilequery("mapbox.mapbox-streets-v8", lon=0.0, lat=1.1)
 
     assert response.status_code == 200
 
@@ -117,7 +117,7 @@ def test_tilequery_two_mapids():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v9,mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v7,mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test",
@@ -129,7 +129,7 @@ def test_tilequery_two_mapids():
     tilequery = Tilequery(access_token="pk.test")
 
     response = tilequery.tilequery(
-        ["mapbox.mapbox-streets-v9", "mapbox.mapbox-streets-v10"], lon=0.0, lat=1.1
+        ["mapbox.mapbox-streets-v7", "mapbox.mapbox-streets-v8"], lon=0.0, lat=1.1
     )
 
     assert response.status_code == 200
@@ -141,7 +141,7 @@ def test_tilequery_with_radius():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test"
@@ -154,7 +154,7 @@ def test_tilequery_with_radius():
     tilequery = Tilequery(access_token="pk.test")
 
     response = tilequery.tilequery(
-        "mapbox.mapbox-streets-v10", lon=0.0, lat=1.1, radius=25
+        "mapbox.mapbox-streets-v8", lon=0.0, lat=1.1, radius=25
     )
 
     assert response.status_code == 200
@@ -166,7 +166,7 @@ def test_tilequery_with_limit():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test"
@@ -179,7 +179,7 @@ def test_tilequery_with_limit():
     tilequery = Tilequery(access_token="pk.test")
 
     response = tilequery.tilequery(
-        "mapbox.mapbox-streets-v10", lon=0.0, lat=1.1, limit=25
+        "mapbox.mapbox-streets-v8", lon=0.0, lat=1.1, limit=25
     )
 
     assert response.status_code == 200
@@ -191,7 +191,7 @@ def test_tilequery_with_dedupe():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test"
@@ -204,7 +204,7 @@ def test_tilequery_with_dedupe():
     tilequery = Tilequery(access_token="pk.test")
 
     response = tilequery.tilequery(
-        "mapbox.mapbox-streets-v10", lon=0.0, lat=1.1, dedupe=True
+        "mapbox.mapbox-streets-v8", lon=0.0, lat=1.1, dedupe=True
     )
 
     assert response.status_code == 200
@@ -216,7 +216,7 @@ def test_tilequery_with_geometry():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test"
@@ -229,7 +229,7 @@ def test_tilequery_with_geometry():
     tilequery = Tilequery(access_token="pk.test")
 
     response = tilequery.tilequery(
-        "mapbox.mapbox-streets-v10", lon=0.0, lat=1.1, geometry="linestring"
+        "mapbox.mapbox-streets-v8", lon=0.0, lat=1.1, geometry="linestring"
     )
 
     assert response.status_code == 200
@@ -241,7 +241,7 @@ def test_tilequery_with_layers():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test"
@@ -254,7 +254,7 @@ def test_tilequery_with_layers():
     tilequery = Tilequery(access_token="pk.test")
 
     response = tilequery.tilequery(
-        "mapbox.mapbox-streets-v10",
+        "mapbox.mapbox-streets-v8",
         lon=0.0,
         lat=1.1,
         layers=["layer0", "layer1", "layer2"],
@@ -269,7 +269,7 @@ def test_tilequery_with_radius_and_limit():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test"
@@ -283,7 +283,7 @@ def test_tilequery_with_radius_and_limit():
     tilequery = Tilequery(access_token="pk.test")
 
     response = tilequery.tilequery(
-        "mapbox.mapbox-streets-v10", lon=0.0, lat=1.1, radius=25, limit=25
+        "mapbox.mapbox-streets-v8", lon=0.0, lat=1.1, radius=25, limit=25
     )
 
     assert response.status_code == 200
@@ -295,7 +295,7 @@ def test_tilequery_with_radius_and_dedupe():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test"
@@ -309,7 +309,7 @@ def test_tilequery_with_radius_and_dedupe():
     tilequery = Tilequery(access_token="pk.test")
 
     response = tilequery.tilequery(
-        "mapbox.mapbox-streets-v10", lon=0.0, lat=1.1, radius=25, dedupe=True
+        "mapbox.mapbox-streets-v8", lon=0.0, lat=1.1, radius=25, dedupe=True
     )
 
     assert response.status_code == 200
@@ -321,7 +321,7 @@ def test_tilequery_with_radius_and_geometry():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test"
@@ -335,7 +335,7 @@ def test_tilequery_with_radius_and_geometry():
     tilequery = Tilequery(access_token="pk.test")
 
     response = tilequery.tilequery(
-        "mapbox.mapbox-streets-v10", lon=0.0, lat=1.1, radius=25, geometry="linestring"
+        "mapbox.mapbox-streets-v8", lon=0.0, lat=1.1, radius=25, geometry="linestring"
     )
 
     assert response.status_code == 200
@@ -347,7 +347,7 @@ def test_tilequery_with_radius_and_layers():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test"
@@ -361,7 +361,7 @@ def test_tilequery_with_radius_and_layers():
     tilequery = Tilequery(access_token="pk.test")
 
     response = tilequery.tilequery(
-        "mapbox.mapbox-streets-v10",
+        "mapbox.mapbox-streets-v8",
         lon=0.0,
         lat=1.1,
         radius=25,
@@ -377,7 +377,7 @@ def test_tilequery_with_radius_limit_and_dedupe():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test"
@@ -392,7 +392,7 @@ def test_tilequery_with_radius_limit_and_dedupe():
     tilequery = Tilequery(access_token="pk.test")
 
     response = tilequery.tilequery(
-        "mapbox.mapbox-streets-v10", lon=0.0, lat=1.1, radius=25, limit=25, dedupe=True
+        "mapbox.mapbox-streets-v8", lon=0.0, lat=1.1, radius=25, limit=25, dedupe=True
     )
 
     assert response.status_code == 200
@@ -404,7 +404,7 @@ def test_tilequery_with_radius_limit_and_geometry():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test"
@@ -419,7 +419,7 @@ def test_tilequery_with_radius_limit_and_geometry():
     tilequery = Tilequery(access_token="pk.test")
 
     response = tilequery.tilequery(
-        "mapbox.mapbox-streets-v10",
+        "mapbox.mapbox-streets-v8",
         lon=0.0,
         lat=1.1,
         radius=25,
@@ -436,7 +436,7 @@ def test_tilequery_with_radius_limit_and_layers():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test"
@@ -451,7 +451,7 @@ def test_tilequery_with_radius_limit_and_layers():
     tilequery = Tilequery(access_token="pk.test")
 
     response = tilequery.tilequery(
-        "mapbox.mapbox-streets-v10",
+        "mapbox.mapbox-streets-v8",
         lon=0.0,
         lat=1.1,
         radius=25,
@@ -468,7 +468,7 @@ def test_tilequery_with_radius_limit_dedupe_and_geometry():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test"
@@ -484,7 +484,7 @@ def test_tilequery_with_radius_limit_dedupe_and_geometry():
     tilequery = Tilequery(access_token="pk.test")
 
     response = tilequery.tilequery(
-        "mapbox.mapbox-streets-v10",
+        "mapbox.mapbox-streets-v8",
         lon=0.0,
         lat=1.1,
         radius=25,
@@ -502,7 +502,7 @@ def test_tilequery_with_radius_limit_dedupe_and_layers():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test"
@@ -518,7 +518,7 @@ def test_tilequery_with_radius_limit_dedupe_and_layers():
     tilequery = Tilequery(access_token="pk.test")
 
     response = tilequery.tilequery(
-        "mapbox.mapbox-streets-v10",
+        "mapbox.mapbox-streets-v8",
         lon=0.0,
         lat=1.1,
         radius=25,
@@ -536,7 +536,7 @@ def test_tilequery_with_radius_limit_dedupe_geometry_and_layers():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test"
@@ -553,7 +553,7 @@ def test_tilequery_with_radius_limit_dedupe_geometry_and_layers():
     tilequery = Tilequery(access_token="pk.test")
 
     response = tilequery.tilequery(
-        "mapbox.mapbox-streets-v10",
+        "mapbox.mapbox-streets-v8",
         lon=0.0,
         lat=1.1,
         radius=25,
@@ -572,7 +572,7 @@ def test_tilequery_geojson_method():
         method=GET,
         url="https://api.mapbox.com"
         + "/v4"
-        + "/mapbox.mapbox-streets-v10"
+        + "/mapbox.mapbox-streets-v8"
         + "/tilequery"
         + "/0.0,1.1.json"
         + "?access_token=pk.test",
@@ -583,7 +583,7 @@ def test_tilequery_geojson_method():
 
     tilequery = Tilequery(access_token="pk.test")
 
-    response = tilequery.tilequery("mapbox.mapbox-streets-v10", lon=0.0, lat=1.1)
+    response = tilequery.tilequery("mapbox.mapbox-streets-v8", lon=0.0, lat=1.1)
 
     assert response.status_code == 200
     assert response.geojson() == response.json()
