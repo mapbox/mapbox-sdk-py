@@ -1,6 +1,11 @@
 Changes
 =======
 
+0.17.2 (TBD)
+------------
+- Coordinates have been swapped to get the proper order in the GeoJSON response
+  from the Directions service (#262).
+
 0.17.1 (2018-09-26)
 -------------------
 
