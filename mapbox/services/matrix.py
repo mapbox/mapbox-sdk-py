@@ -17,6 +17,7 @@ class DirectionsMatrix(Service):
     valid_profiles = [
         'mapbox/driving', 'mapbox/cycling', 'mapbox/walking',
         'mapbox/driving-traffic']
+    valid_annotations = ['duration', 'distance']
 
     @property
     def baseuri(self):
@@ -41,6 +42,18 @@ class DirectionsMatrix(Service):
                 "{0} is not a valid profile".format(profile))
         return profile
 
+    def _validate_annotations(self, annotations):
+        results = []
+        if annotations is None:
+            return None
+        for annotation in annotations:
+            if annotation not in self.valid_annotations:
+                raise errors.InvalidParameterError(
+                    "{0} is not a valid annotation".format(annotation))
+            else:
+                results.append(annotation)
+        return results
+
     def _make_query(self, srcindexes, dstindexes):
         params = {}
         if srcindexes is not None and isinstance(srcindexes, list):
@@ -49,8 +62,8 @@ class DirectionsMatrix(Service):
             params['destinations'] = ';'.join([str(idx) for idx in dstindexes])
         return params
 
-    def matrix(self, coordinates, profile='mapbox/driving',
-               sources=None, destinations=None):
+    def matrix(self, coordinates, profile='mapbox/driving', 
+               sources=None, destinations=None, annotations=None):
         """Request a directions matrix for trips between coordinates
 
         In the default case, the matrix returns a symmetric matrix,
@@ -67,6 +80,9 @@ class DirectionsMatrix(Service):
         profile : str
             The trip travel mode. Valid modes are listed in the class's
             valid_profiles attribute.
+        annotations : list
+            Used to specify the resulting matrices. Possible values are
+            listed in the class's valid_annotations attribute.
         sources : list
             Indices of source coordinates to include in the matrix.
             Default is all coordinates.
@@ -79,27 +95,44 @@ class DirectionsMatrix(Service):
         requests.Response
 
         Note: the directions matrix itself is obtained by calling the
-        response's json() method. The resulting mapping has 4 items.
+        response's json() method. The resulting mapping has a code,
+        the destinations and the sources, and depending of the
+        annotations specified, it can also contain a durations matrix,
+        a distances matrix or both of them (by default, only the
+        durations matrix is provided).
 
         code : str
             Status of the response
+        sources : list
+            Results of snapping selected coordinates to the nearest
+            addresses.
+        destinations : list
+            Results of snapping selected coordinates to the nearest
+            addresses.
         durations : list
             An array of arrays representing the matrix in row-major
             order.  durations[i][j] gives the travel time from the i-th
             source to the j-th destination. All values are in seconds.
             The duration between the same coordinate is always 0. If
             a duration can not be found, the result is null.
-        destinations : list
-            Results of snapping selected coordinates to the nearest
-            addresses.
-        destinations : list
-            Results of snapping selected coordinates to the nearest
-            addresses.
+        distances : list
+            An array of arrays representing the matrix in row-major
+            order.  distances[i][j] gives the distance from the i-th
+            source to the j-th destination. All values are in meters.
+            The distance between the same coordinate is always 0. If
+            a distance can not be found, the result is null.
+
         """
+        annotations = self._validate_annotations(annotations)
         profile = self._validate_profile(profile)
         coords = encode_waypoints(coordinates)
-        query = self._make_query(sources, destinations)
+
+        params = self._make_query(sources, destinations)
+
+        if annotations is not None:
+            params.update({'annotations': ','.join(annotations)})
+
         uri = '{0}/{1}/{2}'.format(self.baseuri, profile, coords)
-        res = self.session.get(uri, params=query)
+        res = self.session.get(uri, params=params)
         self.handle_http_error(res)
         return res

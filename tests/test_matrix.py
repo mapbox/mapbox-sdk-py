@@ -46,6 +46,13 @@ def test_profile_valid(profile):
         access_token='pk.test')._validate_profile(profile)
 
 
+@pytest.mark.parametrize('annotations', [['distance'], ['duration'], ['distance', 'duration'], None])
+def test_annotations_valid(annotations):
+    """Annotations are valid"""
+    assert annotations == DirectionsMatrix(
+        access_token='pk.test')._validate_annotations(annotations)
+
+
 @pytest.mark.parametrize('profile', ['mapbox.driving', 'mapbox.cycling', 'mapbox.walking'])
 def test_deprecated_profile(profile):
     """Profiles are deprecated"""
@@ -68,8 +75,8 @@ def test_query():
 
 @responses.activate
 @pytest.mark.parametrize('waypoints', [points, [p['geometry'] for p in points], [p['geometry']['coordinates'] for p in points]])
-def test_matrix(waypoints):
-
+@pytest.mark.parametrize('annotations', [['distance'], ['duration'], ['distance', 'duration', None]])
+def test_matrix(waypoints, annotations):
     responses.add(
         responses.GET,
         'https://api.mapbox.com/directions-matrix/v1/mapbox/driving/-87,36;-86,36;-88,37?access_token=pk.test',
