@@ -1,10 +1,16 @@
 Changes
 =======
 
-0.17.2 (TBD)
-------------
+0.17.2 (2019-11-30)
+-------------------
+
+Bug fixes:
+
 - Coordinates have been swapped to get the proper order in the GeoJSON response
   from the Directions service (#262).
+- The missing option to select duration, distance, or both matrices has been
+  implemented by adding a optional annotations keyword argument to the matrix
+  method (#266).
 
 0.17.1 (2018-09-26)
 -------------------
