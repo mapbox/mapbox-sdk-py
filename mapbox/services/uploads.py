@@ -57,7 +57,7 @@ class Uploader(Service):
         if '.' not in tileset:
             tileset = "{0}.{1}".format(self.username, tileset)
 
-        pattern = '^[a-z0-9-_]{1,32}\.[a-z0-9-_]{1,32}$'
+        pattern = '^[a-z0-9-]{1,32}\.[a-zA-Z0-9-_]{1,32}$'
         if not re.match(pattern, tileset, flags=re.IGNORECASE):
             raise ValidationError(
                 'tileset {0} is invalid, must match r"{1}"'.format(
