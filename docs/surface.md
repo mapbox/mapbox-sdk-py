@@ -9,7 +9,7 @@ access to the Mapbox Surface API. You can also import it directly from the
 
 ```
 
-See https://www.mapbox.com/developers/api/surface/ for general documentation
+See https://www.mapbox.com/api-documentation/legacy/surface for general documentation
 of the API.
 
 Your Mapbox access token should be set in your environment; see the [access

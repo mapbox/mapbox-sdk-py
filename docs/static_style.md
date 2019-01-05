@@ -5,7 +5,7 @@
 
 ```
 
-See https://www.mapbox.com/api-documentation/#static for general documentation
+See https://www.mapbox.com/api-documentation/maps/#static for general documentation
 of the API.
 
 Your Mapbox access token should be set in your environment; see the [access

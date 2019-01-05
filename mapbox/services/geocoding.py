@@ -50,7 +50,7 @@ class Geocoder(Service):
         Place results may be constrained to those of one or more types
         or be biased toward a given longitude and latitude.
 
-        See: https://www.mapbox.com/api-documentation/#geocoding."""
+        See: https://www.mapbox.com/api-documentation/search/#geocoding."""
         uri = URITemplate(self.baseuri + '/{dataset}/{query}.json').expand(
             dataset=self.name, query=address.encode('utf-8'))
         params = {}
@@ -85,7 +85,7 @@ class Geocoder(Service):
         `response.geojson()` returns the geocoding result as GeoJSON.
         `response.status_code` returns the HTTP API status code.
 
-        See: https://www.mapbox.com/api-documentation/#retrieve-places-near-a-location."""
+        See: https://www.mapbox.com/api-documentation/search/#reverse-geocoding."""
         uri = URITemplate(self.baseuri + '/{dataset}/{lon},{lat}.json').expand(
             dataset=self.name,
             lon=str(round(float(lon), self.precision.get('reverse', 5))),

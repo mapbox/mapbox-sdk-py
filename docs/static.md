@@ -9,7 +9,7 @@ access to the Mapbox Static Maps API. You can also import it directly from the
 
 ```
 
-See https://www.mapbox.com/developers/api/static/ for general documentation
+See https://www.mapbox.com/api-documentation/legacy/static-classic for general documentation
 of the API.
 
 Your Mapbox access token should be set in your environment; see the [access
@@ -26,7 +26,7 @@ image file with the appropriate extension.
 ## Usage
 
 Static maps are standalone images that can be displayed on web and mobile
-devices without the aid of a mapping library or API. 
+devices without the aid of a mapping library or API.
 
 ```python
 >>> service = Static()

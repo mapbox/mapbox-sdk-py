@@ -15,55 +15,55 @@ The Mapbox Python SDK is a low-level client API, not a Resource API such as the 
 Services
 ========
 
-- **Analytics V1** `examples <./docs/analytics.md>`__, `website <https://www.mapbox.com/api-documentation/#analytics>`__
+- **Analytics V1** `examples <./docs/analytics.md>`__, `website <https://www.mapbox.com/api-documentation/accounts/#analytics>`__
 
-  - API usage for services by resource. 
+  - API usage for services by resource.
   - available for premium and enterprise plans.
 
-- **Directions V5** `examples <./docs/directions.md#directions>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#directions>`__
+- **Directions V5** `examples <./docs/directions.md#directions>`__, `website <https://www.mapbox.com/api-documentation/navigation/#directions>`__
 
   - Profiles for driving, walking, and cycling
   - GeoJSON & Polyline formatting
 
 - **Distance V1** **DEPRECATED**
-- **Geocoding V5** `examples <./docs/geocoding.md#geocoding>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#geocoding>`__
+- **Geocoding V5** `examples <./docs/geocoding.md#geocoding>`__, `website <https://www.mapbox.com/api-documentation/search/#geocoding>`__
 
   - Forward (place names ⇢ longitude, latitude)
   - Reverse (longitude, latitude ⇢ place names)
 
-- **Map Matching V4** `examples <./docs/mapmatching.md#map-matching>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#map-matching>`__
+- **Map Matching V4** `examples <./docs/mapmatching.md#map-matching>`__, `website <https://www.mapbox.com/api-documentation/navigation/#map-matching>`__
 
   - Snap GPS traces to OpenStreetMap data
 
-- **Static Maps V4** `examples <./docs/static.md#static-maps>`__, `website <https://www.mapbox.com/api-documentation/pages/static_classic.html>`__
+- **Static Maps V4** `examples <./docs/static.md#static-maps>`__, `website <https://www.mapbox.com/api-documentation/legacy/static-classic>`__
 
   - Generate standalone images from existing Mapbox *mapids* (tilesets)
   - Render with GeoJSON overlays
-  
-- **Static Styles V1** `examples <./docs/static.md#static-maps>`__, `website <https://www.mapbox.com/api-documentation/#static>`__
+
+- **Static Styles V1** `examples <./docs/static.md#static-maps>`__, `website <https://www.mapbox.com/api-documentation/maps/#static>`__
 
   - Generate standalone images from existing Mapbox *styles*
   - Render with GeoJSON overlays
   - Adjust pitch and bearing, decimal zoom levels
-  
+
 - **Surface V4** `examples <./docs/surface.md#surface>`__, `website <https://www.mapbox.com/developers/api/surface/>`__
 
   - Interpolates values along lines. Useful for elevation traces.
 
-- **Uploads V1** `examples <./docs/uploads.md#uploads>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#uploads>`__
+- **Uploads V1** `examples <./docs/uploads.md#uploads>`__, `website <https://www.mapbox.com/api-documentation/maps/#uploads>`__
 
   - Upload data to be processed and hosted by Mapbox.
 
-- **Datasets V1** `examples <./docs/datasets.md#datasets>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#datasets>`__
+- **Datasets V1** `examples <./docs/datasets.md#datasets>`__, `website <https://www.mapbox.com/api-documentation/maps/#datasets>`__
 
   - Manage editable collections of GeoJSON features
   - Persistent storage for custom geographic data
 
-- **Tilequery V4** `examples <./docs/tilequery.md#tilequery>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#tilequery>`__
+- **Tilequery V4** `examples <./docs/tilequery.md#tilequery>`__, `website <https://www.mapbox.com/api-documentation/maps/#tilequery>`__
 
   - Retrieve data about specific features from a vector tileset
 
-- **Maps V4** `examples <./docs/maps.md#maps>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#maps>`__
+- **Maps V4** `examples <./docs/maps.md#maps>`__, `website <https://www.mapbox.com/api-documentation/maps/#maps>`__
 
   - Retrieve an image tile, vector tile, or UTFGrid in the specified format
   - Retrieve vector features from Mapbox Editor projects as GeoJSON or KML

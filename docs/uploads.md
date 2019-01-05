@@ -9,7 +9,7 @@ module.
 
 ```
 
-See https://www.mapbox.com/developers/api/uploads/ for general documentation
+See https://www.mapbox.com/api-documentation/maps/#uploads for general documentation
 of the API.
 
 Your Mapbox access token should be set in your environment; see the [access
