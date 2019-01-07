@@ -77,7 +77,7 @@ between all input waypoints. The diagonal will be zeros.
 ```python
 >>> from pprint import pprint
 >>> pprint(response.json()['durations'])
-[[0, ..., ...], [..., 0, ...], [..., ..., 0]]
+[[0.0, ..., ...], [..., 0.0, ...], [..., ..., 0.0]]
 
 ```
 
