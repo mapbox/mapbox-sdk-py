@@ -11,7 +11,7 @@ cache:
     - $HOME/.pip-cache/
 install:
   - pip install -U pip --cache-dir $HOME/.pip-cache
-  - pip install pytest==4.0.2 --cache-dir $HOME/.pip-cache
+  - pip install pytest-cov~=2.6 --cache-dir $HOME/.pip-cache
   - pip install -e .[test] --cache-dir $HOME/.pip-cache
 before_script:
   - pip install flake8  # 127 == GitHub editor width
