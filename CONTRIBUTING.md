@@ -1,3 +1,7 @@
+# Attention: this project is paused
+
+We're temporarily out of resources to review large pull requests. Please open a new issue to check with the project maintainers before beginning work on new modules. Bug fixes are gratefully accepted, but new releases may be delayed.
+
 # Contributing
 
 If you want to add an issue or pull request, please ensure that the [existing issues](https://github.com/mapbox/mapbox-sdk-py/issues?utf8=✓&q=) don't already cover your question or contribution.
