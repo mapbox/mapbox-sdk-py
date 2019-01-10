@@ -2,7 +2,7 @@
 
 The `Analytics` class from the `mapbox.services.analytics` module provides
 access to the Mapbox Analytics API. You can also import it directly from the
-`mapbox` module. 
+`mapbox` module.
 
 **Note**: This API is available only for premium and enterprise plans.
 
@@ -12,14 +12,14 @@ access to the Mapbox Analytics API. You can also import it directly from the
 ```
 
 
-See https://www.mapbox.com/api-documentation/#analytics for general documentation of the API.
+See https://www.mapbox.com/api-documentation/accounts/#analytics for general documentation of the API.
 
 Your Mapbox access token should be set in your environment; see the [access
 tokens](access_tokens.md) documentation for more information.
 
 ## Analytics methods
 
-The methods of `Analytics` class that provide access to the Analytics API return an instance of 
+The methods of `Analytics` class that provide access to the Analytics API return an instance of
 [`requests.Response`](http://docs.python-requests.org/en/latest/api/#requests.Response). `Analytics` response also include the `json()` method which returns Python data parsed from API.
 
 ## Usage

@@ -16,7 +16,7 @@ __mapbox.services.maps__:
 
 ```
 
-See https://www.mapbox.com/api-documentation/#maps for general documentation of the API.
+See https://www.mapbox.com/api-documentation/maps/#maps for general documentation of the API.
 
 Use of the Maps API requires an access token, which you should set in your environment.  For more information, see the [access tokens](access_tokens.md) documentation.
 
