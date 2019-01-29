@@ -273,6 +273,5 @@ class Uploader(Service):
         -------
         requests.Response
         """
-        tileset = self._validate_tileset(tileset)
         url = self.stage(fileobj, callback=callback)
         return self.create(url, tileset, name=name, patch=patch)
