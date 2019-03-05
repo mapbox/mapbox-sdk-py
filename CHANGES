@@ -1,7 +1,11 @@
 Changes
 =======
 
-0.17.2 (2019-11-30)
+0.18.0 (2019-03-05)
+-------------------
+- Added support for bypass_mbtiles_validation flag in the Uploads API (#271)
+
+0.17.2 (2018-11-30)
 -------------------
 
 Bug fixes:
@@ -41,7 +45,7 @@ New features:
 - Added support for Directions v5 (#203).
 - The Mapbox Distance API is no more and the distance module has been deleted
   (#232). Users must use the DirectionsMatrix introduced in 0.15.
-- Project documentation is now on Read the Docs: 
+- Project documentation is now on Read the Docs:
   https://mapbox-mapbox.readthedocs-hosted.com/en/latest/.
 
 0.15.1 (2018-01-16)
