@@ -431,6 +431,51 @@ def test_upload_patch(monkeypatch):
     assert job['tileset'] == "{0}.test1".format(username)
 
 
+@responses.activate
+def test_upload_bypass(monkeypatch):
+    """Upload a file and create a tileset bypassing mbtiles validation"""
+
+    monkeypatch.setattr(mapbox.services.uploads, 'boto3_session', MockSession)
+
+    def ensure_bypass(request):
+        payload = json.loads(request.body.decode())
+        assert payload['bypass_mbtiles_validation']
+        headers = {}
+        return (201, headers, upload_response_body)
+
+    # Credentials
+    query_body = """
+       {{"key": "_pending/{username}/key.test",
+         "accessKeyId": "ak.test",
+         "bucket": "tilestream-tilesets-production",
+         "url": "https://tilestream-tilesets-production.s3.amazonaws.com/_pending/{username}/key.test",
+         "secretAccessKey": "sak.test",
+         "sessionToken": "st.test"}}""".format(username=username)
+
+    responses.add(
+        responses.POST,
+        'https://api.mapbox.com/uploads/v1/{0}/credentials?access_token={1}'.format(
+            username, access_token),
+        match_querystring=True,
+        body=query_body, status=200,
+        content_type='application/json')
+
+    responses.add_callback(
+        responses.POST,
+        'https://api.mapbox.com/uploads/v1/{0}?access_token={1}'.format(username, access_token),
+        callback=ensure_bypass,
+        match_querystring=True,
+        content_type='application/json')
+
+    with open('tests/moors.json', 'rb') as src:
+        res = mapbox.Uploader(access_token=access_token).upload(
+            src, 'testuser.Test1', name='test1', bypass=True)
+
+    assert res.status_code == 201
+    job = res.json()
+    assert job['tileset'] == "{0}.test1".format(username)
+
+
 def test_upload_tileset_validation():
     with pytest.raises(mapbox.errors.ValidationError):
         with open('tests/moors.json', 'rb') as src:

@@ -116,7 +116,7 @@ class Uploader(Service):
 
         return creds['url']
 
-    def create(self, stage_url, tileset, name=None, patch=False):
+    def create(self, stage_url, tileset, name=None, patch=False, bypass=False):
         """Create a tileset
 
         Note: this step is refered to as "upload" in the API docs;
@@ -144,6 +144,9 @@ class Uploader(Service):
         patch: bool
             Optional patch mode which requires a flag on the owner's
             account.
+        bypass: bool
+            Optional bypass validation mode for MBTiles which requires
+            a flag on the owner's account.
 
         Returns
         -------
@@ -157,6 +160,9 @@ class Uploader(Service):
 
         if patch:
             msg['patch'] = patch
+
+        if bypass:
+            msg['bypass_mbtiles_validation'] = bypass
 
         msg['name'] = name if name else _name
 
@@ -246,7 +252,7 @@ class Uploader(Service):
         self.handle_http_error(resp)
         return resp
 
-    def upload(self, fileobj, tileset, name=None, patch=False, callback=None):
+    def upload(self, fileobj, tileset, name=None, patch=False, callback=None, bypass=False):
         """Upload data and create a Mapbox tileset
 
         Effectively replicates the Studio upload feature. Returns a
@@ -265,6 +271,9 @@ class Uploader(Service):
         patch: bool
             Optional patch mode which requires a flag on the owner's
             account.
+        bypass: bool
+            Optional bypass validation mode for MBTiles which requires
+            a flag on the owner's account.
         callback: func
             A function that takes a number of bytes processed as its
             sole argument. May be used with a progress bar.
@@ -275,4 +284,4 @@ class Uploader(Service):
         """
         tileset = self._validate_tileset(tileset)
         url = self.stage(fileobj, callback=callback)
-        return self.create(url, tileset, name=name, patch=patch)
+        return self.create(url, tileset, name=name, patch=patch, bypass=bypass)
