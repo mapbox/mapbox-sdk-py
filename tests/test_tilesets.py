@@ -10,7 +10,7 @@ from mapbox.services.tilesets import Tilesets
 from base64 import b64encode
 
 from pytest import (
-    mark, 
+    mark,
     raises
 )
 
@@ -97,7 +97,7 @@ def test_validate_limit_valid(limit):
 
 
 @activate
-def test_tilesets():
+def test_list():
     add(
         method=GET,
         url="https://api.mapbox.com" +
@@ -110,13 +110,13 @@ def test_tilesets():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.tilesets()
+    response = tilesets.list()
     assert response.status_code == 200
 
 
 @activate
 @mark.parametrize("tileset_type", ["raster", "vector"])
-def test_tilesets_with_tileset_type(tileset_type):
+def test_list_with_tileset_type(tileset_type):
     add(
         method=GET,
         url="https://api.mapbox.com" +
@@ -130,13 +130,13 @@ def test_tilesets_with_tileset_type(tileset_type):
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.tilesets(tileset_type=tileset_type)
+    response = tilesets.list(tileset_type=tileset_type)
     assert response.status_code == 200
 
 
 @activate
 @mark.parametrize("visibility", ["private", "public"])
-def test_tilesets_with_visibility(visibility):
+def test_list_with_visibility(visibility):
     add(
         method=GET,
         url="https://api.mapbox.com" +
@@ -150,13 +150,13 @@ def test_tilesets_with_visibility(visibility):
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.tilesets(visibility=visibility)
+    response = tilesets.list(visibility=visibility)
     assert response.status_code == 200
 
 
 @activate
 @mark.parametrize("sortby", ["created", "modified"])
-def test_tilesets_with_sortby(sortby):
+def test_list_with_sortby(sortby):
     add(
         method=GET,
         url="https://api.mapbox.com" +
@@ -170,13 +170,13 @@ def test_tilesets_with_sortby(sortby):
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.tilesets(sortby=sortby)
+    response = tilesets.list(sortby=sortby)
     assert response.status_code == 200
 
 
 @activate
 @mark.parametrize("limit", [1, 250, 500])
-def test_tilesets_with_limit(limit):
+def test_list_with_limit(limit):
     add(
         method=GET,
         url="https://api.mapbox.com" +
@@ -190,12 +190,12 @@ def test_tilesets_with_limit(limit):
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.tilesets(limit=limit)
+    response = tilesets.list(limit=limit)
     assert response.status_code == 200
 
 
 @activate
-def test_tilesets_with_tileset_type_and_visibility():
+def test_list_with_tileset_type_and_visibility():
     add(
         method=GET,
         url="https://api.mapbox.com" +
@@ -210,12 +210,12 @@ def test_tilesets_with_tileset_type_and_visibility():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.tilesets(tileset_type="vector", visibility="public")
+    response = tilesets.list(tileset_type="vector", visibility="public")
     assert response.status_code == 200
 
 
 @activate
-def test_tilesets_with_tileset_type_and_sortby():
+def test_list_with_tileset_type_and_sortby():
     add(
         method=GET,
         url="https://api.mapbox.com" +
@@ -230,12 +230,12 @@ def test_tilesets_with_tileset_type_and_sortby():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.tilesets(tileset_type="vector", sortby="created")
+    response = tilesets.list(tileset_type="vector", sortby="created")
     assert response.status_code == 200
 
 
 @activate
-def test_tilesets_with_tileset_type_and_limit():
+def test_list_with_tileset_type_and_limit():
     add(
         method=GET,
         url="https://api.mapbox.com" +
@@ -250,12 +250,12 @@ def test_tilesets_with_tileset_type_and_limit():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.tilesets(tileset_type="vector", limit=500)
+    response = tilesets.list(tileset_type="vector", limit=500)
     assert response.status_code == 200
 
 
 @activate
-def test_tilesets_with_visibility_and_sortby():
+def test_list_with_visibility_and_sortby():
     add(
         method=GET,
         url="https://api.mapbox.com" +
@@ -270,12 +270,12 @@ def test_tilesets_with_visibility_and_sortby():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.tilesets(visibility="public", sortby="created")
+    response = tilesets.list(visibility="public", sortby="created")
     assert response.status_code == 200
 
 
 @activate
-def test_tilesets_with_visibility_and_limit():
+def test_list_with_visibility_and_limit():
     add(
         method=GET,
         url="https://api.mapbox.com" +
@@ -290,12 +290,12 @@ def test_tilesets_with_visibility_and_limit():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.tilesets(visibility="public", limit=500)
+    response = tilesets.list(visibility="public", limit=500)
     assert response.status_code == 200
 
 
 @activate
-def test_tilesets_with_sortby_and_limit():
+def test_list_with_sortby_and_limit():
     add(
         method=GET,
         url="https://api.mapbox.com" +
@@ -309,5 +309,5 @@ def test_tilesets_with_sortby_and_limit():
     )
 
     tilesets = Tilesets(access_token=ACCESS_TOKEN)
-    response = tilesets.tilesets(sortby="created", limit=500)
+    response = tilesets.list(sortby="created", limit=500)
     assert response.status_code == 200

@@ -62,7 +62,7 @@ class Tilesets(Service):
             self.host,
             self.api_name,
             self.api_version
-        ) 
+        )
 
     def _validate_tileset_type(self, tileset_type):
         """Validates tileset type, raising error if invalid."""
@@ -104,7 +104,7 @@ class Tilesets(Service):
 
         return limit
 
-    def tilesets(self, tileset_type=None, visibility=None, 
+    def list(self, tileset_type=None, visibility=None,
                  sortby=None, limit=None):
         """Lists all tilesets for an account.
 

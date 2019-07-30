@@ -30,10 +30,10 @@ Instantiate `Tilesets`.
 >>> tilesets = Tilesets()
 ```
 
-Call the `list_tilesets` method, passing in values for optional arguments as necessary - `tileset_type`, `visibility`, `sortby`, and `limit`.
+Call the `list` method, passing in values for optional arguments as necessary - `tileset_type`, `visibility`, `sortby`, and `limit`.
 
 ```python
->>> response = tilesets.list_tilesets()
+>>> response = tilesets.list()
 ```
 
 Evaluate whether the request succeeded, and retrieve the tileset object from the response object.
