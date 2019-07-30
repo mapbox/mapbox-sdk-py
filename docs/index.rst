@@ -68,6 +68,10 @@ Services
   - Retrieve TileJSON metadata for a tileset
   - Retrieve a single marker image without any background map
 
+- **Tilesets V1** `examples <./docs/tilesets.md#tilesets>`__, `website <https://www.mapbox.com/api-documentation/?language=Python#tilesets>`__
+  
+  - Read metadata for raster and vector tilesets
+
 Please note that there may be some lag between the release of new Mapbox web
 services and releases of this package.
 
@@ -116,6 +120,7 @@ Documentation
    mapmatching.md
    static_style.md
    tilequery.md
+   tilesets.md
    maps.md
    api/mapbox.rst
    api/mapbox.services.rst
