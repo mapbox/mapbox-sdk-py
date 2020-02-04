@@ -1,4 +1,8 @@
-from collections import Mapping, Sequence
+import sys
+try:
+    from collections.abc import Mapping, Sequence
+except ImportError:
+    from collections import Mapping, Sequence
 
 
 def normalize_geojson_featurecollection(obj):
