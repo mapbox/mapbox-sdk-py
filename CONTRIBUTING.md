@@ -1,6 +1,6 @@
 # Attention: this project is paused
 
-We're temporarily out of resources to review large pull requests. Please open a new issue to check with the project maintainers before beginning work on new modules. Bug fixes are gratefully accepted, but new releases may be delayed.
+This project has been paused and the repository has been archived. Issues and pull requests will not be accepted until further notice.
 
 # Contributing
 
