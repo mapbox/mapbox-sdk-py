@@ -1,6 +1,6 @@
 # Attention: this project is paused
 
-This project has been paused and the repository has been archived. Issues and pull requests will not be accepted until further notice.
+This project has been paused while we deal with backlog and the repository has been archived to disable pull and feature enhancement requests. Issues and pull requests will not be accepted until further notice.
 
 # Contributing
 
