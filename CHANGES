@@ -1,6 +1,11 @@
 Changes
 =======
 
+0.18.1 (2022-08-01)
+-------------------
+- Drop python 2 from travis build (#275)
+- make collections import future-proof, use collections.abc (#278)
+
 0.18.0 (2019-03-05)
 -------------------
 - Added support for bypass_mbtiles_validation flag in the Uploads API (#271)
