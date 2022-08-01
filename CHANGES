@@ -4,7 +4,9 @@ Changes
 0.18.1 (2022-08-01)
 -------------------
 - Drop python 2 from travis build (#275)
+- Drop python 3.4, 3.5, 3.6 from travis build
 - make collections import future-proof, use collections.abc (#278)
+- Publish to pypi from 3.9 build
 
 0.18.0 (2019-03-05)
 -------------------

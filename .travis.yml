@@ -1,11 +1,9 @@
 sudo: false
 language: python
 python:
-  - '3.4'
-  - '3.5'
-  - '3.6'
   - '3.7'
   - '3.8'
+  - '3.9'
   - pypy
 cache:
   directories:
@@ -25,7 +23,7 @@ after_success:
 deploy:
   on:
     tags: true
-    condition: "$TRAVIS_PYTHON_VERSION = 3.6"
+    condition: "$TRAVIS_PYTHON_VERSION = 3.9"
   provider: pypi
   user: mapboxci
   distributions: "sdist bdist_wheel"
