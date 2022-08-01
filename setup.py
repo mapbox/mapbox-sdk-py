@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 
 # Get the long description from the relevant file
-with codecs_open('README.rst', encoding='utf-8') as f:
+with codecs_open('README.md', encoding='utf-8') as f:
     long_description = f.read()
 
 # Parse the version from the mapbox module.
@@ -18,6 +18,7 @@ setup(name='mapbox',
       version=version,
       description="A Python client for Mapbox services",
       long_description=long_description,
+      long_description_content_type="text/markdown",
       classifiers=['Development Status :: 5 - Production/Stable',
                    'Environment :: Console',
                    'Intended Audience :: Developers',
