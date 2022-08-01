@@ -21,9 +21,10 @@ script:
 after_success:
   - coveralls
 deploy:
-  on:
-    tags: true
-    condition: "$TRAVIS_PYTHON_VERSION = 3.9"
   provider: pypi
-  user: mapboxci
+  user: __token__
+  password: $PYPI_PASSWORD
   distributions: "sdist bdist_wheel"
+  on:
+    python: 3.9
+    tags: true
