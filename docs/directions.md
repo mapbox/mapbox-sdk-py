@@ -31,7 +31,7 @@ route up to 25 points.  Each of your input waypoints will be visited in order
 and should be represented by a GeoJSON point feature.
 
 ```python
->>> service = Directions()
+>>> service = Directions(access_token="pk.YOUR_ACCESS_TOKEN")
 
 ```
 
